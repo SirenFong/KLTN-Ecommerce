@@ -11,10 +11,10 @@ const CountDown = ({ data }) => {
     }, 1000);
 
     if (
-      typeof timeLeft.days === 'undefined' &&
-      typeof timeLeft.hours === 'undefined' &&
-      typeof timeLeft.minutes === 'undefined' &&
-      typeof timeLeft.seconds === 'undefined'
+      typeof timeLeft.days === "undefined" &&
+      typeof timeLeft.hours === "undefined" &&
+      typeof timeLeft.minutes === "undefined" &&
+      typeof timeLeft.seconds === "undefined"
     ) {
       axios.delete(`${server}/event/delete-shop-event/${data._id}`);
     }
@@ -54,7 +54,7 @@ const CountDown = ({ data }) => {
       {timerComponents.length ? (
         timerComponents
       ) : (
-        <span className="text-[red] text-[25px]">Time's Up</span>
+        <span className="text-[red] text-[25px]">Kết thúc</span>
       )}
     </div>
   );
