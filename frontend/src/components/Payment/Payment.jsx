@@ -407,7 +407,7 @@ const PaymentInfo = ({
 };
 
 const CartData = ({ orderData }) => {
-  const shipping = orderData?.shipping?.toFixed(0);
+  // const shipping = orderData?.shipping?.toFixed(0);
   const formatCurrency = (value) => {
     if (!value) return "-";
     const formatter = new Intl.NumberFormat("vi-VN", {

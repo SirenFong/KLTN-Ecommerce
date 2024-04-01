@@ -11,7 +11,7 @@ router.post(
       amount: req.body.amount,
       currency: "VNĐ",
       metadata: {
-        company: "Thanh Thuong",
+        company: "ThanhThuong",
       },
     });
     res.status(200).json({
