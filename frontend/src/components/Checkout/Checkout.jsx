@@ -313,14 +313,18 @@ const CartData = ({
     <div className="w-full bg-[#fff] rounded-md p-5 pb-8">
       <div className="flex justify-between">
         <h3 className="text-[16px] font-[400] text-[#000000a4]">Tổng tiền:</h3>
-        <h5 className="text-[18px] font-[600]">{subTotalPrice} VNĐ</h5>
+        <h5 className="text-[18px] font-[600]">
+          {subTotalPrice.toLocaleString("vi-VN")} VNĐ
+        </h5>
       </div>
       <br />
       <div className="flex justify-between">
         <h3 className="text-[16px] font-[400] text-[#000000a4]">
           Phí giao hàng:
         </h3>
-        <h5 className="text-[18px] font-[600]">{shipping} VNĐ</h5>
+        <h5 className="text-[18px] font-[600]">
+          {shipping.toLocaleString("vi-VN")} VNĐ
+        </h5>
       </div>
       <br />
       <div className="flex justify-between border-b pb-3">
@@ -328,11 +332,14 @@ const CartData = ({
           Mã giảm giá:
         </h3>
         <h5 className="text-[18px] font-[600]">
-          - {discountPercentenge ? discountPercentenge + " VNĐ" : null}
+          -{" "}
+          {discountPercentenge
+            ? discountPercentenge.toLocaleString("vi-VN") + " VNĐ"
+            : null}
         </h5>
       </div>
       <h5 className="text-[18px] font-[600] text-end pt-3">
-        {Math.round(totalPrice)} VNĐ
+        {Math.round(totalPrice).toLocaleString("vi-VN")} VNĐ
       </h5>
       <br />
       <form onSubmit={handleSubmit}>
