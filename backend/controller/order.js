@@ -7,14 +7,13 @@ const Order = require("../model/order");
 const Shop = require("../model/shop");
 const Product = require("../model/product");
 
-// create new order
+// Tạo đơn hàng mới
 router.post(
   "/create-order",
   catchAsyncErrors(async (req, res, next) => {
     try {
       const { cart, shippingAddress, user, totalPrice, paymentInfo } = req.body;
 
-      //   group cart items by shopId
       const shopItemsMap = new Map();
 
       for (const item of cart) {
@@ -24,8 +23,6 @@ router.post(
         }
         shopItemsMap.get(shopId).push(item);
       }
-
-      // create an order for each shop
       const orders = [];
 
       for (const [shopId, items] of shopItemsMap) {
@@ -49,7 +46,7 @@ router.post(
   })
 );
 
-// get all orders of user
+// Load danh sách đơn hàng khách hàng
 router.get(
   "/get-all-orders/:userId",
   catchAsyncErrors(async (req, res, next) => {
@@ -68,7 +65,6 @@ router.get(
   })
 );
 
-// get all orders of seller
 router.get(
   "/get-seller-all-orders/:shopId",
   catchAsyncErrors(async (req, res, next) => {
@@ -89,7 +85,7 @@ router.get(
   })
 );
 
-// update order status for seller
+// cập nhật trạng thái đơn hàng
 router.put(
   "/update-order-status/:id",
   isSeller,
@@ -98,9 +94,9 @@ router.put(
       const order = await Order.findById(req.params.id);
 
       if (!order) {
-        return next(new ErrorHandler("Order not found with this id", 400));
+        return next(new ErrorHandler("Không tìm thấy đơn hàng", 400));
       }
-      if (req.body.status === "Transferred to delivery partner") {
+      if (req.body.status === "Đã bàn giao cho đơn vị vân chuyển") {
         order.cart.forEach(async (o) => {
           await updateOrder(o._id, o.qty);
         });
@@ -108,10 +104,10 @@ router.put(
 
       order.status = req.body.status;
 
-      if (req.body.status === "Delivered") {
+      if (req.body.status === "Đã giao hàng") {
         order.deliveredAt = Date.now();
-        order.paymentInfo.status = "Succeeded";
-        const serviceCharge = order.totalPrice * .10;
+        order.paymentInfo.status = "Thành công";
+        const serviceCharge = order.totalPrice * 0.1;
         await updateSellerInfo(order.totalPrice - serviceCharge);
       }
 
@@ -133,7 +129,7 @@ router.put(
 
       async function updateSellerInfo(amount) {
         const seller = await Shop.findById(req.seller.id);
-        
+
         seller.availableBalance = amount;
 
         await seller.save();
@@ -144,7 +140,7 @@ router.put(
   })
 );
 
-// give a refund ----- user
+// Hoàn trả người dùng
 router.put(
   "/order-refund/:id",
   catchAsyncErrors(async (req, res, next) => {
@@ -152,7 +148,7 @@ router.put(
       const order = await Order.findById(req.params.id);
 
       if (!order) {
-        return next(new ErrorHandler("Order not found with this id", 400));
+        return next(new ErrorHandler("Không hợp lệ", 400));
       }
 
       order.status = req.body.status;
@@ -162,7 +158,7 @@ router.put(
       res.status(200).json({
         success: true,
         order,
-        message: "Order Refund Request successfully!",
+        message: "Hoàn trả đơn hàng thành công",
       });
     } catch (error) {
       return next(new ErrorHandler(error.message, 500));
@@ -170,7 +166,7 @@ router.put(
   })
 );
 
-// accept the refund ---- seller
+//Chấp nhận hoàn trả
 router.put(
   "/order-refund-success/:id",
   isSeller,
@@ -179,7 +175,7 @@ router.put(
       const order = await Order.findById(req.params.id);
 
       if (!order) {
-        return next(new ErrorHandler("Order not found with this id", 400));
+        return next(new ErrorHandler("Không tìm thấy đơn hàng", 400));
       }
 
       order.status = req.body.status;
@@ -188,10 +184,10 @@ router.put(
 
       res.status(200).json({
         success: true,
-        message: "Order Refund successfull!",
+        message: "Hoàn trả đơn hàng thành công!",
       });
 
-      if (req.body.status === "Refund Success") {
+      if (req.body.status === "Đã hoàn trả đơn hàng") {
         order.cart.forEach(async (o) => {
           await updateOrder(o._id, o.qty);
         });
@@ -211,7 +207,7 @@ router.put(
   })
 );
 
-// all orders --- for admin
+// Admin
 router.get(
   "/admin-all-orders",
   isAuthenticated,

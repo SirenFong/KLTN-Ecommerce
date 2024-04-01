@@ -10,63 +10,65 @@ const catchAsyncErrors = require("../middleware/catchAsyncErrors");
 const ErrorHandler = require("../utils/ErrorHandler");
 const sendShopToken = require("../utils/shopToken");
 
-// create shop
-router.post("/create-shop", catchAsyncErrors(async (req, res, next) => {
-  try {
-    const { email } = req.body;
-    const sellerEmail = await Shop.findOne({ email });
-    if (sellerEmail) {
-      return next(new ErrorHandler("User already exists", 400));
-    }
-
-    const myCloud = await cloudinary.v2.uploader.upload(req.body.avatar, {
-      folder: "avatars",
-    });
-
-
-    const seller = {
-      name: req.body.name,
-      email: email,
-      password: req.body.password,
-      avatar: {
-        public_id: myCloud.public_id,
-        url: myCloud.secure_url,
-      },
-      address: req.body.address,
-      phoneNumber: req.body.phoneNumber,
-      zipCode: req.body.zipCode,
-    };
-
-    const activationToken = createActivationToken(seller);
-
-    const activationUrl = `http://localhost:3000/seller/activation/${activationToken}`;
-
+// Đăng ký cửa hàng mới
+router.post(
+  "/create-shop",
+  catchAsyncErrors(async (req, res, next) => {
     try {
-      await sendMail({
-        email: seller.email,
-        subject: "Activate your Shop",
-        message: `Hello ${seller.name}, please click on the link to activate your shop: ${activationUrl}`,
-      });
-      res.status(201).json({
-        success: true,
-        message: `please check your email:- ${seller.email} to activate your shop!`,
-      });
-    } catch (error) {
-      return next(new ErrorHandler(error.message, 500));
-    }
-  } catch (error) {
-    return next(new ErrorHandler(error.message, 400));
-  }
-}));
+      const { email } = req.body;
+      const sellerEmail = await Shop.findOne({ email });
+      if (sellerEmail) {
+        return next(new ErrorHandler("User already exists", 400));
+      }
 
-// create activation token
+      const myCloud = await cloudinary.v2.uploader.upload(req.body.avatar, {
+        folder: "avatars",
+      });
+
+      const seller = {
+        name: req.body.name,
+        email: email,
+        password: req.body.password,
+        avatar: {
+          public_id: myCloud.public_id,
+          url: myCloud.secure_url,
+        },
+        address: req.body.address,
+        phoneNumber: req.body.phoneNumber,
+        zipCode: req.body.zipCode,
+      };
+
+      const activationToken = createActivationToken(seller);
+
+      const activationUrl = `http://localhost:3000/seller/activation/${activationToken}`;
+
+      try {
+        await sendMail({
+          email: seller.email,
+          subject: "Kích hoạt cửa hàng",
+          message: `Xin chào ${seller.name}, Nhấn vào đường link bên dưới để kích hoạt tài khoản: ${activationUrl}`,
+        });
+        res.status(201).json({
+          success: true,
+          message: `Đã gửi Email:- ${seller.email} để kích hoạt!`,
+        });
+      } catch (error) {
+        return next(new ErrorHandler(error.message, 500));
+      }
+    } catch (error) {
+      return next(new ErrorHandler(error.message, 400));
+    }
+  })
+);
+
+// Tạo token
 const createActivationToken = (seller) => {
   return jwt.sign(seller, process.env.ACTIVATION_SECRET, {
     expiresIn: "5m",
   });
 };
 
-// activate user
+// kích hoạt tài khoản
 router.post(
   "/activation",
   catchAsyncErrors(async (req, res, next) => {
@@ -107,7 +109,7 @@ router.post(
   })
 );
 
-// login shop
+// Đăng nhập
 router.post(
   "/login-shop",
   catchAsyncErrors(async (req, res, next) => {
@@ -115,7 +117,7 @@ router.post(
       const { email, password } = req.body;
 
       if (!email || !password) {
-        return next(new ErrorHandler("Please provide the all fields!", 400));
+        return next(new ErrorHandler("Vui lòng điền đầy đủ thông tin!", 400));
       }
 
       const user = await Shop.findOne({ email }).select("+password");
@@ -127,9 +129,7 @@ router.post(
       const isPasswordValid = await user.comparePassword(password);
 
       if (!isPasswordValid) {
-        return next(
-          new ErrorHandler("Please provide the correct information", 400)
-        );
+        return next(new ErrorHandler("Xin vui lòng nhập đúng mật khẩu", 400));
       }
 
       sendShopToken(user, 201, res);
@@ -139,7 +139,6 @@ router.post(
   })
 );
 
-// load shop
 router.get(
   "/getSeller",
   isSeller,
@@ -148,7 +147,7 @@ router.get(
       const seller = await Shop.findById(req.seller._id);
 
       if (!seller) {
-        return next(new ErrorHandler("User doesn't exists", 400));
+        return next(new ErrorHandler("Người dùng không hợp lệ", 400));
       }
 
       res.status(200).json({
@@ -161,7 +160,6 @@ router.get(
   })
 );
 
-// log out from shop
 router.get(
   "/logout",
   catchAsyncErrors(async (req, res, next) => {
@@ -174,7 +172,7 @@ router.get(
       });
       res.status(201).json({
         success: true,
-        message: "Log out successful!",
+        message: "Đã đăng xuất!",
       });
     } catch (error) {
       return next(new ErrorHandler(error.message, 500));
@@ -182,7 +180,7 @@ router.get(
   })
 );
 
-// get shop info
+//Load thông tin cửa hàng
 router.get(
   "/get-shop-info/:id",
   catchAsyncErrors(async (req, res, next) => {
@@ -198,7 +196,7 @@ router.get(
   })
 );
 
-// update shop profile picture
+//Cập nhật ảnh
 router.put(
   "/update-shop-avatar",
   isSeller,
@@ -206,26 +204,25 @@ router.put(
     try {
       let existsSeller = await Shop.findById(req.seller._id);
 
-        const imageId = existsSeller.avatar.public_id;
+      const imageId = existsSeller.avatar.public_id;
 
-        await cloudinary.v2.uploader.destroy(imageId);
+      await cloudinary.v2.uploader.destroy(imageId);
 
-        const myCloud = await cloudinary.v2.uploader.upload(req.body.avatar, {
-          folder: "avatars",
-          width: 150,
-        });
+      const myCloud = await cloudinary.v2.uploader.upload(req.body.avatar, {
+        folder: "avatars",
+        width: 150,
+      });
 
-        existsSeller.avatar = {
-          public_id: myCloud.public_id,
-          url: myCloud.secure_url,
-        };
+      existsSeller.avatar = {
+        public_id: myCloud.public_id,
+        url: myCloud.secure_url,
+      };
 
-  
       await existsSeller.save();
 
       res.status(200).json({
         success: true,
-        seller:existsSeller,
+        seller: existsSeller,
       });
     } catch (error) {
       return next(new ErrorHandler(error.message, 500));
@@ -233,7 +230,7 @@ router.put(
   })
 );
 
-// update seller info
+// Cật nhật người dùng
 router.put(
   "/update-seller-info",
   isSeller,
@@ -244,7 +241,7 @@ router.put(
       const shop = await Shop.findOne(req.seller._id);
 
       if (!shop) {
-        return next(new ErrorHandler("User not found", 400));
+        return next(new ErrorHandler("Không tìm thấy người dùng", 400));
       }
 
       shop.name = name;
@@ -265,7 +262,7 @@ router.put(
   })
 );
 
-// all sellers --- for admin
+// Dược sỹ -- Admin
 router.get(
   "/admin-all-sellers",
   isAuthenticated,
@@ -285,7 +282,7 @@ router.get(
   })
 );
 
-// delete seller ---admin
+// Xóa dược sỹ -- Admin
 router.delete(
   "/delete-seller/:id",
   isAuthenticated,
@@ -295,16 +292,14 @@ router.delete(
       const seller = await Shop.findById(req.params.id);
 
       if (!seller) {
-        return next(
-          new ErrorHandler("Seller is not available with this id", 400)
-        );
+        return next(new ErrorHandler("Dược sỹ không tồn tại", 400));
       }
 
       await Shop.findByIdAndDelete(req.params.id);
 
       res.status(201).json({
         success: true,
-        message: "Seller deleted successfully!",
+        message: "xóa thành công!",
       });
     } catch (error) {
       return next(new ErrorHandler(error.message, 500));
@@ -312,7 +307,6 @@ router.delete(
   })
 );
 
-// update seller withdraw methods --- sellers
 router.put(
   "/update-payment-methods",
   isSeller,
@@ -334,7 +328,6 @@ router.put(
   })
 );
 
-// delete seller withdraw merthods --- only seller
 router.delete(
   "/delete-withdraw-method/",
   isSeller,
@@ -343,7 +336,7 @@ router.delete(
       const seller = await Shop.findById(req.seller._id);
 
       if (!seller) {
-        return next(new ErrorHandler("Seller not found with this id", 400));
+        return next(new ErrorHandler("Không tìm thấy cửa hàng", 400));
       }
 
       seller.withdrawMethod = null;

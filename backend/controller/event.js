@@ -7,15 +7,19 @@ const { isSeller, isAdmin, isAuthenticated } = require("../middleware/auth");
 const router = express.Router();
 const cloudinary = require("cloudinary");
 
-// create event
+// Tạo sự kiện
 router.post(
   "/create-event",
   catchAsyncErrors(async (req, res, next) => {
     try {
+      if (!req.body) {
+        return next(new ErrorHandler("Request body is missing", 400));
+      }
+
       const shopId = req.body.shopId;
       const shop = await Shop.findById(shopId);
       if (!shop) {
-        return next(new ErrorHandler("Shop Id is invalid!", 400));
+        return next(new ErrorHandler("Không hợp lệ", 400));
       } else {
         let images = [];
 
@@ -55,7 +59,7 @@ router.post(
   })
 );
 
-// get all events
+// Load tất cả sự kiện
 router.get("/get-all-events", async (req, res, next) => {
   try {
     const events = await Event.find();
@@ -68,7 +72,7 @@ router.get("/get-all-events", async (req, res, next) => {
   }
 });
 
-// get all events of a shop
+// Load sự kiện
 router.get(
   "/get-all-events/:id",
   catchAsyncErrors(async (req, res, next) => {
@@ -85,28 +89,26 @@ router.get(
   })
 );
 
-// delete event of a shop
+// Xóa sự kiện
 router.delete(
   "/delete-shop-event/:id",
   catchAsyncErrors(async (req, res, next) => {
     try {
       const event = await Event.findById(req.params.id);
 
-      if (!product) {
+      if (!event) {
         return next(new ErrorHandler("Product is not found with this id", 404));
       }
 
-      for (let i = 0; 1 < product.images.length; i++) {
-        const result = await cloudinary.v2.uploader.destroy(
-          event.images[i].public_id
-        );
+      for (let i = 0; i < event.images.length; i++) {
+        await cloudinary.v2.uploader.destroy(event.images[i].public_id);
       }
 
-      await event.remove();
+      await event.deleteOne();
 
       res.status(201).json({
         success: true,
-        message: "Event Deleted successfully!",
+        message: "Xóa sự kiện thành công!",
       });
     } catch (error) {
       return next(new ErrorHandler(error, 400));
@@ -114,7 +116,7 @@ router.delete(
   })
 );
 
-// all events --- for admin
+// Sự kiện - Admin
 router.get(
   "/admin-all-events",
   isAuthenticated,

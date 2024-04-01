@@ -32,7 +32,7 @@ router.post(
   })
 );
 
-// get all coupons of a shop
+// Load mã giảm giá
 router.get(
   "/get-coupon/:id",
   isSeller,
@@ -49,7 +49,7 @@ router.get(
   })
 );
 
-// delete coupoun code of a shop
+// Xóa mã giảm giá
 router.delete(
   "/delete-coupon/:id",
   isSeller,
@@ -58,11 +58,11 @@ router.delete(
       const couponCode = await CoupounCode.findByIdAndDelete(req.params.id);
 
       if (!couponCode) {
-        return next(new ErrorHandler("Coupon code dosen't exists!", 400));
+        return next(new ErrorHandler("Mã giảm giá không tồn tại!", 400));
       }
       res.status(201).json({
         success: true,
-        message: "Coupon code deleted successfully!",
+        message: "Xóa mã giảm giá thành công",
       });
     } catch (error) {
       return next(new ErrorHandler(error, 400));

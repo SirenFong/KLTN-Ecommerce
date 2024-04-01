@@ -8,7 +8,7 @@ const Shop = require("../model/shop");
 const cloudinary = require("cloudinary");
 const ErrorHandler = require("../utils/ErrorHandler");
 
-// create product
+// Tạo sản phẩm
 router.post(
   "/create-product",
   catchAsyncErrors(async (req, res, next) => {
@@ -16,7 +16,7 @@ router.post(
       const shopId = req.body.shopId;
       const shop = await Shop.findById(shopId);
       if (!shop) {
-        return next(new ErrorHandler("Shop Id is invalid!", 400));
+        return next(new ErrorHandler("Không hợp lệ", 400));
       } else {
         let images = [];
 
@@ -56,7 +56,7 @@ router.post(
   })
 );
 
-// get all products of a shop
+// Lấy danh sách sản phẩm
 router.get(
   "/get-all-products-shop/:id",
   catchAsyncErrors(async (req, res, next) => {
@@ -73,7 +73,7 @@ router.get(
   })
 );
 
-// delete product of a shop
+// Xóa sản phẩm
 router.delete(
   "/delete-shop-product/:id",
   isSeller,
@@ -102,7 +102,7 @@ router.delete(
   })
 );
 
-// get all products
+// Lấy danh sách sản phẩm
 router.get(
   "/get-all-products",
   catchAsyncErrors(async (req, res, next) => {
@@ -119,7 +119,7 @@ router.get(
   })
 );
 
-// review for a product
+// Đánh giá người dùng
 router.put(
   "/create-new-review",
   isAuthenticated,
@@ -168,7 +168,7 @@ router.put(
 
       res.status(200).json({
         success: true,
-        message: "Reviwed succesfully!",
+        message: "Đánh giá thành công!",
       });
     } catch (error) {
       return next(new ErrorHandler(error, 400));
@@ -176,7 +176,7 @@ router.put(
   })
 );
 
-// all products --- for admin
+// Sản phẩm -- Admin
 router.get(
   "/admin-all-products",
   isAuthenticated,

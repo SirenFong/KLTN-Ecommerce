@@ -28,7 +28,9 @@ const CreateEvent = () => {
     const minEndDate = new Date(startDate.getTime() + 3 * 24 * 60 * 60 * 1000);
     setStartDate(startDate);
     setEndDate(null);
-    document.getElementById("end-date").min = minEndDate.slice(0, 10);
+    document.getElementById("end-date").min = minEndDate
+      .toISOString()
+      .slice(0, 10);
   };
 
   const handleEndDateChange = (e) => {
@@ -49,11 +51,14 @@ const CreateEvent = () => {
       toast.error(error);
     }
     if (success) {
-      toast.success("Event created successfully!");
+      toast.success("Tạo sự kiện thành công!");
       navigate("/dashboard-events");
-      window.location.reload();
+      window.location.reload(true);
+      // Reset state here instead of reloading the page
+      setStartDate(null);
+      setEndDate(null);
     }
-  }, [dispatch, error, navigate, success]);
+  }, [error, navigate, success]);
 
   const handleImageChange = (e) => {
     const files = Array.from(e.target.files);

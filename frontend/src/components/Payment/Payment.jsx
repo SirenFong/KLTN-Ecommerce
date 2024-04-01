@@ -36,12 +36,11 @@ const Payment = () => {
           {
             description: "Sunflower",
             amount: {
-              currency_code: "USD",
+              currency_code: "VNĐ",
               value: orderData?.totalPrice,
             },
           },
         ],
-        // not needed if a shipping address is actually needed
         application_context: {
           shipping_preference: "NO_SHIPPING",
         },
@@ -164,15 +163,15 @@ const Payment = () => {
     };
 
     await axios
-    .post(`${server}/order/create-order`, order, config)
-    .then((res) => {
-      setOpen(false);
-      navigate("/order/success");
-      toast.success("Order successful!");
-      localStorage.setItem("cartItems", JSON.stringify([]));
-      localStorage.setItem("latestOrder", JSON.stringify([]));
-      window.location.reload();
-    });
+      .post(`${server}/order/create-order`, order, config)
+      .then((res) => {
+        setOpen(false);
+        navigate("/order/success");
+        toast.success("Order successful!");
+        localStorage.setItem("cartItems", JSON.stringify([]));
+        localStorage.setItem("latestOrder", JSON.stringify([]));
+        window.location.reload();
+      });
   };
 
   return (
@@ -210,7 +209,7 @@ const PaymentInfo = ({
 
   return (
     <div className="w-full 800px:w-[95%] bg-[#fff] rounded-md p-5 pb-8">
-      {/* select buttons */}
+      {/* button chọn */}
       <div>
         <div className="flex w-full pb-5 border-b mb-2">
           <div
@@ -222,17 +221,17 @@ const PaymentInfo = ({
             ) : null}
           </div>
           <h4 className="text-[18px] pl-2 font-[600] text-[#000000b1]">
-            Pay with Debit/credit card
+            Thanh toán với thẻ tín dụng
           </h4>
         </div>
 
-        {/* pay with card */}
+        {/* thanh toán với thẻ tín dụng */}
         {select === 1 ? (
           <div className="w-full flex border-b">
             <form className="w-full" onSubmit={paymentHandler}>
               <div className="w-full flex pb-3">
                 <div className="w-[50%]">
-                  <label className="block pb-2">Name On Card</label>
+                  <label className="block pb-2">Tên chủ thẻ</label>
                   <input
                     required
                     placeholder={user && user.name}
@@ -241,7 +240,7 @@ const PaymentInfo = ({
                   />
                 </div>
                 <div className="w-[50%]">
-                  <label className="block pb-2">Exp Date</label>
+                  <label className="block pb-2">Ngày hết hạn</label>
                   <CardExpiryElement
                     className={`${styles.input}`}
                     options={{
@@ -266,7 +265,7 @@ const PaymentInfo = ({
 
               <div className="w-full flex pb-3">
                 <div className="w-[50%]">
-                  <label className="block pb-2">Card Number</label>
+                  <label className="block pb-2">Mã thẻ</label>
                   <CardNumberElement
                     className={`${styles.input} !h-[35px] !w-[95%]`}
                     options={{
@@ -312,8 +311,8 @@ const PaymentInfo = ({
               </div>
               <input
                 type="submit"
-                value="Submit"
-                className={`${styles.button} !bg-[#f63b60] text-[#fff] h-[45px] rounded-[5px] cursor-pointer text-[18px] font-[600]`}
+                value="Xác nhận"
+                className={`${styles.button} !bg-[#3c80ce] text-[#fff] h-[45px] rounded-[5px] cursor-pointer text-[18px] font-[600]`}
               />
             </form>
           </div>
@@ -321,7 +320,7 @@ const PaymentInfo = ({
       </div>
 
       <br />
-      {/* paypal payment */}
+
       <div>
         <div className="flex w-full pb-5 border-b mb-2">
           <div
@@ -333,18 +332,18 @@ const PaymentInfo = ({
             ) : null}
           </div>
           <h4 className="text-[18px] pl-2 font-[600] text-[#000000b1]">
-            Pay with Paypal
+            Thanh toán với Paypal
           </h4>
         </div>
 
-        {/* pay with payement */}
+        {/* Thanh toán với Paypal */}
         {select === 2 ? (
           <div className="w-full flex border-b">
             <div
-              className={`${styles.button} !bg-[#f63b60] text-white h-[45px] rounded-[5px] cursor-pointer text-[18px] font-[600]`}
+              className={`${styles.button} !bg-[#3c80ce] text-white h-[45px] rounded-[5px] cursor-pointer text-[18px] font-[600]`}
               onClick={() => setOpen(true)}
             >
-              Pay Now
+              Thanh toán
             </div>
             {open && (
               <div className="w-full fixed top-0 left-0 bg-[#00000039] h-screen flex items-center justify-center z-[99999]">
@@ -356,18 +355,18 @@ const PaymentInfo = ({
                       onClick={() => setOpen(false)}
                     />
                   </div>
-                    <PayPalScriptProvider
-                      options={{
-                        "client-id":
-                          "Aczac4Ry9_QA1t4c7TKH9UusH3RTe6onyICPoCToHG10kjlNdI-qwobbW9JAHzaRQwFMn2-k660853jn",
-                      }}
-                    >
-                      <PayPalButtons
-                        style={{ layout: "vertical" }}
-                        onApprove={onApprove}
-                        createOrder={createOrder}
-                      />
-                    </PayPalScriptProvider>
+                  <PayPalScriptProvider
+                    options={{
+                      "client-id":
+                        "Aczac4Ry9_QA1t4c7TKH9UusH3RTe6onyICPoCToHG10kjlNdI-qwobbW9JAHzaRQwFMn2-k660853jn",
+                    }}
+                  >
+                    <PayPalButtons
+                      style={{ layout: "vertical" }}
+                      onApprove={onApprove}
+                      createOrder={createOrder}
+                    />
+                  </PayPalScriptProvider>
                 </div>
               </div>
             )}
@@ -376,7 +375,7 @@ const PaymentInfo = ({
       </div>
 
       <br />
-      {/* cash on delivery */}
+
       <div>
         <div className="flex w-full pb-5 border-b mb-2">
           <div
@@ -388,18 +387,16 @@ const PaymentInfo = ({
             ) : null}
           </div>
           <h4 className="text-[18px] pl-2 font-[600] text-[#000000b1]">
-            Cash on Delivery
+            Thanh toán khi nhận hàng
           </h4>
         </div>
-
-        {/* cash on delivery */}
         {select === 3 ? (
           <div className="w-full flex">
             <form className="w-full" onSubmit={cashOnDeliveryHandler}>
               <input
                 type="submit"
-                value="Confirm"
-                className={`${styles.button} !bg-[#f63b60] text-[#fff] h-[45px] rounded-[5px] cursor-pointer text-[18px] font-[600]`}
+                value="Xác nhận"
+                className={`${styles.button} !bg-[#3c80ce] text-[#fff] h-[45px] rounded-[5px] cursor-pointer text-[18px] font-[600]`}
               />
             </form>
           </div>
@@ -410,25 +407,44 @@ const PaymentInfo = ({
 };
 
 const CartData = ({ orderData }) => {
-  const shipping = orderData?.shipping?.toFixed(2);
+  const shipping = orderData?.shipping?.toFixed(0);
+  const formatCurrency = (value) => {
+    if (!value) return "-";
+    const formatter = new Intl.NumberFormat("vi-VN", {
+      style: "currency",
+      currency: "VND",
+    });
+    return formatter.format(value).replace(/\D00(?=\D*$)/, "");
+  };
+  // const formatCurrency = (value) => {
+  //   return value
+  //     ? value.toLocaleString("vi-VN", { style: "currency", currency: "VND" })
+  //     : "-";
+  // };
   return (
     <div className="w-full bg-[#fff] rounded-md p-5 pb-8">
       <div className="flex justify-between">
         <h3 className="text-[16px] font-[400] text-[#000000a4]">subtotal:</h3>
-        <h5 className="text-[18px] font-[600]">${orderData?.subTotalPrice}</h5>
+        <h5 className="text-[18px] font-[600]">
+          {formatCurrency(orderData?.subTotalPrice)}
+        </h5>
       </div>
       <br />
       <div className="flex justify-between">
         <h3 className="text-[16px] font-[400] text-[#000000a4]">shipping:</h3>
-        <h5 className="text-[18px] font-[600]">${shipping}</h5>
+        <h5 className="text-[18px] font-[600]">
+          {formatCurrency(orderData?.shipping)}
+        </h5>
       </div>
       <br />
       <div className="flex justify-between border-b pb-3">
         <h3 className="text-[16px] font-[400] text-[#000000a4]">Discount:</h3>
-        <h5 className="text-[18px] font-[600]">{orderData?.discountPrice? "$" + orderData.discountPrice : "-"}</h5>
+        <h5 className="text-[18px] font-[600]">
+          {formatCurrency(orderData?.discountPrice)}
+        </h5>
       </div>
       <h5 className="text-[18px] font-[600] text-end pt-3">
-        ${orderData?.totalPrice}
+        {formatCurrency(orderData?.totalPrice)}
       </h5>
       <br />
     </div>

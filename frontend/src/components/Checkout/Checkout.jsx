@@ -23,6 +23,10 @@ const Checkout = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
+    setCountry("VN");
+  }, []);
+
+  useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
 
@@ -165,7 +169,7 @@ const ShippingInfo = ({
 }) => {
   return (
     <div className="w-full 800px:w-[95%] bg-white rounded-md p-5 pb-8">
-      <h5 className="text-[18px] font-[500]">Địa chỉ giao hàng</h5>
+      <h5 className="text-[18px] font-[500]">Thông tin người nhận</h5>
       <br />
       <form>
         <div className="w-full flex pb-3">
@@ -199,10 +203,11 @@ const ShippingInfo = ({
             />
           </div>
         </div>
-
+        <br />
+        <h5 className="text-[18px] font-[500]">Địa chỉ giao hàng</h5>
+        <br />
         <div className="w-full flex pb-3">
           <div className="w-[50%]">
-            <br />
             <select
               className="w-[95%] border h-[40px] rounded-[5px]"
               value={country}
@@ -220,14 +225,13 @@ const ShippingInfo = ({
             </select>
           </div>
           <div className="w-[50%]">
-            <br />
             <select
               className="w-[95%] border h-[40px] rounded-[5px]"
               value={city}
               onChange={(e) => setCity(e.target.value)}
             >
               <option className="block pb-2" value="">
-                Chọn Quận/Huyện
+                Chọn Tỉnh/Thành Phố
               </option>
               {State &&
                 State.getStatesOfCountry(country).map((item) => (
@@ -241,7 +245,7 @@ const ShippingInfo = ({
 
         <div className="w-full flex pb-3">
           <div className="w-[50%]">
-            <label className="block pb-2">Address1</label>
+            <label className="block pb-2">Nhập địa chỉ nhà</label>
             <input
               type="address"
               required
@@ -251,7 +255,7 @@ const ShippingInfo = ({
             />
           </div>
           <div className="w-[50%]">
-            <label className="block pb-2">Address2</label>
+            <label className="block pb-2">Nhập Quận/Huyện</label>
             <input
               type="address"
               value={address2}
@@ -268,7 +272,7 @@ const ShippingInfo = ({
         className="text-[18px] cursor-pointer inline-block"
         onClick={() => setUserInfo(!userInfo)}
       >
-        Choose From saved address
+        Địa chỉ đã lưu
       </h5>
       {userInfo && (
         <div>
@@ -308,22 +312,28 @@ const CartData = ({
   return (
     <div className="w-full bg-[#fff] rounded-md p-5 pb-8">
       <div className="flex justify-between">
-        <h3 className="text-[16px] font-[400] text-[#000000a4]">subtotal:</h3>
-        <h5 className="text-[18px] font-[600]">${subTotalPrice}</h5>
+        <h3 className="text-[16px] font-[400] text-[#000000a4]">Tổng tiền:</h3>
+        <h5 className="text-[18px] font-[600]">{subTotalPrice} VNĐ</h5>
       </div>
       <br />
       <div className="flex justify-between">
-        <h3 className="text-[16px] font-[400] text-[#000000a4]">shipping:</h3>
-        <h5 className="text-[18px] font-[600]">${shipping.toFixed(2)}</h5>
+        <h3 className="text-[16px] font-[400] text-[#000000a4]">
+          Phí giao hàng:
+        </h3>
+        <h5 className="text-[18px] font-[600]">{shipping} VNĐ</h5>
       </div>
       <br />
       <div className="flex justify-between border-b pb-3">
-        <h3 className="text-[16px] font-[400] text-[#000000a4]">Discount:</h3>
+        <h3 className="text-[16px] font-[400] text-[#000000a4]">
+          Mã giảm giá:
+        </h3>
         <h5 className="text-[18px] font-[600]">
-          - {discountPercentenge ? "$" + discountPercentenge.toString() : null}
+          - {discountPercentenge ? discountPercentenge + " VNĐ" : null}
         </h5>
       </div>
-      <h5 className="text-[18px] font-[600] text-end pt-3">${totalPrice}</h5>
+      <h5 className="text-[18px] font-[600] text-end pt-3">
+        {Math.round(totalPrice)} VNĐ
+      </h5>
       <br />
       <form onSubmit={handleSubmit}>
         <input
@@ -337,7 +347,7 @@ const CartData = ({
         <input
           className={`w-full h-[40px] border border-[#f63b60] text-center text-[#f63b60] rounded-[3px] mt-8 cursor-pointer`}
           required
-          value="Apply code"
+          value="Áp mã giảm giá"
           type="submit"
         />
       </form>

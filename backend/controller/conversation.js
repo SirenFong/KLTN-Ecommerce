@@ -5,7 +5,7 @@ const express = require("express");
 const { isSeller, isAuthenticated } = require("../middleware/auth");
 const router = express.Router();
 
-// create a new conversation
+// Tạo mới cuộc trò chuyện
 router.post(
   "/create-new-conversation",
   catchAsyncErrors(async (req, res, next) => {
@@ -37,7 +37,7 @@ router.post(
   })
 );
 
-// get seller conversations
+// Load tin nhắn
 router.get(
   "/get-all-conversation-seller/:id",
   isSeller,
@@ -59,8 +59,7 @@ router.get(
   })
 );
 
-
-// get user conversations
+// load tin nhắn người dùng
 router.get(
   "/get-all-conversation-user/:id",
   isAuthenticated,
@@ -82,7 +81,7 @@ router.get(
   })
 );
 
-// update the last message
+// cập nhật tin nhắn
 router.put(
   "/update-last-message/:id",
   catchAsyncErrors(async (req, res, next) => {

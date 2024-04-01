@@ -5,16 +5,16 @@ const jwt = require("jsonwebtoken");
 const shopSchema = new mongoose.Schema({
   name: {
     type: String,
-    required: [true, "Please enter your shop name!"],
+    required: [true, "Vui lòng nhập tên cửa hàng!"],
   },
   email: {
     type: String,
-    required: [true, "Please enter your shop email address"],
+    required: [true, "Địa chỉ Email không được để trống!"],
   },
   password: {
     type: String,
-    required: [true, "Please enter your password"],
-    minLength: [6, "Password should be greater than 6 characters"],
+    required: [true, "Mật khẩu không được để trống!"],
+    minLength: [6, "Mật khẩu từ 6 ký tự trở lên!"],
     select: false,
   },
   description: {
@@ -61,7 +61,7 @@ const shopSchema = new mongoose.Schema({
       },
       status: {
         type: String,
-        default: "Processing",
+        default: "Đang chờ xử lý",
       },
       createdAt: {
         type: Date,

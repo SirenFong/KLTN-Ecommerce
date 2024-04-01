@@ -84,7 +84,7 @@ const AdminDashboardMain = () => {
         <Loader />
       ) : (
         <div className="w-full p-4">
-          <h3 className="text-[22px] font-Poppins pb-2">Overview</h3>
+          <h3 className="text-[22px] font-Poppins pb-2">Tổng quan</h3>
           <div className="w-full block 800px:flex items-center justify-between">
             <div className="w-full mb-4 800px:w-[30%] min-h-[20vh] bg-white shadow rounded px-2 py-5">
               <div className="flex items-center">

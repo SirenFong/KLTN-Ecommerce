@@ -9,7 +9,7 @@ const sendMail = require("../utils/sendMail");
 const sendToken = require("../utils/jwtToken");
 const { isAuthenticated, isAdmin } = require("../middleware/auth");
 
-// create user
+// Đăng ký
 router.post("/create-user", async (req, res, next) => {
   try {
     const { name, email, password, avatar } = req.body;
@@ -40,12 +40,12 @@ router.post("/create-user", async (req, res, next) => {
     try {
       await sendMail({
         email: user.email,
-        subject: "Activate your account",
-        message: `Hello ${user.name}, please click on the link to activate your account: ${activationUrl}`,
+        subject: "Kích hoạt tài khoản người dùng",
+        message: `Xin chào: ${user.name}, Vui lòng nhấn vào đường link bên dưới để kích hoạt tài khoản: ${activationUrl}`,
       });
       res.status(201).json({
         success: true,
-        message: `please check your email:- ${user.email} to activate your account!`,
+        message: `Kiểm tra:- ${user.email} Để kích hoạt tài khoản!`,
       });
     } catch (error) {
       return next(new ErrorHandler(error.message, 500));
@@ -55,14 +55,14 @@ router.post("/create-user", async (req, res, next) => {
   }
 });
 
-// create activation token
+// Tạo token
 const createActivationToken = (user) => {
   return jwt.sign(user, process.env.ACTIVATION_SECRET, {
     expiresIn: "5m",
   });
 };
 
-// activate user
+// Đăng ký
 router.post(
   "/activation",
   catchAsyncErrors(async (req, res, next) => {
@@ -82,7 +82,7 @@ router.post(
       let user = await User.findOne({ email });
 
       if (user) {
-        return next(new ErrorHandler("User already exists", 400));
+        return next(new ErrorHandler("Người dùng đã tồn tại", 400));
       }
       user = await User.create({
         name,
@@ -98,7 +98,7 @@ router.post(
   })
 );
 
-// login user
+// Đăng nhập
 router.post(
   "/login-user",
   catchAsyncErrors(async (req, res, next) => {
@@ -106,21 +106,19 @@ router.post(
       const { email, password } = req.body;
 
       if (!email || !password) {
-        return next(new ErrorHandler("Please provide the all fields!", 400));
+        return next(new ErrorHandler("Vui lòng điền đủ thông tin!", 400));
       }
 
       const user = await User.findOne({ email }).select("+password");
 
       if (!user) {
-        return next(new ErrorHandler("User doesn't exists!", 400));
+        return next(new ErrorHandler("Người dùng không tồn tại!", 400));
       }
 
       const isPasswordValid = await user.comparePassword(password);
 
       if (!isPasswordValid) {
-        return next(
-          new ErrorHandler("Please provide the correct information", 400)
-        );
+        return next(new ErrorHandler("Sai mật khẩu", 400));
       }
 
       sendToken(user, 201, res);
@@ -130,7 +128,6 @@ router.post(
   })
 );
 
-// load user
 router.get(
   "/getuser",
   isAuthenticated,
@@ -139,7 +136,7 @@ router.get(
       const user = await User.findById(req.user.id);
 
       if (!user) {
-        return next(new ErrorHandler("User doesn't exists", 400));
+        return next(new ErrorHandler("Người dùng không tồn tại", 400));
       }
 
       res.status(200).json({
@@ -165,7 +162,7 @@ router.get(
       });
       res.status(201).json({
         success: true,
-        message: "Log out successful!",
+        message: "Đăng xuất thành công",
       });
     } catch (error) {
       return next(new ErrorHandler(error.message, 500));
@@ -184,15 +181,13 @@ router.put(
       const user = await User.findOne({ email }).select("+password");
 
       if (!user) {
-        return next(new ErrorHandler("User not found", 400));
+        return next(new ErrorHandler("Không tìm thấy người dùng", 400));
       }
 
       const isPasswordValid = await user.comparePassword(password);
 
       if (!isPasswordValid) {
-        return next(
-          new ErrorHandler("Please provide the correct information", 400)
-        );
+        return next(new ErrorHandler("Sai mật khẩu", 400));
       }
 
       user.name = name;
@@ -211,7 +206,7 @@ router.put(
   })
 );
 
-// update user avatar
+//Avatar
 router.put(
   "/update-avatar",
   isAuthenticated,
@@ -246,7 +241,7 @@ router.put(
   })
 );
 
-// update user addresses
+//Địa chỉ
 router.put(
   "/update-user-addresses",
   isAuthenticated,
@@ -259,7 +254,7 @@ router.put(
       );
       if (sameTypeAddress) {
         return next(
-          new ErrorHandler(`${req.body.addressType} address already exists`)
+          new ErrorHandler(`${req.body.addressType} Địa chỉ đã tồn tại`)
         );
       }
 
@@ -270,7 +265,7 @@ router.put(
       if (existsAddress) {
         Object.assign(existsAddress, req.body);
       } else {
-        // add the new address to the array
+        //Thêm địa chỉ vào mảng danh sách
         user.addresses.push(req.body);
       }
 
@@ -286,7 +281,7 @@ router.put(
   })
 );
 
-// delete user address
+//xóa địa chỉ
 router.delete(
   "/delete-user-address/:id",
   isAuthenticated,
@@ -311,7 +306,7 @@ router.delete(
   })
 );
 
-// update user password
+//Cập nhật mật khẩu
 router.put(
   "/update-user-password",
   isAuthenticated,
@@ -324,13 +319,11 @@ router.put(
       );
 
       if (!isPasswordMatched) {
-        return next(new ErrorHandler("Old password is incorrect!", 400));
+        return next(new ErrorHandler("Mật khẩu cũ không đúng!", 400));
       }
 
       if (req.body.newPassword !== req.body.confirmPassword) {
-        return next(
-          new ErrorHandler("Password doesn't matched with each other!", 400)
-        );
+        return next(new ErrorHandler("Mật khẩu không trùng khớp!", 400));
       }
       user.password = req.body.newPassword;
 
@@ -338,7 +331,7 @@ router.put(
 
       res.status(200).json({
         success: true,
-        message: "Password updated successfully!",
+        message: "Đổi mật khẩu thành công!",
       });
     } catch (error) {
       return next(new ErrorHandler(error.message, 500));
@@ -346,7 +339,6 @@ router.put(
   })
 );
 
-// find user infoormation with the userId
 router.get(
   "/user-info/:id",
   catchAsyncErrors(async (req, res, next) => {
@@ -363,7 +355,6 @@ router.get(
   })
 );
 
-// all users --- for admin
 router.get(
   "/admin-all-users",
   isAuthenticated,
@@ -383,7 +374,6 @@ router.get(
   })
 );
 
-// delete users --- admin
 router.delete(
   "/delete-user/:id",
   isAuthenticated,
@@ -393,9 +383,7 @@ router.delete(
       const user = await User.findById(req.params.id);
 
       if (!user) {
-        return next(
-          new ErrorHandler("User is not available with this id", 400)
-        );
+        return next(new ErrorHandler("Người dùng không tồn tại", 400));
       }
 
       const imageId = user.avatar.public_id;
@@ -406,7 +394,7 @@ router.delete(
 
       res.status(201).json({
         success: true,
-        message: "User deleted successfully!",
+        message: "Xóa người dùng thành công!",
       });
     } catch (error) {
       return next(new ErrorHandler(error.message, 500));

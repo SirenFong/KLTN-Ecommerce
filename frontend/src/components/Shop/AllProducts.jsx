@@ -22,6 +22,7 @@ const AllProducts = () => {
     dispatch(deleteProduct(id))
       .then(() => {
         dispatch(getAllProductsShop(seller._id));
+        window.location.reload(true);
       })
       .catch((error) => {
         console.log(error);
