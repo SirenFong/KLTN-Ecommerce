@@ -1,8 +1,10 @@
+/* eslint-disable jsx-a11y/role-supports-aria-props */
+/* eslint-disable jsx-a11y/alt-text */
 import axios from "axios";
 import React, { useRef, useState } from "react";
 import { useEffect } from "react";
 import { server } from "../../server";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { AiOutlineArrowRight, AiOutlineSend } from "react-icons/ai";
 import styles from "../../styles/styles";
@@ -10,11 +12,11 @@ import { TfiGallery } from "react-icons/tfi";
 import socketIO from "socket.io-client";
 import { format } from "timeago.js";
 // const ENDPOINT = "https://socket-ecommerce-tu68.onrender.com/";
-const ENDPOINT = "http://localhost:3000";
+const ENDPOINT = "http://localhost:4000/";
 const socketId = socketIO(ENDPOINT, { transports: ["websocket"] });
 
 const DashboardMessages = () => {
-  const { seller,isLoading } = useSelector((state) => state.seller);
+  const { seller, isLoading } = useSelector((state) => state.seller);
   const [conversations, setConversations] = useState([]);
   const [arrivalMessage, setArrivalMessage] = useState(null);
   const [currentChat, setCurrentChat] = useState();
@@ -23,7 +25,7 @@ const DashboardMessages = () => {
   const [newMessage, setNewMessage] = useState("");
   const [onlineUsers, setOnlineUsers] = useState([]);
   const [activeStatus, setActiveStatus] = useState(false);
-  const [images, setImages] = useState();
+  const [setImages] = useState();
   const [open, setOpen] = useState(false);
   const scrollRef = useRef(null);
 
@@ -54,9 +56,7 @@ const DashboardMessages = () => {
         );
 
         setConversations(resonse.data.conversations);
-      } catch (error) {
-        // console.log(error);
-      }
+      } catch (error) {}
     };
     getConversation();
   }, [seller, messages]);
@@ -78,7 +78,7 @@ const DashboardMessages = () => {
     return online ? true : false;
   };
 
-  // get messages
+  // Tin nhắn
   useEffect(() => {
     const getMessage = async () => {
       try {
@@ -93,10 +93,11 @@ const DashboardMessages = () => {
     getMessage();
   }, [currentChat]);
 
-  // create new message
+  // Gửi tin nhắn
   const sendMessageHandler = async (e) => {
     e.preventDefault();
 
+    //Tạo đối tượng
     const message = {
       sender: seller._id,
       text: newMessage,
@@ -261,7 +262,7 @@ const MessageList = ({
   setUserData,
   online,
   setActiveStatus,
-  isLoading
+  isLoading,
 }) => {
   console.log(data);
   const [user, setUser] = useState([]);

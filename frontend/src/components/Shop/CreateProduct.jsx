@@ -512,7 +512,7 @@ const CreateProduct = () => {
         <br />
         <div>
           <label className="pb-2">
-            Hình ảnh <span className="text-red-500">*</span>
+            Upload Hình ảnh <span className="text-red-500">*</span>
           </label>
           <input
             key={fileKey}

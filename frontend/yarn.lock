@@ -9183,11 +9183,6 @@ thunky@^1.0.2:
   resolved "https://registry.npmjs.org/thunky/-/thunky-1.1.0.tgz"
   integrity sha512-eHY7nBftgThBqOyHGVN+l8gF0BucP09fMo0oO/Lb0w1OF80dJv+lDVpXG60WMQvkcxAkNybKsrEIE3ZtKGmPrA==
 
-timeago.js@^1.0.6:
-  version "1.0.6"
-  resolved "https://registry.npmjs.org/timeago.js/-/timeago.js-1.0.6.tgz"
-  integrity sha512-EGH6wXKT8q1J+p8w2VaVEULGc+yU86V98hTmDEm3BMC07UEHypwpcsmakcXL2U6HgG6Oq1yGgge8NP5PcbQKVg==
-
 tiny-warning@^1.0.2:
   version "1.0.3"
   resolved "https://registry.npmjs.org/tiny-warning/-/tiny-warning-1.0.3.tgz"
