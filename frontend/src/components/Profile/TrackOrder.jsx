@@ -12,7 +12,7 @@ const TrackOrder = () => {
 
   useEffect(() => {
     dispatch(getAllOrdersOfUser(user._id));
-  }, [dispatch]);
+  }, [dispatch, user._id]);
 
   const data = orders && orders.find((item) => item._id === id);
 
@@ -21,29 +21,27 @@ const TrackOrder = () => {
       {" "}
       <>
         {data && data?.status === "Processing" ? (
-          <h1 className="text-[20px]">Your Order is processing in shop.</h1>
+          <h1 className="text-[20px]">Đơn hàng đang được tiếp nhận.</h1>
         ) : data?.status === "Transferred to delivery partner" ? (
           <h1 className="text-[20px]">
-            Your Order is on the way for delivery partner.
+            Đơn hàng đã bàn giao cho đơn vị vận chuyển
           </h1>
         ) : data?.status === "Shipping" ? (
-          <h1 className="text-[20px]">
-            Your Order is on the way with our delivery partner.
-          </h1>
+          <h1 className="text-[20px]">Đơn hàng được được vận chuyển</h1>
         ) : data?.status === "Received" ? (
           <h1 className="text-[20px]">
-            Your Order is in your city. Our Delivery man will deliver it.
+            Đơn hàng đã được tiếp nhận tại kho hàng
           </h1>
         ) : data?.status === "On the way" ? (
-          <h1 className="text-[20px]">
-            Our Delivery man is going to deliver your order.
-          </h1>
+          <h1 className="text-[20px]">Đơn hàng đang được giao tới</h1>
         ) : data?.status === "Delivered" ? (
-          <h1 className="text-[20px]">Your order is delivered!</h1>
+          <h1 className="text-[20px]">Đơn hàng đã giao thành công!</h1>
         ) : data?.status === "Processing refund" ? (
-          <h1 className="text-[20px]">Your refund is processing!</h1>
+          <h1 className="text-[20px]">
+            Đơn yêu cầu hoàn trả đang chờ tiếp nhận!
+          </h1>
         ) : data?.status === "Refund Success" ? (
-          <h1 className="text-[20px]">Your Refund is success!</h1>
+          <h1 className="text-[20px]">Đơn hoàn trả thành công!</h1>
         ) : null}
       </>
     </div>

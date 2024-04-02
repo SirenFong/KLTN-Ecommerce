@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/role-supports-aria-props */
 import React, { useState } from "react";
 import {
   AiOutlineArrowRight,
@@ -30,7 +31,7 @@ const ProfileContent = ({ active }) => {
   const [email, setEmail] = useState(user && user.email);
   const [phoneNumber, setPhoneNumber] = useState(user && user.phoneNumber);
   const [password, setPassword] = useState("");
-  const [avatar, setAvatar] = useState(null);
+  const [setAvatar] = useState(null);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -42,7 +43,7 @@ const ProfileContent = ({ active }) => {
       toast.success(successMessage);
       dispatch({ type: "clearMessages" });
     }
-  }, [error, successMessage]);
+  }, [dispatch, error, successMessage]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -65,7 +66,7 @@ const ProfileContent = ({ active }) => {
           )
           .then((response) => {
             dispatch(loadUser());
-            toast.success("avatar updated successfully!");
+            toast.success("Thay ảnh đại diện thành công!");
           })
           .catch((error) => {
             toast.error(error);
@@ -107,7 +108,7 @@ const ProfileContent = ({ active }) => {
             <form onSubmit={handleSubmit} aria-required={true}>
               <div className="w-full 800px:flex block pb-3">
                 <div className=" w-[100%] 800px:w-[50%]">
-                  <label className="block pb-2">Full Name</label>
+                  <label className="block pb-2">Họ và tên</label>
                   <input
                     type="text"
                     className={`${styles.input} !w-[95%] mb-4 800px:mb-0`}
@@ -117,7 +118,7 @@ const ProfileContent = ({ active }) => {
                   />
                 </div>
                 <div className=" w-[100%] 800px:w-[50%]">
-                  <label className="block pb-2">Email Address</label>
+                  <label className="block pb-2">Địa chỉ Email</label>
                   <input
                     type="text"
                     className={`${styles.input} !w-[95%] mb-1 800px:mb-0`}
@@ -130,7 +131,7 @@ const ProfileContent = ({ active }) => {
 
               <div className="w-full 800px:flex block pb-3">
                 <div className=" w-[100%] 800px:w-[50%]">
-                  <label className="block pb-2">Phone Number</label>
+                  <label className="block pb-2">Số điện thoại</label>
                   <input
                     type="number"
                     className={`${styles.input} !w-[95%] mb-4 800px:mb-0`}
@@ -141,7 +142,7 @@ const ProfileContent = ({ active }) => {
                 </div>
 
                 <div className=" w-[100%] 800px:w-[50%]">
-                  <label className="block pb-2">Enter your password</label>
+                  <label className="block pb-2">Nhập mật khẩu</label>
                   <input
                     type="password"
                     className={`${styles.input} !w-[95%] mb-4 800px:mb-0`}
@@ -154,7 +155,7 @@ const ProfileContent = ({ active }) => {
               <input
                 className={`w-[250px] h-[40px] border border-[#3a24db] text-center text-[#3a24db] rounded-[3px] mt-8 cursor-pointer`}
                 required
-                value="Update"
+                value="Cập nhật"
                 type="submit"
               />
             </form>
@@ -207,14 +208,14 @@ const AllOrders = () => {
 
   useEffect(() => {
     dispatch(getAllOrdersOfUser(user._id));
-  }, []);
+  }, [dispatch, user._id]);
 
   const columns = [
     // { field: "id", headerName: "Order ID", minWidth: 150, flex: 0.7 },
 
     {
       field: "status",
-      headerName: "Trạng Thái",
+      headerName: "Trạng Thái đơn hàng",
       minWidth: 130,
       flex: 0.7,
       cellClassName: (params) => {
@@ -225,7 +226,7 @@ const AllOrders = () => {
     },
     {
       field: "itemsQty",
-      headerName: "Items Qty",
+      headerName: "Số lượng sản phẩm",
       type: "number",
       minWidth: 130,
       flex: 0.7,
@@ -233,7 +234,7 @@ const AllOrders = () => {
 
     {
       field: "total",
-      headerName: "Total",
+      headerName: "Tổng tiền",
       type: "number",
       minWidth: 130,
       flex: 0.8,
@@ -267,7 +268,10 @@ const AllOrders = () => {
       row.push({
         id: item._id,
         itemsQty: item.cart.length,
-        total: "US$ " + item.totalPrice,
+        total: item.totalPrice.toLocaleString("vi-VN", {
+          style: "currency",
+          currency: "VND",
+        }),
         status: item.status,
       });
     });
@@ -292,17 +296,17 @@ const AllRefundOrders = () => {
 
   useEffect(() => {
     dispatch(getAllOrdersOfUser(user._id));
-  }, []);
+  }, [dispatch, user._id]);
 
   const eligibleOrders =
     orders && orders.filter((item) => item.status === "Processing refund");
 
   const columns = [
-    { field: "id", headerName: "Order ID", minWidth: 150, flex: 0.7 },
+    // { field: "id", headerName: "Order ID", minWidth: 150, flex: 0.7 },
 
     {
       field: "status",
-      headerName: "Status",
+      headerName: "Trạng Thái",
       minWidth: 130,
       flex: 0.7,
       cellClassName: (params) => {
@@ -313,7 +317,7 @@ const AllRefundOrders = () => {
     },
     {
       field: "itemsQty",
-      headerName: "Items Qty",
+      headerName: "Số lượng sản phẩm",
       type: "number",
       minWidth: 130,
       flex: 0.7,
@@ -321,7 +325,7 @@ const AllRefundOrders = () => {
 
     {
       field: "total",
-      headerName: "Total",
+      headerName: "Tổng cộng",
       type: "number",
       minWidth: 130,
       flex: 0.8,
@@ -355,7 +359,10 @@ const AllRefundOrders = () => {
       row.push({
         id: item._id,
         itemsQty: item.cart.length,
-        total: "US$ " + item.totalPrice,
+        total: item.totalPrice.toLocaleString("vi-VN", {
+          style: "currency",
+          currency: "VND",
+        }),
         status: item.status,
       });
     });
@@ -380,14 +387,14 @@ const TrackOrder = () => {
 
   useEffect(() => {
     dispatch(getAllOrdersOfUser(user._id));
-  }, []);
+  }, [dispatch, user._id]);
 
   const columns = [
-    { field: "id", headerName: "Order ID", minWidth: 150, flex: 0.7 },
+    // { field: "id", headerName: "Order ID", minWidth: 150, flex: 0.7 },
 
     {
       field: "status",
-      headerName: "Status",
+      headerName: "Trạng thái",
       minWidth: 130,
       flex: 0.7,
       cellClassName: (params) => {
@@ -398,7 +405,7 @@ const TrackOrder = () => {
     },
     {
       field: "itemsQty",
-      headerName: "Items Qty",
+      headerName: "Số lượng sản phẩm",
       type: "number",
       minWidth: 130,
       flex: 0.7,
@@ -406,7 +413,7 @@ const TrackOrder = () => {
 
     {
       field: "total",
-      headerName: "Total",
+      headerName: "Tổng cộng",
       type: "number",
       minWidth: 130,
       flex: 0.8,
@@ -440,7 +447,10 @@ const TrackOrder = () => {
       row.push({
         id: item._id,
         itemsQty: item.cart.length,
-        total: "US$ " + item.totalPrice,
+        total: item.totalPrice.toLocaleString("vi-VN", {
+          style: "currency",
+          currency: "VND",
+        }),
         status: item.status,
       });
     });
@@ -485,7 +495,7 @@ const ChangePassword = () => {
   return (
     <div className="w-full px-5">
       <h1 className="block text-[25px] text-center font-[600] text-[#000000ba] pb-2">
-        Change Password
+        Đổi mật khẩu
       </h1>
       <div className="w-full">
         <form
@@ -494,7 +504,7 @@ const ChangePassword = () => {
           className="flex flex-col items-center"
         >
           <div className=" w-[100%] 800px:w-[50%] mt-5">
-            <label className="block pb-2">Enter your old password</label>
+            <label className="block pb-2">Nhập mật khẩu cũ</label>
             <input
               type="password"
               className={`${styles.input} !w-[95%] mb-4 800px:mb-0`}
@@ -504,7 +514,7 @@ const ChangePassword = () => {
             />
           </div>
           <div className=" w-[100%] 800px:w-[50%] mt-2">
-            <label className="block pb-2">Enter your new password</label>
+            <label className="block pb-2">Nhập mật khẩu mới</label>
             <input
               type="password"
               className={`${styles.input} !w-[95%] mb-4 800px:mb-0`}
@@ -514,7 +524,7 @@ const ChangePassword = () => {
             />
           </div>
           <div className=" w-[100%] 800px:w-[50%] mt-2">
-            <label className="block pb-2">Enter your confirm password</label>
+            <label className="block pb-2">Xác nhận mật khẩu</label>
             <input
               type="password"
               className={`${styles.input} !w-[95%] mb-4 800px:mb-0`}
@@ -525,7 +535,7 @@ const ChangePassword = () => {
             <input
               className={`w-[95%] h-[40px] border border-[#3a24db] text-center text-[#3a24db] rounded-[3px] mt-8 cursor-pointer`}
               required
-              value="Update"
+              value="Đổi mật khẩu"
               type="submit"
             />
           </div>
@@ -551,10 +561,10 @@ const Address = () => {
       name: "Default",
     },
     {
-      name: "Home",
+      name: "Nhà riêng",
     },
     {
-      name: "Office",
+      name: "Cơ quan",
     },
   ];
 
@@ -562,7 +572,7 @@ const Address = () => {
     e.preventDefault();
 
     if (addressType === "" || country === "" || city === "") {
-      toast.error("Please fill all the fields!");
+      toast.error("Vui lòng điền đủ thông tin nhận hàng!");
     } else {
       dispatch(
         updatUserAddress(
@@ -602,7 +612,7 @@ const Address = () => {
               />
             </div>
             <h1 className="text-center text-[25px] font-Poppins">
-              Add New Address
+              Thêm địa chỉ
             </h1>
             <div className="w-full">
               <form aria-required onSubmit={handleSubmit} className="w-full">
@@ -617,7 +627,7 @@ const Address = () => {
                       className="w-[95%] border h-[40px] rounded-[5px]"
                     >
                       <option value="" className="block border pb-2">
-                        choose your country
+                        Chọn quốc gia
                       </option>
                       {Country &&
                         Country.getAllCountries().map((item) => (
@@ -642,7 +652,7 @@ const Address = () => {
                       className="w-[95%] border h-[40px] rounded-[5px]"
                     >
                       <option value="" className="block border pb-2">
-                        choose your city
+                        Chọn Tỉnh/Thành phố
                       </option>
                       {State &&
                         State.getStatesOfCountry(country).map((item) => (
@@ -658,7 +668,7 @@ const Address = () => {
                   </div>
 
                   <div className="w-full pb-2">
-                    <label className="block pb-2">Address 1</label>
+                    <label className="block pb-2">Địa chỉ nhà</label>
                     <input
                       type="address"
                       className={`${styles.input}`}
@@ -668,7 +678,7 @@ const Address = () => {
                     />
                   </div>
                   <div className="w-full pb-2">
-                    <label className="block pb-2">Address 2</label>
+                    <label className="block pb-2">Nhập Quận/Huyện</label>
                     <input
                       type="address"
                       className={`${styles.input}`}
@@ -690,7 +700,7 @@ const Address = () => {
                   </div>
 
                   <div className="w-full pb-2">
-                    <label className="block pb-2">Address Type</label>
+                    <label className="block pb-2">Loại địa chỉ</label>
                     <select
                       name=""
                       id=""
@@ -699,7 +709,7 @@ const Address = () => {
                       className="w-[95%] border h-[40px] rounded-[5px]"
                     >
                       <option value="" className="block border pb-2">
-                        Choose your Address Type
+                        Chọn loại địa chỉ
                       </option>
                       {addressTypeData &&
                         addressTypeData.map((item) => (
@@ -730,13 +740,13 @@ const Address = () => {
       )}
       <div className="flex w-full items-center justify-between">
         <h1 className="text-[25px] font-[600] text-[#000000ba] pb-2">
-          My Addresses
+          Địa chỉ đã lưu
         </h1>
         <div
           className={`${styles.button} !rounded-md`}
           onClick={() => setOpen(true)}
         >
-          <span className="text-[#fff]">Add New</span>
+          <span className="text-[#fff]">Thêm địa chỉ</span>
         </div>
       </div>
       <br />
@@ -771,7 +781,7 @@ const Address = () => {
 
       {user && user.addresses.length === 0 && (
         <h5 className="text-center pt-8 text-[18px]">
-          You not have any saved address!
+          Bạn chưa có địa chỉ đã lưu!
         </h5>
       )}
     </div>

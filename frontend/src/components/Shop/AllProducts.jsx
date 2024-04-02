@@ -37,12 +37,7 @@ const AllProducts = () => {
       minWidth: 180,
       flex: 1.4,
     },
-    {
-      field: "price",
-      headerName: "Giá tiền",
-      minWidth: 100,
-      flex: 0.6,
-    },
+
     {
       field: "Stock",
       headerName: "Tồn kho",
@@ -103,7 +98,6 @@ const AllProducts = () => {
       row.push({
         id: item._id,
         name: item.name,
-        price: "US$ " + item.discountPrice,
         Stock: item.stock,
         sold: item?.sold_out,
       });

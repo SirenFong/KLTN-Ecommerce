@@ -15,10 +15,10 @@ const AllOrders = () => {
 
   useEffect(() => {
     dispatch(getAllOrdersOfShop(seller._id));
-  }, [dispatch]);
+  }, [dispatch, seller._id]);
 
   const columns = [
-    { field: "id", headerName: "Order ID", minWidth: 150, flex: 0.7 },
+    // { field: "id", headerName: "Order ID", minWidth: 150, flex: 0.7 },
 
     {
       field: "status",
@@ -33,7 +33,7 @@ const AllOrders = () => {
     },
     {
       field: "itemsQty",
-      headerName: "Items Qty",
+      headerName: "Số lượng",
       type: "number",
       minWidth: 130,
       flex: 0.7,
@@ -41,7 +41,7 @@ const AllOrders = () => {
 
     {
       field: "total",
-      headerName: "Total",
+      headerName: "Tổng tiền",
       type: "number",
       minWidth: 130,
       flex: 0.8,
@@ -75,7 +75,10 @@ const AllOrders = () => {
       row.push({
         id: item._id,
         itemsQty: item.cart.length,
-        total: "US$ " + item.totalPrice,
+        total: item.totalPrice.toLocaleString("vi-VN", {
+          style: "currency",
+          currency: "VND",
+        }),
         status: item.status,
       });
     });

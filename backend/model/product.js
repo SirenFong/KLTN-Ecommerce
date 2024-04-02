@@ -7,25 +7,68 @@ const productSchema = new mongoose.Schema({
   },
   description: {
     type: String,
-    required: [true, "Vui lòng nhập mô tả!"],
+    required: [true, "Vui lòng nhập mô tả sản phẩm"],
   },
   category: {
     type: String,
-    required: [true, "Vui lòng chọn danh mục sản phẩm!"],
+    required: [true, "Vui lòng chọn danh mục sản phẩm"],
+  },
+  origin: {
+    type: String,
+    required: [true, "Vui lòng chọn xuất xứ"],
+  },
+  entryDate: {
+    type: Date,
+  },
+  expiryDate: {
+    type: Date,
   },
   tags: {
     type: String,
   },
+  quantity: {
+    type: String,
+  },
+  brand: {
+    type: String,
+  },
+  specifications: {
+    type: String,
+    required: function () {
+      return this.category !== "Thiết bị y tế";
+    },
+  },
+  unit: {
+    type: String,
+    required: function () {
+      return this.category !== "Thiết bị y tế";
+    },
+  },
+  ingredient: {
+    type: String,
+  },
+  weight: {
+    type: String,
+  },
+  material: {
+    type: String,
+  },
+  guarantee: {
+    type: String,
+  },
   originalPrice: {
     type: Number,
+    required: [true, "Vui lòng nhập giá nhập vào!"],
   },
-  discountPrice: {
+  vat: {
     type: Number,
-    required: [true, "Vui lòng nhập giá giảm"],
+  },
+  sellPrice: {
+    type: Number,
   },
   stock: {
     type: Number,
-    required: [true, "Vui lòng nhập số lượng tồn!"],
+    required: [true, "Please enter your product stock!"],
   },
   images: [
     {

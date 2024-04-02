@@ -15,16 +15,21 @@ const AllRefundOrders = () => {
 
   useEffect(() => {
     dispatch(getAllOrdersOfShop(seller._id));
-  }, [dispatch]);
+  }, [dispatch, seller._id]);
 
-  const refundOrders = orders && orders.filter((item) => item.status === "Processing refund"  || item.status === "Refund Success");
+  const refundOrders =
+    orders &&
+    orders.filter(
+      (item) =>
+        item.status === "Processing refund" || item.status === "Refund Success"
+    );
 
   const columns = [
-    { field: "id", headerName: "Order ID", minWidth: 150, flex: 0.7 },
+    // { field: "id", headerName: "Order ID", minWidth: 150, flex: 0.7 },
 
     {
       field: "status",
-      headerName: "Status",
+      headerName: "Trạng thái",
       minWidth: 130,
       flex: 0.7,
       cellClassName: (params) => {
@@ -35,7 +40,7 @@ const AllRefundOrders = () => {
     },
     {
       field: "itemsQty",
-      headerName: "Items Qty",
+      headerName: "Số lượng",
       type: "number",
       minWidth: 130,
       flex: 0.7,
@@ -43,7 +48,7 @@ const AllRefundOrders = () => {
 
     {
       field: "total",
-      headerName: "Total",
+      headerName: "Tổng tiền",
       type: "number",
       minWidth: 130,
       flex: 0.8,
@@ -73,11 +78,14 @@ const AllRefundOrders = () => {
   const row = [];
 
   refundOrders &&
-  refundOrders.forEach((item) => {
+    refundOrders.forEach((item) => {
       row.push({
         id: item._id,
         itemsQty: item.cart.length,
-        total: "US$ " + item.totalPrice,
+        total: item.totalPrice.toLocaleString("vi-VN", {
+          style: "currency",
+          currency: "VND",
+        }),
         status: item.status,
       });
     });

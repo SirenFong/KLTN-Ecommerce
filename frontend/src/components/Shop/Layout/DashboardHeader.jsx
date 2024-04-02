@@ -13,8 +13,15 @@ const DashboardHeader = () => {
       <div>
         <Link to="/dashboard">
           <img
-            src="https://shopo.quomodothemes.website/assets/images/logo.svg"
+            src="https://res.cloudinary.com/dgtostoep/image/upload/v1702905710/imgonline-com-ua-resize-kyOORaMPjDUL_1_at1rmh.jpg"
             alt=""
+            style={{
+              width: "auto",
+              height: "80px",
+              marginTop: "0px",
+              marginLeft: "auto",
+              marginRight: "auto",
+            }}
           />
         </Link>
       </div>

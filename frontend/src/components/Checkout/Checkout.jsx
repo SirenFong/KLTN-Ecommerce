@@ -58,7 +58,7 @@ const Checkout = () => {
         user,
       };
 
-      // update local storage with the updated orders array
+      //Lưu giỏ hàng lên localStorage
       localStorage.setItem("latestOrder", JSON.stringify(orderData));
       navigate("/payment");
     }

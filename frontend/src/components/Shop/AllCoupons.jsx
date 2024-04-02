@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/role-supports-aria-props */
 import { Button } from "@material-ui/core";
 import { DataGrid } from "@material-ui/data-grid";
 import axios from "axios";
@@ -14,7 +15,7 @@ const AllCoupons = () => {
   const [open, setOpen] = useState(false);
   const [name, setName] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [coupouns,setCoupouns] = useState([]);
+  const [coupouns, setCoupouns] = useState([]);
   const [minAmount, setMinAmout] = useState(null);
   const [maxAmount, setMaxAmount] = useState(null);
   const [selectedProducts, setSelectedProducts] = useState(null);
@@ -37,12 +38,14 @@ const AllCoupons = () => {
       .catch((error) => {
         setIsLoading(false);
       });
-  }, [dispatch]);
+  }, [dispatch, seller._id]);
 
   const handleDelete = async (id) => {
-    axios.delete(`${server}/coupon/delete-coupon/${id}`,{withCredentials: true}).then((res) => {
-      toast.success("Coupon code deleted succesfully!")
-    })
+    axios
+      .delete(`${server}/coupon/delete-coupon/${id}`, { withCredentials: true })
+      .then((res) => {
+        toast.success("Xóa mã giảm giá thành công!");
+      });
     window.location.reload();
   };
 
@@ -63,9 +66,9 @@ const AllCoupons = () => {
         { withCredentials: true }
       )
       .then((res) => {
-       toast.success("Coupon code created successfully!");
-       setOpen(false);
-       window.location.reload();
+        toast.success("Tạo mã giảm giá thành công");
+        setOpen(false);
+        window.location.reload();
       })
       .catch((error) => {
         toast.error(error.response.data.message);
@@ -73,21 +76,21 @@ const AllCoupons = () => {
   };
 
   const columns = [
-    { field: "id", headerName: "Id", minWidth: 150, flex: 0.7 },
+    // { field: "id", headerName: "Id", minWidth: 150, flex: 0.7 },
     {
       field: "name",
-      headerName: "Coupon Code",
+      headerName: "Mã giảm giá",
       minWidth: 180,
       flex: 1.4,
     },
     {
       field: "price",
-      headerName: "Value",
+      headerName: "(%) Giảm giá",
       minWidth: 100,
       flex: 0.6,
     },
     {
-      field: "Delete",
+      field: "Xóa",
       flex: 0.8,
       minWidth: 120,
       headerName: "",
@@ -108,12 +111,11 @@ const AllCoupons = () => {
   const row = [];
 
   coupouns &&
-  coupouns.forEach((item) => {
+    coupouns.forEach((item) => {
       row.push({
         id: item._id,
         name: item.name,
         price: item.value + " %",
-        sold: 10,
       });
     });
 
@@ -128,7 +130,7 @@ const AllCoupons = () => {
               className={`${styles.button} !w-max !h-[45px] px-3 !rounded-[5px] mr-3 mb-3`}
               onClick={() => setOpen(true)}
             >
-              <span className="text-white">Create Coupon Code</span>
+              <span className="text-white">Tạo mã giảm giá</span>
             </div>
           </div>
           <DataGrid
@@ -140,7 +142,7 @@ const AllCoupons = () => {
           />
           {open && (
             <div className="fixed top-0 left-0 w-full h-screen bg-[#00000062] z-[20000] flex items-center justify-center">
-              <div className="w-[90%] 800px:w-[40%] h-[80vh] bg-white rounded-md shadow p-4">
+              <div className="w-[90%] 800px:w-[40%] h-[90vh] bg-white rounded-md shadow p-4">
                 <div className="w-full flex justify-end">
                   <RxCross1
                     size={30}
@@ -149,14 +151,13 @@ const AllCoupons = () => {
                   />
                 </div>
                 <h5 className="text-[30px] font-Poppins text-center">
-                  Create Coupon code
+                  Tạo mã giảm giá
                 </h5>
-                {/* create coupoun code */}
                 <form onSubmit={handleSubmit} aria-required={true}>
                   <br />
                   <div>
                     <label className="pb-2">
-                      Name <span className="text-red-500">*</span>
+                      Tên mã giảm <span className="text-red-500">*</span>
                     </label>
                     <input
                       type="text"
@@ -165,14 +166,13 @@ const AllCoupons = () => {
                       value={name}
                       className="mt-2 appearance-none block w-full px-3 h-[35px] border border-gray-300 rounded-[3px] placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                       onChange={(e) => setName(e.target.value)}
-                      placeholder="Enter your coupon code name..."
+                      placeholder="Nhập tên mã giảm giá..."
                     />
                   </div>
                   <br />
                   <div>
                     <label className="pb-2">
-                      Discount Percentenge{" "}
-                      <span className="text-red-500">*</span>
+                      (%) Giảm giá <span className="text-red-500">*</span>
                     </label>
                     <input
                       type="text"
@@ -181,7 +181,7 @@ const AllCoupons = () => {
                       required
                       className="mt-2 appearance-none block w-full px-3 h-[35px] border border-gray-300 rounded-[3px] placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                       onChange={(e) => setValue(e.target.value)}
-                      placeholder="Enter your coupon code value..."
+                      placeholder="Nhập (%) giảm giá..."
                     />
                   </div>
                   <br />
@@ -193,7 +193,7 @@ const AllCoupons = () => {
                       value={minAmount}
                       className="mt-2 appearance-none block w-full px-3 h-[35px] border border-gray-300 rounded-[3px] placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                       onChange={(e) => setMinAmout(e.target.value)}
-                      placeholder="Enter your coupon code min amount..."
+                      placeholder="Nhập số tiền nhỏ nhất..."
                     />
                   </div>
                   <br />
@@ -205,7 +205,7 @@ const AllCoupons = () => {
                       value={maxAmount}
                       className="mt-2 appearance-none block w-full px-3 h-[35px] border border-gray-300 rounded-[3px] placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                       onChange={(e) => setMaxAmount(e.target.value)}
-                      placeholder="Enter your coupon code max amount..."
+                      placeholder="Nhập số tiền lớn nhất..."
                     />
                   </div>
                   <br />
@@ -217,7 +217,7 @@ const AllCoupons = () => {
                       onChange={(e) => setSelectedProducts(e.target.value)}
                     >
                       <option value="Choose your selected products">
-                        Choose a selected product
+                        Chọn sản phẩm
                       </option>
                       {products &&
                         products.map((i) => (
@@ -231,7 +231,7 @@ const AllCoupons = () => {
                   <div>
                     <input
                       type="submit"
-                      value="Create"
+                      value="Tạo mã"
                       className="mt-2 appearance-none block w-full px-3 h-[35px] border border-gray-300 rounded-[3px] placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                     />
                   </div>

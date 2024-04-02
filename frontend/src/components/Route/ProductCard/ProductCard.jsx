@@ -33,7 +33,7 @@ const ProductCard = ({ data, isEvent }) => {
     } else {
       setClick(false);
     }
-  }, [wishlist]);
+  }, [data._id, wishlist]);
 
   const removeFromWishlistHandler = (data) => {
     setClick(!click);
@@ -48,14 +48,14 @@ const ProductCard = ({ data, isEvent }) => {
   const addToCartHandler = (id) => {
     const isItemExists = cart && cart.find((i) => i._id === id);
     if (isItemExists) {
-      toast.error("Item already in cart!");
+      toast.error("Sản phẩm đã được thêm vào giỏ hàng!");
     } else {
       if (data.stock < 1) {
-        toast.error("Product stock limited!");
+        toast.error("Đã hết hàng!");
       } else {
         const cartData = { ...data, qty: 1 };
         dispatch(addTocart(cartData));
-        toast.success("Item added to cart successfully!");
+        toast.success("Thêm thành công!");
       }
     }
   };
@@ -97,14 +97,13 @@ const ProductCard = ({ data, isEvent }) => {
 
           <div className="py-2 flex items-center justify-between">
             <div className="flex">
-              <h5 className={`${styles.productDiscountPrice}`}>
-                {data.originalPrice === 0
-                  ? data.originalPrice
-                  : data.discountPrice}
-                $
-              </h5>
               <h4 className={`${styles.price}`}>
-                {data.originalPrice ? data.originalPrice + " $" : null}
+                {data.sellPrice
+                  ? data.sellPrice.toLocaleString("vi-VN", {
+                      style: "currency",
+                      currency: "VND",
+                    })
+                  : "0"}
               </h4>
             </div>
             <span className="font-[400] text-[17px] text-[#68d284]">
@@ -113,7 +112,6 @@ const ProductCard = ({ data, isEvent }) => {
           </div>
         </Link>
 
-        {/* side options */}
         <div>
           {click ? (
             <AiFillHeart
@@ -121,7 +119,7 @@ const ProductCard = ({ data, isEvent }) => {
               className="cursor-pointer absolute right-2 top-5"
               onClick={() => removeFromWishlistHandler(data)}
               color={click ? "red" : "#333"}
-              title="Remove from wishlist"
+              title="Xóa sản phẩm yêu thích"
             />
           ) : (
             <AiOutlineHeart
@@ -129,7 +127,7 @@ const ProductCard = ({ data, isEvent }) => {
               className="cursor-pointer absolute right-2 top-5"
               onClick={() => addToWishlistHandler(data)}
               color={click ? "red" : "#333"}
-              title="Add to wishlist"
+              title="Thêm vào yêu thích"
             />
           )}
           <AiOutlineEye
@@ -137,14 +135,14 @@ const ProductCard = ({ data, isEvent }) => {
             className="cursor-pointer absolute right-2 top-14"
             onClick={() => setOpen(!open)}
             color="#333"
-            title="Quick view"
+            title="Xem nhanh"
           />
           <AiOutlineShoppingCart
             size={25}
             className="cursor-pointer absolute right-2 top-24"
             onClick={() => addToCartHandler(data._id)}
             color="#444"
-            title="Add to cart"
+            title="Thêm vào giỏ hàng"
           />
           {open ? <ProductDetailsCard setOpen={setOpen} data={data} /> : null}
         </div>
