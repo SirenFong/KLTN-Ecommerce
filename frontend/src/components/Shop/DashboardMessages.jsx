@@ -212,7 +212,7 @@ const DashboardMessages = () => {
       {!open && (
         <>
           <h1 className="text-center text-[30px] py-3 font-Poppins">
-            All Messages
+            Tin nhắn
           </h1>
           {/* All messages list */}
           {conversations &&
@@ -349,7 +349,7 @@ const SellerInbox = ({
           />
           <div className="pl-3">
             <h1 className="text-[18px] font-[600]">{userData?.name}</h1>
-            <h1>{activeStatus ? "Active Now" : ""}</h1>
+            <h1>{activeStatus ? "Đang hoạt động" : ""}</h1>
           </div>
         </div>
         <AiOutlineArrowRight
@@ -403,7 +403,6 @@ const SellerInbox = ({
           })}
       </div>
 
-      {/* send message input */}
       <form
         aria-required={true}
         className="p-3 relative w-full flex justify-between items-center"

@@ -47,7 +47,7 @@ const Singup = () => {
     <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
         <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-          Register as a new user
+          Đăng ký tài khoản
         </h2>
       </div>
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
@@ -58,7 +58,7 @@ const Singup = () => {
                 htmlFor="email"
                 className="block text-sm font-medium text-gray-700"
               >
-                Full Name
+                Họ và Tên
               </label>
               <div className="mt-1">
                 <input
@@ -78,7 +78,7 @@ const Singup = () => {
                 htmlFor="email"
                 className="block text-sm font-medium text-gray-700"
               >
-                Email address
+                Địa chỉ Email
               </label>
               <div className="mt-1">
                 <input
@@ -98,7 +98,7 @@ const Singup = () => {
                 htmlFor="password"
                 className="block text-sm font-medium text-gray-700"
               >
-                Password
+                Mật khẩu
               </label>
               <div className="mt-1 relative">
                 <input
@@ -147,7 +147,7 @@ const Singup = () => {
                   htmlFor="file-input"
                   className="ml-5 flex items-center justify-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50"
                 >
-                  <span>Upload a file</span>
+                  <span>Chọn hình đại diện</span>
                   <input
                     type="file"
                     name="avatar"
@@ -165,13 +165,13 @@ const Singup = () => {
                 type="submit"
                 className="group relative w-full h-[40px] flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700"
               >
-                Submit
+                Đăng ký
               </button>
             </div>
             <div className={`${styles.noramlFlex} w-full`}>
-              <h4>Already have an account?</h4>
+              <h4>Đã có tài khoản?</h4>
               <Link to="/login" className="text-blue-600 pl-2">
-                Sign In
+                Đăng nhập
               </Link>
             </div>
           </form>
