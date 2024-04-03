@@ -38,11 +38,11 @@ const EventCard = ({ active, data }) => {
         <p>{data.description}</p>
         <div className="flex py-2 justify-between">
           <div className="flex">
-            <h5 className="font-[500] text-[18px] text-[#d55b45] pr-3 line-through">
-              {data.productDiscountPrice}
+            <h5 className="font-bold text-[25px] text-[#016FD6] font-Roboto pr-3">
+              Giảm giá đặc biệt: {data.discountPrice.toLocaleString()}đ
             </h5>
-            <h5 className="font-bold text-[20px] text-[#333] font-Roboto">
-              {data.price}đ
+            <h5 className="font-[500] text-[18px] text-[#ff5837] ">
+              {data.percentDiscount}(%)
             </h5>
           </div>
           <span className="pr-3 font-[400] text-[17px] text-[#44a55e]">
@@ -53,7 +53,7 @@ const EventCard = ({ active, data }) => {
         <br />
         <div className="flex items-center">
           <Link to={`/product/${data._id}?isEvent=true`}>
-            <div className={`${styles.button} text-[#fff]`}>See Details</div>
+            <div className={`${styles.button} text-[#fff]`}>Xem chi tiết</div>
           </Link>
           <div
             className={`${styles.button} text-[#fff] ml-5`}

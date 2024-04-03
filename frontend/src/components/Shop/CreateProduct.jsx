@@ -448,6 +448,7 @@ const CreateProduct = () => {
           </>
         )}
         <br />
+
         <div>
           <label className="pb-2">
             Giá nhập <span className="text-red-500">*</span>

@@ -17,8 +17,12 @@ const CreateEvent = () => {
   const [description, setDescription] = useState("");
   const [category, setCategory] = useState("");
   const [tags, setTags] = useState("");
-  const [originalPrice, setOriginalPrice] = useState();
-  const [discountPrice, setDiscountPrice] = useState();
+  //
+  // const [sellPrice, setSellPrice] = useState("");
+  const [originalPrice, setOriginalPrice] = useState("");
+  const [percentDiscount, setPercentDiscount] = useState("");
+  const [discountPrice, setDiscountPrice] = useState(0);
+  //
   const [stock, setStock] = useState();
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
@@ -35,6 +39,11 @@ const CreateEvent = () => {
     setStartDate(null);
     setEndDate(null);
   };
+
+  useEffect(() => {
+    const discount = originalPrice * (percentDiscount / 100);
+    setDiscountPrice(originalPrice - discount);
+  }, [originalPrice, percentDiscount]);
 
   useEffect(() => {
     if (error) {
@@ -78,10 +87,9 @@ const CreateEvent = () => {
     if (success) {
       toast.success("Tạo sự kiện thành công!");
       navigate("/dashboard-events");
-      window.location.reload(true);
-      // Reset state here instead of reloading the page
       setStartDate(null);
       setEndDate(null);
+      window.location.reload(true);
     }
   }, [error, navigate, success]);
 
@@ -115,7 +123,8 @@ const CreateEvent = () => {
       description,
       category,
       tags,
-      originalPrice,
+      setOriginalPrice,
+      percentDiscount,
       discountPrice,
       stock,
       images,
@@ -128,7 +137,7 @@ const CreateEvent = () => {
 
   return (
     <div className="w-[90%] 800px:w-[50%] bg-white  shadow h-[80vh] rounded-[4px] p-3 overflow-y-scroll">
-      <h5 className="text-[30px] font-Poppins text-center">Create Event</h5>
+      <h5 className="text-[30px] font-Poppins text-center">Tạo sự kiện</h5>
       {/* Tạo sự kiện */}
       <form onSubmit={handleSubmit}>
         <div className="mb-4">
@@ -199,23 +208,37 @@ const CreateEvent = () => {
             type="number"
             name="price"
             value={originalPrice}
-            className="mt-2 appearance-none block w-full px-3 h-[35px] border border-gray-300 rounded-[3px] placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
             onChange={(e) => setOriginalPrice(e.target.value)}
+            className="mt-2 appearance-none block w-full px-3 h-[35px] border border-gray-300 rounded-[3px] placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
             placeholder="Nhập giá sản phẩm..."
           />
         </div>
         <br />
         <div>
-          <label className="pb-2">
-            Giả sau khi giảm<span className="text-red-500">*</span>
-          </label>
+          <label className="pb-2">(%) Giảm giá</label>
           <input
             type="number"
             name="price"
-            value={discountPrice}
+            value={percentDiscount}
+            onChange={(e) => setPercentDiscount(Number(e.target.value))}
             className="mt-2 appearance-none block w-full px-3 h-[35px] border border-gray-300 rounded-[3px] placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-            onChange={(e) => setDiscountPrice(e.target.value)}
-            placeholder="Nhập giá sau khi giảm..."
+            placeholder="(%) Giảm giá"
+          />
+        </div>
+        <br />
+        <div>
+          <label className="pb-2">
+            Giá giảm<span className="text-red-500">*</span>
+          </label>
+          <input
+            type="text"
+            name="price"
+            readOnly
+            value={discountPrice.toLocaleString()}
+            className="mt-2 appearance-none block w-full px-3 h-[35px] border border-gray-300 rounded-[3px] placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+            onChange={(e) =>
+              setDiscountPrice(Number(e.target.value.replace(/,/g, "")))
+            }
           />
         </div>
         <br />
@@ -232,6 +255,7 @@ const CreateEvent = () => {
             placeholder="Nhập số lượng tồn..."
           />
         </div>
+        <br />
         <div className="mb-4">
           <label className="pb-2">
             Ngày bắt đầu <span className="text-red-500">*</span>

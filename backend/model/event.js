@@ -28,7 +28,10 @@ const eventSchema = new mongoose.Schema({
   tags: {
     type: String,
   },
-  originalPrice: {
+  sellPrice: {
+    type: Number,
+  },
+  percentDiscount: {
     type: Number,
   },
   discountPrice: {

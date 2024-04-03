@@ -152,14 +152,20 @@ const ProductDetails = ({ data }) => {
               <div className="w-full 800px:w-[50%] pt-5">
                 <h1 className={`${styles.productTitle}`}>{data.name}</h1>
                 <p>{data.description}</p>
-                <div className="flex pt-3">
-                  <h3 className={`${styles.price}`}>
-                    {data.sellPrice
-                      ? data.sellPrice.toLocaleString("vi-VN", {
-                          style: "currency",
-                          currency: "VND",
-                        })
-                      : null}
+                <div className="flex pt-3 relative">
+                  <h3 className={`${styles.price} pr-10 relative`}>
+                    {(data.sellPrice || data.discountPrice).toLocaleString(
+                      "vi-VN",
+                      {
+                        style: "currency",
+                        currency: "VND",
+                      }
+                    )}
+                    {data.sellPrice === undefined && (
+                      <h3 className="font-[500] text-[18px] text-[#ff5837] absolute top-0 right-0 text-sm">
+                        {data.percentDiscount}(%)
+                      </h3>
+                    )}
                   </h3>
                 </div>
 

@@ -1,0 +1,11 @@
+{
+    "breadcrumbs.enabled": true,
+    "editor.cursorBlinking": "smooth",
+    "window.autoDetectColorScheme": false,
+    "workbench.productIconTheme": "adwaita",
+    "workbench.colorTheme": "Adwaita Dark",
+    "workbench.iconTheme": "vs-seti",
+    "git-graph.tabIconColourTheme": "colour",
+    "autoimport.spaceBetweenBraces": false,
+    "dart.completeFunctionCalls": false
+}
