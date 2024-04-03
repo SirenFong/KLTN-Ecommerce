@@ -32,6 +32,7 @@ const ProductDetails = ({ data }) => {
 
   useEffect(() => {
     window.scrollTo(0, 0);
+
     dispatch(getAllProductsShop(data && data?.shop._id));
     if (wishlist && wishlist.find((i) => i._id === data?._id)) {
       setClick(true);

@@ -7,55 +7,57 @@ const { isSeller, isAdmin, isAuthenticated } = require("../middleware/auth");
 const router = express.Router();
 const cloudinary = require("cloudinary");
 
+const uploadImage = async (image) => {
+  const result = await cloudinary.v2.uploader.upload(image, {
+    folder: "products",
+  });
+  return {
+    public_id: result.public_id,
+    url: result.secure_url,
+  };
+};
 // Tạo sự kiện
 router.post(
   "/create-event",
   catchAsyncErrors(async (req, res, next) => {
-    try {
-      if (!req.body) {
-        return next(new ErrorHandler("Request body is missing", 400));
-      }
+    const { shopId, images, ...productData } = req.body;
 
-      const shopId = req.body.shopId;
-      const shop = await Shop.findById(shopId);
-      if (!shop) {
-        return next(new ErrorHandler("Không hợp lệ", 400));
-      } else {
-        let images = [];
-
-        if (typeof req.body.images === "string") {
-          images.push(req.body.images);
-        } else {
-          images = req.body.images;
-        }
-
-        const imagesLinks = [];
-
-        for (let i = 0; i < images.length; i++) {
-          const result = await cloudinary.v2.uploader.upload(images[i], {
-            folder: "products",
-          });
-
-          imagesLinks.push({
-            public_id: result.public_id,
-            url: result.secure_url,
-          });
-        }
-
-        const productData = req.body;
-        productData.images = imagesLinks;
-        productData.shop = shop;
-
-        const event = await Event.create(productData);
-
-        res.status(201).json({
-          success: true,
-          event,
-        });
-      }
-    } catch (error) {
-      return next(new ErrorHandler(error, 400));
+    if (!shopId || !images || !productData) {
+      return next(
+        new ErrorHandler("Request body is missing required fields", 400)
+      );
     }
+
+    const shop = await Shop.findById(shopId);
+    if (!shop) {
+      return next(new ErrorHandler("Invalid shop ID", 400));
+    }
+
+    const imagesArray = typeof images === "string" ? [images] : images;
+    const imagesLinks = [];
+
+    for (const image of imagesArray) {
+      try {
+        const imageLink = await uploadImage(image);
+        imagesLinks.push(imageLink);
+      } catch (error) {
+        return next(
+          new ErrorHandler(`Failed to upload image: ${error.message}`, 400)
+        );
+      }
+    }
+
+    const event = await Event.create({
+      ...productData,
+      shopId,
+      images: imagesLinks,
+      shop,
+    });
+
+    res.status(201).json({
+      success: true,
+      event,
+    });
   })
 );
 

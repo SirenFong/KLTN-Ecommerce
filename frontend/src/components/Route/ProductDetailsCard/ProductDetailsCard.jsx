@@ -83,6 +83,7 @@ const ProductDetailsCard = ({ setOpen, data }) => {
             <div className="block w-full 800px:flex">
               <div className="w-full 800px:w-[50%]">
                 <img src={`${data.images && data.images[0]?.url}`} alt="" />
+
                 <div className="flex">
                   <Link to={`/shop/preview/${data.shop._id}`} className="flex">
                     <img
@@ -108,7 +109,7 @@ const ProductDetailsCard = ({ setOpen, data }) => {
                     Gửi tin nhắn <AiOutlineMessage className="ml-1" />
                   </span>
                 </div>
-                <h5 className="text-[16px] text-[red] mt-5">(50) Đã bán</h5>
+                {/* <h5 className="text-[16px] text-[red] mt-5">(50) Đã bán</h5> */}
               </div>
 
               <div className="w-full 800px:w-[50%] pt-5 pl-[5px] pr-[5px]">
@@ -118,7 +119,6 @@ const ProductDetailsCard = ({ setOpen, data }) => {
                 <p>{data.description}</p>
 
                 <div className="flex pt-3">
-                 
                   <h3 className={`${styles.price}`}>
                     {data.sellPrice
                       ? data.sellPrice.toLocaleString("vi-VN", {

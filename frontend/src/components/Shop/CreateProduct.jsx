@@ -455,12 +455,12 @@ const CreateProduct = () => {
           <input
             type="text"
             name="originalPrice"
-            value={originalPrice}
+            value={Number(originalPrice).toLocaleString("vi-VI")}
             className="mt-2 appearance-none block w-full px-3 h-[35px] border border-gray-300 rounded-[3px] placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
             onChange={(e) => {
-              setOriginalPrice(e.target.value);
-              calculateSellPrice(); // Tính toán giá bán khi giá nhập thay đổi
+              setOriginalPrice(e.target.value.replace(/\D/g, "")); // Loại bỏ các ký tự không phải số
             }}
+            onBlur={calculateSellPrice} // Tính toán giá bán khi giá nhập thay đổi
             placeholder="Nhập giá sản phẩm..."
           />
         </div>

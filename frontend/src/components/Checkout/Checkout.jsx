@@ -19,7 +19,7 @@ const Checkout = () => {
   // const [zipCode, setZipCode] = useState(null);
   const [couponCode, setCouponCode] = useState("");
   const [couponCodeData, setCouponCodeData] = useState(null);
-  const [discountPrice, setDiscountPrice] = useState(null);
+  const [sellPrice, setSellPrice] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -53,7 +53,7 @@ const Checkout = () => {
         totalPrice,
         subTotalPrice,
         shipping,
-        discountPrice,
+        sellPrice,
         shippingAddress,
         user,
       };
@@ -65,12 +65,12 @@ const Checkout = () => {
   };
 
   const subTotalPrice = cart.reduce(
-    (acc, item) => acc + item.qty * item.discountPrice,
+    (acc, item) => acc + item.qty * item.sellPrice,
     0
   );
 
-  // this is shipping cost variable
-  const shipping = subTotalPrice * 0.1;
+  // Phí vận chuyển
+  const shipping = subTotalPrice > 500000 ? 0 : 15000;
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -92,7 +92,7 @@ const Checkout = () => {
             0
           );
           const discountPrice = (eligiblePrice * couponCodeValue) / 100;
-          setDiscountPrice(discountPrice);
+          setSellPrice(discountPrice);
           setCouponCodeData(res.data.couponCode);
           setCouponCode("");
         }
@@ -104,7 +104,7 @@ const Checkout = () => {
     });
   };
 
-  const discountPercentenge = couponCodeData ? discountPrice : "";
+  const discountPercentenge = couponCodeData ? sellPrice : "";
 
   const totalPrice = couponCodeData
     ? (subTotalPrice + shipping - discountPercentenge).toFixed(2)

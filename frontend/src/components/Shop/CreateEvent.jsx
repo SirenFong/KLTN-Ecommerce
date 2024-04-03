@@ -44,8 +44,9 @@ const CreateEvent = () => {
       toast.success("Tạo sự kiện thành công!");
       navigate("/dashboard-events");
       resetForm();
+      window.location.reload();
     }
-  }, [error, navigate, success]);
+  }, [dispatch, error, navigate, success]);
 
   const handleStartDateChange = (e) => {
     const startDate = new Date(e.target.value);

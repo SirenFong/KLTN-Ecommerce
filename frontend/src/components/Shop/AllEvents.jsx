@@ -17,9 +17,15 @@ const AllEvents = () => {
     dispatch(getAllEventsShop(seller._id));
   }, [dispatch, seller._id]);
 
-  const handleDelete = (id) => {
-    dispatch(deleteEvent(id));
-    window.location.reload(true);
+  const handleDelete = async (id) => {
+    dispatch(deleteEvent(id))
+      .then(() => {
+        dispatch(getAllEventsShop(seller._id));
+        window.location.reload(true);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   };
 
   const columns = [
