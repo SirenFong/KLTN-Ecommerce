@@ -73,6 +73,13 @@ const UserOrderDetails = () => {
           <BsFillBagFill size={30} color="crimson" />
           <h1 className="pl-2 text-[25px]">Chi tiết đơn hàng</h1>
         </div>
+        <Link to="/profile">
+          <div
+            className={`${styles.button} !bg-[#fce1e6] !rounded-[4px] text-[#e94560] font-[600] !h-[45px] text-[18px]`}
+          >
+            Trở về
+          </div>
+        </Link>
       </div>
 
       <div className="w-full flex items-center justify-between pt-6">
@@ -99,7 +106,9 @@ const UserOrderDetails = () => {
               <div className="w-full">
                 <h5 className="pl-3 text-[20px]">{item.name}</h5>
                 <h5 className="pl-3 text-[20px] text-[#00000091]">
-                  {item.sellPrice.toLocaleString("vi-VN")}đ x {item.qty}
+                  {item.sellPrice?.toLocaleString("vi-VN") ||
+                    item.discountPrice?.toLocaleString("vi-VN")}{" "}
+                  đ x {item.qty}
                 </h5>
               </div>
               {!item.isReviewed && data?.status === "Delivered" ? (

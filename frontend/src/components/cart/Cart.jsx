@@ -17,7 +17,8 @@ const Cart = ({ setOpenCart }) => {
   };
 
   const totalPrice = cart.reduce(
-    (acc, item) => acc + item.qty * item.sellPrice,
+    (acc, item) =>
+      acc + item.qty * item.sellPrice || acc + item.discountPrice * item.qty,
     0
   );
 
@@ -140,10 +141,10 @@ const CartSingle = ({ data, quantityChangeHandler, removeFromCartHandler }) => {
         <div className="pl-[5px]">
           <h1>{data.name}</h1>
           <h4 className="font-[400] text-[15px] text-[#00000082]">
-            {data.sellPrice.toLocaleString()} * {value}
+            {(data.sellPrice || data.discountPrice).toLocaleString()} * {value}
           </h4>
           <h4 className="font-[600] text-[17px] pt-[3px] text-[#016FD6] font-Roboto">
-            {totalPrice.toLocaleString()} VNĐ
+            {(totalPrice || data.discountPrice).toLocaleString()} VNĐ
           </h4>
         </div>
       </div>

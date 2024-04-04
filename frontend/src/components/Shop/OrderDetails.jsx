@@ -9,7 +9,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 
 const OrderDetails = () => {
-  const { orders, isLoading } = useSelector((state) => state.order);
+  const { orders } = useSelector((state) => state.order);
   const { seller } = useSelector((state) => state.seller);
   const dispatch = useDispatch();
   const [status, setStatus] = useState("");
@@ -19,7 +19,7 @@ const OrderDetails = () => {
 
   useEffect(() => {
     dispatch(getAllOrdersOfShop(seller._id));
-  }, [dispatch]);
+  }, [dispatch, seller._id]);
 
   const data = orders && orders.find((item) => item._id === id);
 
@@ -66,13 +66,13 @@ const OrderDetails = () => {
       <div className="w-full flex items-center justify-between">
         <div className="flex items-center">
           <BsFillBagFill size={30} color="crimson" />
-          <h1 className="pl-2 text-[25px]">Order Details</h1>
+          <h1 className="pl-2 text-[25px]">Chi tiết đơn đặt hàng</h1>
         </div>
         <Link to="/dashboard-orders">
           <div
             className={`${styles.button} !bg-[#fce1e6] !rounded-[4px] text-[#e94560] font-[600] !h-[45px] text-[18px]`}
           >
-            Danh sách đơn hàng
+            Trở về
           </div>
         </Link>
       </div>
@@ -99,7 +99,9 @@ const OrderDetails = () => {
             <div className="w-full">
               <h5 className="pl-3 text-[20px]">{item.name}</h5>
               <h5 className="pl-3 text-[20px] text-[#00000091]">
-                US${item.discountPrice} x {item.qty}
+                {item.sellPrice?.toLocaleString("vi-VN") ||
+                  item.discountPrice?.toLocaleString("vi-VN")}{" "}
+                đ x {item.qty}
               </h5>
             </div>
           </div>
@@ -107,14 +109,20 @@ const OrderDetails = () => {
 
       <div className="border-t w-full text-right">
         <h5 className="pt-3 text-[18px]">
-          Total Price: <strong>US${data?.totalPrice}</strong>
+          Thành tiền:{" "}
+          <strong>
+            {data?.totalPrice.toLocaleString("vi-VN", {
+              style: "currency",
+              currency: "VND",
+            })}
+          </strong>
         </h5>
       </div>
       <br />
       <br />
       <div className="w-full 800px:flex items-center">
         <div className="w-full 800px:w-[60%]">
-          <h4 className="pt-3 text-[20px] font-[600]">Shipping Address:</h4>
+          <h4 className="pt-3 text-[20px] font-[600]">Địa chỉ giao hàng:</h4>
           <h4 className="pt-3 text-[20px]">
             {data?.shippingAddress.address1 +
               " " +
@@ -125,16 +133,18 @@ const OrderDetails = () => {
           <h4 className=" text-[20px]">{data?.user?.phoneNumber}</h4>
         </div>
         <div className="w-full 800px:w-[40%]">
-          <h4 className="pt-3 text-[20px]">Payment Info:</h4>
+          <h4 className="pt-3 text-[20px]">Thanh toán?</h4>
           <h4>
-            Status:{" "}
-            {data?.paymentInfo?.status ? data?.paymentInfo?.status : "Not Paid"}
+            Trạng thái:{" "}
+            {data?.paymentInfo?.status
+              ? data?.paymentInfo?.status
+              : "Chưa thanh toán"}
           </h4>
         </div>
       </div>
       <br />
       <br />
-      <h4 className="pt-3 text-[20px] font-[600]">Order Status:</h4>
+      <h4 className="pt-3 text-[20px] font-[600]">Trạng thái đơn hàng:</h4>
       {data?.status !== "Processing refund" &&
         data?.status !== "Refund Success" && (
           <select
@@ -194,7 +204,7 @@ const OrderDetails = () => {
             : refundOrderUpdateHandler
         }
       >
-        Update Status
+        Cập nhật
       </div>
     </div>
   );

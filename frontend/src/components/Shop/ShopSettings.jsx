@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/aria-props */
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { backend_url, server } from "../../server";
@@ -63,7 +64,7 @@ const ShopSettings = () => {
         { withCredentials: true }
       )
       .then((res) => {
-        toast.success("Shop info updated succesfully!");
+        toast.success("Thông tin cập nhật thành công!");
         dispatch(loadSeller());
       })
       .catch((error) => {
@@ -95,7 +96,7 @@ const ShopSettings = () => {
           </div>
         </div>
 
-        {/* shop info */}
+        {/* Thông tin cửa hàng */}
         <form
           aria-aria-required={true}
           className="flex flex-col items-center"
@@ -103,27 +104,25 @@ const ShopSettings = () => {
         >
           <div className="w-[100%] flex items-center flex-col 800px:w-[50%] mt-5">
             <div className="w-full pl-[3%]">
-              <label className="block pb-2">Shop Name</label>
+              <label className="block pb-2">Tên cửa hàng</label>
             </div>
             <input
               type="name"
+              readOnly
               placeholder={`${seller.name}`}
               value={name}
               onChange={(e) => setName(e.target.value)}
               className={`${styles.input} !w-[95%] mb-4 800px:mb-0`}
-              required
             />
           </div>
           <div className="w-[100%] flex items-center flex-col 800px:w-[50%] mt-5">
             <div className="w-full pl-[3%]">
-              <label className="block pb-2">Shop description</label>
+              <label className="block pb-2">Mô tả cửa hàng</label>
             </div>
             <input
               type="name"
               placeholder={`${
-                seller?.description
-                  ? seller.description
-                  : "Enter your shop description"
+                seller?.description ? seller.description : "Mô tả..."
               }`}
               value={description}
               onChange={(e) => setDescription(e.target.value)}
@@ -132,7 +131,7 @@ const ShopSettings = () => {
           </div>
           <div className="w-[100%] flex items-center flex-col 800px:w-[50%] mt-5">
             <div className="w-full pl-[3%]">
-              <label className="block pb-2">Shop Address</label>
+              <label className="block pb-2">Địa chỉ</label>
             </div>
             <input
               type="name"
@@ -140,13 +139,12 @@ const ShopSettings = () => {
               value={address}
               onChange={(e) => setAddress(e.target.value)}
               className={`${styles.input} !w-[95%] mb-4 800px:mb-0`}
-              required
             />
           </div>
 
           <div className="w-[100%] flex items-center flex-col 800px:w-[50%] mt-5">
             <div className="w-full pl-[3%]">
-              <label className="block pb-2">Shop Phone Number</label>
+              <label className="block pb-2">Hotline</label>
             </div>
             <input
               type="number"
@@ -160,7 +158,7 @@ const ShopSettings = () => {
 
           <div className="w-[100%] flex items-center flex-col 800px:w-[50%] mt-5">
             <div className="w-full pl-[3%]">
-              <label className="block pb-2">Shop Zip Code</label>
+              <label className="block pb-2">Zipcode</label>
             </div>
             <input
               type="number"
@@ -168,14 +166,13 @@ const ShopSettings = () => {
               value={zipCode}
               onChange={(e) => setZipcode(e.target.value)}
               className={`${styles.input} !w-[95%] mb-4 800px:mb-0`}
-              required
             />
           </div>
 
           <div className="w-[100%] flex items-center flex-col 800px:w-[50%] mt-5">
             <input
               type="submit"
-              value="Update Shop"
+              value="Cập nhật"
               className={`${styles.input} !w-[95%] mb-4 800px:mb-0`}
               required
               readOnly
