@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { AiOutlineArrowRight, AiOutlineMoneyCollect } from "react-icons/ai";
 import styles from "../../styles/styles";
 import { Link } from "react-router-dom";
@@ -23,8 +23,6 @@ const DashboardHero = () => {
   const availableBalance = seller?.availableBalance.toFixed(2);
 
   const columns = [
-    // { field: "id", headerName: "Order ID", minWidth: 150, flex: 0.7 },
-
     {
       field: "status",
       headerName: "Trạng thái",
@@ -85,7 +83,7 @@ const DashboardHero = () => {
     });
   return (
     <div className="w-full p-8">
-      <h3 className="text-[22px] font-Poppins pb-2">Overview</h3>
+      <h3 className="text-[22px] font-Poppins pb-2">Tổng quan</h3>
       <div className="w-full block 800px:flex items-center justify-between">
         <div className="w-full mb-4 800px:w-[30%] min-h-[20vh] bg-white shadow rounded px-2 py-5">
           <div className="flex items-center">
@@ -97,16 +95,18 @@ const DashboardHero = () => {
             <h3
               className={`${styles.productTitle} !text-[18px] leading-5 !font-[400] text-[#00000085]`}
             >
-              Account Balance{" "}
-              <span className="text-[16px]">(with 10% service charge)</span>
+              Tổng thu nhập{" "}
             </h3>
           </div>
           <h5 className="pt-2 pl-[36px] text-[22px] font-[500]">
-            ${availableBalance}
+            {availableBalance.toLocaleString("vi-VN", {
+              styles: "currency",
+              currency: "VND",
+            })}
           </h5>
-          <Link to="/dashboard-withdraw-money">
+          {/* <Link to="/dashboard-withdraw-money">
             <h5 className="pt-4 pl-[2] text-[#077f9c]">Withdraw Money</h5>
-          </Link>
+          </Link> */}
         </div>
 
         <div className="w-full mb-4 800px:w-[30%] min-h-[20vh] bg-white shadow rounded px-2 py-5">
@@ -115,14 +115,14 @@ const DashboardHero = () => {
             <h3
               className={`${styles.productTitle} !text-[18px] leading-5 !font-[400] text-[#00000085]`}
             >
-              All Orders
+              Tổng Đơn hàng
             </h3>
           </div>
           <h5 className="pt-2 pl-[36px] text-[22px] font-[500]">
             {orders && orders.length}
           </h5>
           <Link to="/dashboard-orders">
-            <h5 className="pt-4 pl-2 text-[#077f9c]">View Orders</h5>
+            <h5 className="pt-4 pl-2 text-[#077f9c]">Xem đơn hàng</h5>
           </Link>
         </div>
 
@@ -136,19 +136,19 @@ const DashboardHero = () => {
             <h3
               className={`${styles.productTitle} !text-[18px] leading-5 !font-[400] text-[#00000085]`}
             >
-              All Products
+              Tổng Sản phẩm
             </h3>
           </div>
           <h5 className="pt-2 pl-[36px] text-[22px] font-[500]">
             {products && products.length}
           </h5>
           <Link to="/dashboard-products">
-            <h5 className="pt-4 pl-2 text-[#077f9c]">View Products</h5>
+            <h5 className="pt-4 pl-2 text-[#077f9c]">Xem sản phẩm</h5>
           </Link>
         </div>
       </div>
       <br />
-      <h3 className="text-[22px] font-Poppins pb-2">Latest Orders</h3>
+      <h3 className="text-[22px] font-Poppins pb-2">Hóa đơn gần nhất</h3>
       <div className="w-full min-h-[45vh] bg-white rounded">
         <DataGrid
           rows={row}

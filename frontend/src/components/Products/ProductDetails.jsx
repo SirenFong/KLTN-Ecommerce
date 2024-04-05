@@ -23,10 +23,12 @@ const ProductDetails = ({ data }) => {
   const { wishlist } = useSelector((state) => state.wishlist);
   const { cart } = useSelector((state) => state.cart);
   const { user, isAuthenticated } = useSelector((state) => state.user);
+  const { seller } = useSelector((state) => state.seller);
   const { products } = useSelector((state) => state.products);
   const [count, setCount] = useState(1);
   const [click, setClick] = useState(false);
   const [select, setSelect] = useState(0);
+  const [displayCount, setDisplayCount] = useState(5);
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -128,11 +130,12 @@ const ProductDetails = ({ data }) => {
                 />
                 <div className="w-full flex">
                   {data &&
-                    data.images.map((i, index) => (
+                    data.images.slice(0, displayCount).map((i, index) => (
                       <div
                         className={`${
                           select === 0 ? "border" : "null"
                         } cursor-pointer`}
+                        key={index}
                       >
                         <img
                           src={`${i?.url}`}
@@ -142,6 +145,11 @@ const ProductDetails = ({ data }) => {
                         />
                       </div>
                     ))}
+                  {data && data.images.length > displayCount && (
+                    <button onClick={() => setDisplayCount(displayCount + 5)}>
+                      Xem thêm
+                    </button>
+                  )}
                   <div
                     className={`${
                       select === 1 ? "border" : "null"
@@ -150,9 +158,11 @@ const ProductDetails = ({ data }) => {
                 </div>
               </div>
               <div className="w-full 800px:w-[50%] pt-5">
+                <h1 className={`${styles.brandTitle}`}>
+                  Thương hiệu: {data.brand}
+                </h1>
                 <h1 className={`${styles.productTitle}`}>{data.name}</h1>
-                <p>{data.description}</p>
-                <div className="flex pt-3 relative">
+                <div className="flex pt-3 p-3 relative">
                   <h3 className={`${styles.price} pr-10 relative`}>
                     {(data.sellPrice || data.discountPrice).toLocaleString(
                       "vi-VN",
@@ -160,7 +170,8 @@ const ProductDetails = ({ data }) => {
                         style: "currency",
                         currency: "VND",
                       }
-                    )}
+                    )}{" "}
+                    / {data.unit}
                     {data.sellPrice === undefined && (
                       <h3 className="font-[500] text-[18px] text-[#ff5837] absolute top-0 right-0 text-sm">
                         {data.percentDiscount}(%)
@@ -168,6 +179,7 @@ const ProductDetails = ({ data }) => {
                     )}
                   </h3>
                 </div>
+                <p>{data.description}</p>
 
                 <div className="flex items-center mt-12 justify-between pr-3">
                   <div>
@@ -218,7 +230,7 @@ const ProductDetails = ({ data }) => {
                 <div className="flex items-center pt-8">
                   <Link to={`/shop/preview/${data?.shop._id}`}>
                     <img
-                      src={`${data?.shop?.avatar?.url}`}
+                      src={`${seller.avatar?.url}`}
                       alt=""
                       className="w-[50px] h-[50px] rounded-full mr-2"
                     />
