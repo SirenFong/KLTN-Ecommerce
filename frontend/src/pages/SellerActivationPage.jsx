@@ -37,9 +37,9 @@ const SellerActivationPage = () => {
       }}
     >
       {error ? (
-        <p>Your token is expired!</p>
+        <p>Link đã hết hạn!</p>
       ) : (
-        <p>Your account has been created suceessfully!</p>
+        <p>Bạn đã đăng ký tài khoản thành công!</p>
       )}
     </div>
   );

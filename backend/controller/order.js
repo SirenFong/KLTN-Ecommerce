@@ -89,7 +89,7 @@ router.get(
   })
 );
 
-// update order status for seller
+// Cật nhật trạng thái
 router.put(
   "/update-order-status/:id",
   isSeller,
@@ -144,7 +144,7 @@ router.put(
   })
 );
 
-// give a refund ----- user
+// hoàn trả
 router.put(
   "/order-refund/:id",
   catchAsyncErrors(async (req, res, next) => {
@@ -162,7 +162,7 @@ router.put(
       res.status(200).json({
         success: true,
         order,
-        message: "Order Refund Request successfully!",
+        message: "Yêu cầu hoàn trả thành công!",
       });
     } catch (error) {
       return next(new ErrorHandler(error.message, 500));
@@ -170,7 +170,7 @@ router.put(
   })
 );
 
-// accept the refund ---- seller
+// Chấp nhận hoàn trả
 router.put(
   "/order-refund-success/:id",
   isSeller,
@@ -211,7 +211,7 @@ router.put(
   })
 );
 
-// all orders --- for admin
+// Admin
 router.get(
   "/admin-all-orders",
   isAuthenticated,
