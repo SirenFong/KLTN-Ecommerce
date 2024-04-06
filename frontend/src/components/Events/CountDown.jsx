@@ -11,10 +11,10 @@ const CountDown = ({ data }) => {
     }, 1000);
 
     if (
-      typeof timeLeft.days === "undefined" &&
-      typeof timeLeft.hours === "undefined" &&
-      typeof timeLeft.minutes === "undefined" &&
-      typeof timeLeft.seconds === "undefined"
+      typeof timeLeft.Ngày === "undefined" &&
+      typeof timeLeft.Giờ === "undefined" &&
+      typeof timeLeft.Phút === "undefined" &&
+      typeof timeLeft.Giây === "undefined"
     ) {
       axios.delete(`${server}/event/delete-shop-event/${data._id}`);
     }
@@ -27,10 +27,10 @@ const CountDown = ({ data }) => {
 
     if (difference > 0) {
       timeLeft = {
-        days: Math.floor(difference / (1000 * 60 * 60 * 24)),
-        hours: Math.floor((difference / (1000 * 60 * 60)) % 24),
-        minutes: Math.floor((difference / 1000 / 60) % 60),
-        seconds: Math.floor((difference / 1000) % 60),
+        Ngày: Math.floor(difference / (1000 * 60 * 60 * 24)),
+        Giờ: Math.floor((difference / (1000 * 60 * 60)) % 24),
+        Phút: Math.floor((difference / 1000 / 60) % 60),
+        Giây: Math.floor((difference / 1000) % 60),
       };
     }
 

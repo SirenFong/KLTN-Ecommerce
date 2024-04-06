@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { AiOutlineArrowRight, AiOutlineMoneyCollect } from "react-icons/ai";
 import styles from "../../styles/styles";
 import { Link } from "react-router-dom";
@@ -14,13 +14,24 @@ const DashboardHero = () => {
   const { orders } = useSelector((state) => state.order);
   const { seller } = useSelector((state) => state.seller);
   const { products } = useSelector((state) => state.products);
+  const [availableBalance, setAvailableBalance] = useState(0);
 
   useEffect(() => {
     dispatch(getAllOrdersOfShop(seller._id));
     dispatch(getAllProductsShop(seller._id));
-  }, [dispatch, seller._id]);
+    if (seller?.availableBalance) {
+      setAvailableBalance(seller.availableBalance.toFixed(0));
+    }
+  }, [dispatch, seller._id, seller?.availableBalance]);
 
-  const availableBalance = seller?.availableBalance.toFixed(2);
+  const formatCurrency = (amount) => {
+    return amount.toLocaleString("vi-VN", {
+      style: "currency",
+      currency: "VND",
+    });
+  };
+
+  // const availableBalance = seller?.availableBalance.toFixed(0).toLocaleString();
 
   const columns = [
     {
@@ -60,7 +71,7 @@ const DashboardHero = () => {
       renderCell: (params) => {
         return (
           <>
-            <Link to={`/dashboard/order/${params.id}`}>
+            <Link to={`/order/${params.id}`}>
               <Button>
                 <AiOutlineArrowRight size={20} />
               </Button>
@@ -77,6 +88,7 @@ const DashboardHero = () => {
     orders.forEach((item) => {
       row.push({
         id: item._id,
+        total: item.totalPrice,
         itemsQty: item.cart.reduce((acc, item) => acc + item.qty, 0),
         status: item.status,
       });
@@ -100,9 +112,9 @@ const DashboardHero = () => {
           </div>
           <h5 className="pt-2 pl-[36px] text-[22px] font-[500]">
             {availableBalance.toLocaleString("vi-VN", {
-              styles: "currency",
+              style: "currency",
               currency: "VND",
-            })}
+            })}{" "}
           </h5>
           {/* <Link to="/dashboard-withdraw-money">
             <h5 className="pt-4 pl-[2] text-[#077f9c]">Withdraw Money</h5>

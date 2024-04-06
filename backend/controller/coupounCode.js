@@ -12,15 +12,25 @@ router.post(
   isSeller,
   catchAsyncErrors(async (req, res, next) => {
     try {
-      const isCoupounCodeExists = await CoupounCode.find({
-        name: req.body.name,
-      });
+      const { name, minAmount, maxAmount, selectedProducts, value, shopId } =
+        req.body;
+
+      // Kiểm tra xem mã giảm giá có tồn tại chưa
+      const isCoupounCodeExists = await CoupounCode.find({ name });
 
       if (isCoupounCodeExists.length !== 0) {
         return next(new ErrorHandler("Mã giảm giá đã tồn tại!", 400));
       }
 
-      const coupounCode = await CoupounCode.create(req.body);
+      // Tạo mã giảm giá
+      const coupounCode = await CoupounCode.create({
+        name,
+        minAmount,
+        maxAmount,
+        selectedProducts,
+        value,
+        shopId,
+      });
 
       res.status(201).json({
         success: true,

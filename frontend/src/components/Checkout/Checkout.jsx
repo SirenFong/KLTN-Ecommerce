@@ -11,6 +11,7 @@ import { toast } from "react-toastify";
 const Checkout = () => {
   const { user } = useSelector((state) => state.user);
   const { cart } = useSelector((state) => state.cart);
+
   const [country, setCountry] = useState("");
   const [city, setCity] = useState("");
   const [userInfo, setUserInfo] = useState(false);
@@ -80,6 +81,8 @@ const Checkout = () => {
     await axios.get(`${server}/coupon/get-coupon-value/${name}`).then((res) => {
       const shopId = res.data.couponCode?.shopId;
       const couponCodeValue = res.data.couponCode?.value;
+      const minAmount = res.data.couponCode?.minAmount;
+      const maxAmount = res.data.couponCode?.maxAmount;
       if (res.data.couponCode !== null) {
         const isCouponValid =
           cart && cart.filter((item) => item.shopId === shopId);
@@ -94,10 +97,18 @@ const Checkout = () => {
               acc + item.qty * item.discountPrice,
             0
           );
-          const discountPrice = (eligiblePrice * couponCodeValue) / 100;
-          setSellPrice(discountPrice);
-          setCouponCodeData(res.data.couponCode);
-          setCouponCode("");
+          if (eligiblePrice < minAmount) {
+            toast.error("Số tiền chưa đủ để áp mã");
+            setCouponCode("");
+          } else {
+            let discountPrice = (eligiblePrice * couponCodeValue) / 100;
+            if (discountPrice > maxAmount) {
+              discountPrice = maxAmount;
+            }
+            setSellPrice(discountPrice);
+            setCouponCodeData(res.data.couponCode);
+            setCouponCode("");
+          }
         }
       }
       if (res.data.couponCode === null) {

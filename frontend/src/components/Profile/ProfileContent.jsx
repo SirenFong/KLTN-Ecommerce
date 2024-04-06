@@ -31,7 +31,7 @@ const ProfileContent = ({ active }) => {
   const [email, setEmail] = useState(user && user.email);
   const [phoneNumber, setPhoneNumber] = useState(user && user.phoneNumber);
   const [password, setPassword] = useState("");
-  const [setAvatar] = useState(null);
+  const [avatar, setAvatar] = useState(null);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -66,7 +66,7 @@ const ProfileContent = ({ active }) => {
           )
           .then((response) => {
             dispatch(loadUser());
-            toast.success("Thay ảnh đại diện thành công!");
+            toast.success("Đã cập nhật ảnh đại diện!");
           })
           .catch((error) => {
             toast.error(error);

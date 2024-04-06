@@ -79,9 +79,10 @@ const AllOrders = () => {
 
   orders &&
     orders.forEach((item) => {
+      console.log(item.user);
       row.push({
         id: item._id,
-        phoneNumber: `0${item.user.phoneNumber}`,
+        phoneNumber: `${item.user.phoneNumber}`,
         itemsQty: item.cart.length,
         total: item.totalPrice.toLocaleString("vi-VN", {
           style: "currency",
