@@ -23,10 +23,12 @@ const ProductDetails = ({ data }) => {
   const { wishlist } = useSelector((state) => state.wishlist);
   const { cart } = useSelector((state) => state.cart);
   const { user, isAuthenticated } = useSelector((state) => state.user);
+  const { seller } = useSelector((state) => state.seller);
   const { products } = useSelector((state) => state.products);
   const [count, setCount] = useState(1);
   const [click, setClick] = useState(false);
   const [select, setSelect] = useState(0);
+  const [displayCount, setDisplayCount] = useState(5);
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -128,11 +130,12 @@ const ProductDetails = ({ data }) => {
                 />
                 <div className="w-full flex">
                   {data &&
-                    data.images.map((i, index) => (
+                    data.images.slice(0, displayCount).map((i, index) => (
                       <div
                         className={`${
                           select === 0 ? "border" : "null"
                         } cursor-pointer`}
+                        key={index}
                       >
                         <img
                           src={`${i?.url}`}
@@ -142,6 +145,11 @@ const ProductDetails = ({ data }) => {
                         />
                       </div>
                     ))}
+                  {data && data.images.length > displayCount && (
+                    <button onClick={() => setDisplayCount(displayCount + 5)}>
+                      Xem thêm
+                    </button>
+                  )}
                   <div
                     className={`${
                       select === 1 ? "border" : "null"
@@ -150,9 +158,11 @@ const ProductDetails = ({ data }) => {
                 </div>
               </div>
               <div className="w-full 800px:w-[50%] pt-5">
+                <h1 className={`${styles.brandTitle}`}>
+                  Thương hiệu: {data.brand}
+                </h1>
                 <h1 className={`${styles.productTitle}`}>{data.name}</h1>
-                <p>{data.description}</p>
-                <div className="flex pt-3 relative">
+                <div className="flex pt-3 p-3 relative">
                   <h3 className={`${styles.price} pr-10 relative`}>
                     {(data.sellPrice || data.discountPrice).toLocaleString(
                       "vi-VN",
@@ -160,7 +170,8 @@ const ProductDetails = ({ data }) => {
                         style: "currency",
                         currency: "VND",
                       }
-                    )}
+                    )}{" "}
+                    / {data.unit}
                     {data.sellPrice === undefined && (
                       <h3 className="font-[500] text-[18px] text-[#ff5837] absolute top-0 right-0 text-sm">
                         {data.percentDiscount}(%)
@@ -168,6 +179,7 @@ const ProductDetails = ({ data }) => {
                     )}
                   </h3>
                 </div>
+                <p>{data.description}</p>
 
                 <div className="flex items-center mt-12 justify-between pr-3">
                   <div>
@@ -311,37 +323,32 @@ const ProductDetailsInfo = ({
         </div>
       </div>
       {active === 1 ? (
-        <>
-          <p className="py-2 text-[18px] leading-8 pb-10 whitespace-pre-line">
-            {data.description}
-          </p>
-        </>
+        <p className="py-2 text-[18px] leading-8 pb-10 whitespace-pre-line">
+          {data?.description}
+        </p>
       ) : null}
 
       {active === 2 ? (
         <div className="w-full min-h-[40vh] flex flex-col items-center py-3 overflow-y-scroll">
-          {data &&
-            data.reviews.map((item) => (
-              <div className="w-full flex my-2">
-                <img
-                  src={`${item.user.avatar?.url}`}
-                  alt=""
-                  className="w-[50px] h-[50px] rounded-full"
-                />
-                <div className="pl-2 ">
-                  <div className="w-full flex items-center">
-                    <h1 className="font-[500] mr-3">{item.user.name}</h1>
-                    <Ratings rating={data?.ratings} />
-                  </div>
-                  <p>{item.comment}</p>
+          {data?.reviews?.map((item) => (
+            <div className="w-full flex my-2">
+              <img
+                src={`${item.user?.avatar?.url}`}
+                alt=""
+                className="w-[50px] h-[50px] rounded-full"
+              />
+              <div className="pl-2 ">
+                <div className="w-full flex items-center">
+                  <h1 className="font-[500] mr-3">{item.user.name}</h1>
+                  <Ratings rating={data?.ratings} />
                 </div>
+                <p>{item.comment}</p>
               </div>
-            ))}
+            </div>
+          ))}
 
           <div className="w-full flex justify-center">
-            {data && data.reviews.length === 0 && (
-              <h5>Chưa có đánh giá nào!</h5>
-            )}
+            {data?.reviews?.length === 0 && <h5>Chưa có đánh giá nào!</h5>}
           </div>
         </div>
       ) : null}

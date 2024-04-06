@@ -4,7 +4,8 @@ const styles = {
     "text-[27px] text-center md:text-start font-[600] font-Roboto pb-[20px]",
   section: "w-11/12 mx-auto",
   productTitle: "text-[25px] font-[600] font-Roboto text-[#333]",
-  price: "font-bold text-[18px] text-[#016FD6] font-Roboto",
+  brandTitle: "text-[18px] font-[600] font-Roboto text-[#ff5837]",
+  price: "font-bold text-[20px] text-[#016FD6] font-Roboto",
   productDiscountPrice:
     "font-[500] text-[16px] text-[#2F2D2D] pl-3 mt-[-4px] line-through",
   shop_name: "pt-3 text-[15px] text-blue-400 pb-3",

@@ -97,17 +97,23 @@ const ProductCard = ({ data, isEvent }) => {
 
           <div className="py-2 flex items-center justify-between">
             <div className="flex">
-              <h4 className={`${styles.price}`}>
-                {data.sellPrice
-                  ? data.sellPrice.toLocaleString("vi-VN", {
-                      style: "currency",
-                      currency: "VND",
-                    })
-                  : "0"}
+              <h4 className={`${styles.price} pr-2`}>
+                {(data.discountPrice || data.sellPrice).toLocaleString(
+                  "vi-VN",
+                  {
+                    style: "currency",
+                    currency: "VND",
+                  }
+                ) || "0"}
               </h4>
+              {data.discountPrice && (
+                <h5 className="font-[500] text-[15px] text-[#ff5837] ">
+                  {data.percentDiscount}(%)
+                </h5>
+              )}
             </div>
             <span className="font-[400] text-[17px] text-[#68d284]">
-              Đã bán {data?.sold_out}
+              Đã bán {data?.sold_out || 0}
             </span>
           </div>
         </Link>

@@ -5,6 +5,7 @@ import {
   AiOutlineMessage,
   AiOutlineShoppingCart,
 } from "react-icons/ai";
+import { Button } from "@nextui-org/react";
 import { RxCross1 } from "react-icons/rx";
 import { Link } from "react-router-dom";
 import styles from "../../../styles/styles";
@@ -148,7 +149,9 @@ const ProductDetailsCard = ({ setOpen, data }) => {
                   </div>
                   <div>
                     {click ? (
-                      <AiFillHeart
+                      <Button
+                        auto
+                        effect={true}
                         size={30}
                         className="cursor-pointer"
                         onClick={() => removeFromWishlistHandler(data)}
@@ -156,7 +159,9 @@ const ProductDetailsCard = ({ setOpen, data }) => {
                         title="Xóa sản phẩm yêu thích"
                       />
                     ) : (
-                      <AiOutlineHeart
+                      <Button
+                        auto
+                        effect={true}
                         size={30}
                         className="cursor-pointer"
                         onClick={() => addToWishlistHandler(data)}
