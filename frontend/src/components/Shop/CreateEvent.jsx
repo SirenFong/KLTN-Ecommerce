@@ -17,6 +17,7 @@ const CreateEvent = () => {
   const [description, setDescription] = useState("");
   const [category, setCategory] = useState("");
   const [tags, setTags] = useState("");
+  const [unit, setUnit] = useState("");
   //
   // const [sellPrice, setSellPrice] = useState("");
   const [originalPrice, setOriginalPrice] = useState("");
@@ -33,6 +34,7 @@ const CreateEvent = () => {
     setDescription("");
     setCategory("");
     setTags("");
+    setUnit("");
     setOriginalPrice();
     setDiscountPrice();
     setStock();
@@ -123,6 +125,7 @@ const CreateEvent = () => {
       description,
       category,
       tags,
+      unit,
       setOriginalPrice,
       percentDiscount,
       discountPrice,
@@ -198,7 +201,17 @@ const CreateEvent = () => {
             value={tags}
             className="mt-2 appearance-none block w-full px-3 h-[35px] border border-gray-300 rounded-[3px] placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
             onChange={(e) => setTags(e.target.value)}
-            placeholder="Enter your event product tags..."
+          />
+        </div>
+        <br />
+        <div>
+          <label className="pb-2">Đơn vị tính</label>
+          <input
+            type="text"
+            name="unit"
+            value={unit}
+            className="mt-2 appearance-none block w-full px-3 h-[35px] border border-gray-300 rounded-[3px] placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+            onChange={(e) => setUnit(e.target.value)}
           />
         </div>
         <br />

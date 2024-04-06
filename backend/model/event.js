@@ -13,6 +13,9 @@ const eventSchema = new mongoose.Schema({
     type: String,
     required: [true, "Vui lòng chọn danh mục sản phẩm!"],
   },
+  unit: {
+    type: String,
+  },
   start_Date: {
     type: Date,
     required: true,

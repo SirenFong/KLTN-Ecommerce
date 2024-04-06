@@ -164,14 +164,27 @@ const ProductDetails = ({ data }) => {
                 <h1 className={`${styles.productTitle}`}>{data.name}</h1>
                 <div className="flex pt-3 p-3 relative">
                   <h3 className={`${styles.price} pr-10 relative`}>
-                    {(data.sellPrice || data.discountPrice).toLocaleString(
-                      "vi-VN",
-                      {
-                        style: "currency",
-                        currency: "VND",
-                      }
-                    )}{" "}
-                    / {data.unit}
+                    {/* Display the sell price, formatted as currency */}
+                    {data.sellPrice && (
+                      <>
+                        {data.sellPrice.toLocaleString("vi-VN", {
+                          style: "currency",
+                          currency: "VND",
+                        })}{" "}
+                        / {data.unit} {/* Display the unit */}
+                      </>
+                    )}
+                    {/* Display the discount price, formatted as currency */}
+                    {data.discountPrice && (
+                      <>
+                        {data.discountPrice.toLocaleString("vi-VN", {
+                          style: "currency",
+                          currency: "VND",
+                        })}{" "}
+                        / {data.unit} {/* Display the unit */}
+                      </>
+                    )}
+                    {/* If sellPrice is undefined, display the discount percentage */}
                     {data.sellPrice === undefined && (
                       <h3 className="font-[500] text-[18px] text-[#ff5837] absolute top-0 right-0 text-sm">
                         {data.percentDiscount}(%)
