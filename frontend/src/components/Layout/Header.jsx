@@ -71,47 +71,52 @@ const Header = ({ activeHeading }) => {
             </Link>
           </div>
 
-          <div className="w-[50%] relative">
-            <input
-              type="text"
-              placeholder="Tìm sản phẩm..."
-              value={searchTerm}
-              onChange={handleSearchChange}
-              className="h-[40px] w-full px-2 border-[#3957db] border-[2px] rounded-md"
-            />
-            <AiOutlineSearch
-              size={30}
-              className="absolute right-2 top-1.5 cursor-pointer"
-            />
-            {searchData && searchData.length !== 0 ? (
-              <div className="absolute min-h-[30vh] bg-slate-50 shadow-sm-2 z-[9] p-4">
-                {searchData &&
-                  searchData.map((i, index) => {
-                    return (
-                      <Link to={`/product/${i._id}`}>
-                        <div className="w-full flex items-start-py-3">
-                          <img
-                            src={`${i.images[0]?.url}`}
-                            alt=""
-                            className="w-[40px] h-[40px] mr-[10px]"
-                          />
-                          <h1>{i.name}</h1>
-                        </div>
-                      </Link>
-                    );
-                  })}
-              </div>
-            ) : null}
+          <div className="w-[100%] flex justify-center items-center h-screen">
+            <div className="w-[70%] relative">
+              <input
+                type="text"
+                placeholder="Tìm sản phẩm..."
+                value={searchTerm}
+                onChange={handleSearchChange}
+                className="h-[40px] w-full px-2 border-[#3957db] border-[2px] rounded-md"
+              />
+              <AiOutlineSearch
+                size={30}
+                className="absolute right-2 top-1.5 cursor-pointer"
+              />
+              {searchData && searchData.length !== 0 ? (
+                <div className="absolute min-h-[30vh] bg-slate-50 shadow-sm-2 z-[9] p-4">
+                  {searchData &&
+                    searchData.map((i) => {
+                      return (
+                        <Link to={`/product/${i._id}`}>
+                          <div className="w-full flex items-start-py-3">
+                            <img
+                              src={`${i.images[0]?.url}`}
+                              alt=""
+                              className="w-[40px] h-[40px] mr-[10px]"
+                            />
+                            <h1>{i.name}</h1>
+                          </div>
+                        </Link>
+                      );
+                    })}
+                </div>
+              ) : null}
+            </div>
           </div>
 
-          <div className={`${styles.button}`}>
-            <Link to={`${isSeller ? "/dashboard" : "/shop-login"}`}>
-              <h1 className="text-[#fff] flex items-center">
-                {isSeller ? "Trang quản lý" : "Đăng nhập"}{" "}
-                <IoIosArrowForward className="ml-1" />
-              </h1>
-            </Link>
-          </div>
+          {isSeller ? (
+            <div className={`${styles.button}`}>
+              <div className={`${styles.button}`}>
+                <Link to="/dashboard">
+                  <h1 className="text-[#fff] flex items-center">
+                    Trang quản lý <IoIosArrowForward className="ml-1" />
+                  </h1>
+                </Link>
+              </div>
+            </div>
+          ) : null}
         </div>
       </div>
       <div
