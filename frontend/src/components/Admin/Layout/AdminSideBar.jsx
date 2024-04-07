@@ -5,7 +5,7 @@ import { RxDashboard } from "react-icons/rx";
 import { Link } from "react-router-dom";
 import { HiOutlineUserGroup } from "react-icons/hi";
 import { BsHandbag } from "react-icons/bs";
-import { MdOutlineLocalOffer } from "react-icons/md";
+import { MdOutlineLocalOffer, MdSupervisorAccount } from "react-icons/md";
 import { AiOutlineSetting } from "react-icons/ai";
 
 const AdminSideBar = ({ active }) => {
@@ -103,16 +103,31 @@ const AdminSideBar = ({ active }) => {
           </h5>
         </Link>
       </div>
-
       <div className="w-full flex items-center p-4">
-        <Link to="/profile" className="w-full flex items-center">
-          <AiOutlineSetting
+        <Link to="/shop-create" className="w-full flex items-center">
+          <MdSupervisorAccount
             size={30}
             color={`${active === 8 ? "crimson" : "#555"}`}
           />
           <h5
             className={`hidden 800px:block pl-2 text-[18px] font-[400] ${
               active === 8 ? "text-[crimson]" : "text-[#555]"
+            }`}
+          >
+            Đăng ký cửa hàng
+          </h5>
+        </Link>
+      </div>
+
+      <div className="w-full flex items-center p-4">
+        <Link to="/profile" className="w-full flex items-center">
+          <AiOutlineSetting
+            size={30}
+            color={`${active === 9 ? "crimson" : "#555"}`}
+          />
+          <h5
+            className={`hidden 800px:block pl-2 text-[18px] font-[400] ${
+              active === 9 ? "text-[crimson]" : "text-[#555]"
             }`}
           >
             Cài đặt

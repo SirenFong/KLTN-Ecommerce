@@ -237,8 +237,8 @@ const ShopCreate = () => {
               </button>
             </div>
             <div className={`${styles.noramlFlex} w-full`}>
-              <Link to="/shop-login" className="text-blue-600 pl-2">
-                Đăng nhập
+              <Link to="/admin-sellers" className="text-blue-600 pl-2">
+                Trở về
               </Link>
             </div>
           </form>

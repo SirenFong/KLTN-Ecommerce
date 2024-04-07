@@ -75,7 +75,10 @@ const AllProducts = () => {
       row.push({
         id: item._id,
         name: item.name,
-        price: "US$ " + item.discountPrice,
+        price: item.sellPrice.toLocaleString("vi-VN", {
+          style: "currency",
+          currency: "VND",
+        }),
         Stock: item.stock,
         sold: item?.sold_out,
       });
