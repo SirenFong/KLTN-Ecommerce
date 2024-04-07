@@ -1,10 +1,8 @@
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
-import { motion } from "framer-motion";
 import styles from "../../styles/styles";
 import EventCard from "./EventCard";
 import {
-  IconName,
   IoIosArrowDropleftCircle,
   IoIosArrowDroprightCircle,
 } from "react-icons/io";
@@ -39,28 +37,21 @@ const Events = () => {
           <div className="w-full grid">
             {allEvents.length > 0 ? (
               <div className="flex items-center">
-                <motion.div
-                  className="mr-5"
-                  initial="hidden"
-                  animate="visible"
-                  variants={variants}
-                  transition={{ duration: 1 }}
-                >
-                  <EventCard
-                    key={currentEventIndex}
-                    data={allEvents[currentEventIndex]}
-                  />
-                </motion.div>
-
+                <EventCard
+                  key={currentEventIndex}
+                  data={allEvents[currentEventIndex]}
+                />
                 <IoIosArrowDropleftCircle
-                  className="cursor-pointer"
+                  className="cursor-pointer p-2"
                   size={70}
                   onClick={handlePrevEvent}
+                  style={{ width: "70px", height: "70px" }}
                 />
                 <IoIosArrowDroprightCircle
-                  className="cursor-pointer"
+                  className="cursor-pointer p-2"
                   size={70}
                   onClick={handleNextEvent}
+                  style={{ width: "70px", height: "70px" }}
                 />
               </div>
             ) : (

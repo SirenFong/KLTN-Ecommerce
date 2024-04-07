@@ -23,12 +23,13 @@ const ProductDetails = ({ data }) => {
   const { wishlist } = useSelector((state) => state.wishlist);
   const { cart } = useSelector((state) => state.cart);
   const { user, isAuthenticated } = useSelector((state) => state.user);
-  const { seller } = useSelector((state) => state.seller);
+  // const { seller } = useSelector((state) => state.seller);
   const { products } = useSelector((state) => state.products);
   const [count, setCount] = useState(1);
   const [click, setClick] = useState(false);
   const [select, setSelect] = useState(0);
   const [displayCount, setDisplayCount] = useState(5);
+  const [showFullDescription, setShowFullDescription] = useState(false);
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -42,6 +43,14 @@ const ProductDetails = ({ data }) => {
       setClick(false);
     }
   }, [data, dispatch, wishlist]);
+
+  const handleShowMoreClick = () => {
+    setShowFullDescription(true);
+  };
+
+  const handleShowLessClick = () => {
+    setShowFullDescription(false);
+  };
 
   const incrementCount = () => {
     setCount(count + 1);
@@ -128,7 +137,7 @@ const ProductDetails = ({ data }) => {
                   alt=""
                   className="w-[80%]"
                 />
-                <div className="w-full flex">
+                <div className="w-full flex justify-center pr-5">
                   {data &&
                     data.images.slice(0, displayCount).map((i, index) => (
                       <div
@@ -164,27 +173,26 @@ const ProductDetails = ({ data }) => {
                 <h1 className={`${styles.productTitle}`}>{data.name}</h1>
                 <div className="flex pt-3 p-3 relative">
                   <h3 className={`${styles.price} pr-10 relative`}>
-                    {/* Display the sell price, formatted as currency */}
                     {data.sellPrice && (
                       <>
                         {data.sellPrice.toLocaleString("vi-VN", {
                           style: "currency",
                           currency: "VND",
                         })}{" "}
-                        / {data.unit} {/* Display the unit */}
+                        / {data.unit}
                       </>
                     )}
-                    {/* Display the discount price, formatted as currency */}
+
                     {data.discountPrice && (
                       <>
                         {data.discountPrice.toLocaleString("vi-VN", {
                           style: "currency",
                           currency: "VND",
                         })}{" "}
-                        / {data.unit} {/* Display the unit */}
+                        / {data.unit}
                       </>
                     )}
-                    {/* If sellPrice is undefined, display the discount percentage */}
+
                     {data.sellPrice === undefined && (
                       <h3 className="font-[500] text-[18px] text-[#ff5837] absolute top-0 right-0 text-sm">
                         {data.percentDiscount}(%)
@@ -192,7 +200,23 @@ const ProductDetails = ({ data }) => {
                     )}
                   </h3>
                 </div>
-                <p>{data.description}</p>
+                <p className="py-2 text-[18px] leading-8 pb-10 whitespace-pre-line">
+                  {showFullDescription
+                    ? data?.description
+                    : `${data?.description.substring(0, 250)}...`}
+                  <br />
+                  {!showFullDescription && (
+                    <button className="font-bold" onClick={handleShowMoreClick}>
+                      Xem thêm
+                    </button>
+                  )}
+                  <br />
+                  {showFullDescription && (
+                    <button className="font-bold" onClick={handleShowLessClick}>
+                      Thu gọn
+                    </button>
+                  )}
+                </p>
 
                 <div className="flex items-center mt-12 justify-between pr-3">
                   <div>

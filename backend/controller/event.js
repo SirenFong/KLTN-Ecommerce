@@ -23,14 +23,12 @@ router.post(
     const { shopId, images, ...productData } = req.body;
 
     if (!shopId || !images || !productData) {
-      return next(
-        new ErrorHandler("Request body is missing required fields", 400)
-      );
+      return next(new ErrorHandler("Chưa nhập đủ thông tin", 400));
     }
 
     const shop = await Shop.findById(shopId);
     if (!shop) {
-      return next(new ErrorHandler("Invalid shop ID", 400));
+      return next(new ErrorHandler("Lỗi vui lòng thử lại", 400));
     }
 
     const imagesArray = typeof images === "string" ? [images] : images;
@@ -42,7 +40,7 @@ router.post(
         imagesLinks.push(imageLink);
       } catch (error) {
         return next(
-          new ErrorHandler(`Failed to upload image: ${error.message}`, 400)
+          new ErrorHandler(`Lỗi khi tải hình ảnh: ${error.message}`, 400)
         );
       }
     }
@@ -99,7 +97,7 @@ router.delete(
       const event = await Event.findById(req.params.id);
 
       if (!event) {
-        return next(new ErrorHandler("Product is not found with this id", 404));
+        return next(new ErrorHandler("Không tìm thấy sản phẩm", 404));
       }
 
       for (let i = 0; i < event.images.length; i++) {

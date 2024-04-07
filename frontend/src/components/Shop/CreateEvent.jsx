@@ -18,6 +18,7 @@ const CreateEvent = () => {
   const [category, setCategory] = useState("");
   const [tags, setTags] = useState("");
   const [unit, setUnit] = useState("");
+  const [brand, setBrand] = useState("");
   //
   // const [sellPrice, setSellPrice] = useState("");
   const [originalPrice, setOriginalPrice] = useState("");
@@ -35,6 +36,7 @@ const CreateEvent = () => {
     setCategory("");
     setTags("");
     setUnit("");
+    setBrand("");
     setOriginalPrice();
     setDiscountPrice();
     setStock();
@@ -126,6 +128,7 @@ const CreateEvent = () => {
       category,
       tags,
       unit,
+      brand,
       setOriginalPrice,
       percentDiscount,
       discountPrice,
@@ -212,6 +215,17 @@ const CreateEvent = () => {
             value={unit}
             className="mt-2 appearance-none block w-full px-3 h-[35px] border border-gray-300 rounded-[3px] placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
             onChange={(e) => setUnit(e.target.value)}
+          />
+        </div>
+        <br />
+        <div>
+          <label className="pb-2">Thương hiệu</label>
+          <input
+            type="text"
+            name="brand"
+            value={brand}
+            className="mt-2 appearance-none block w-full px-3 h-[35px] border border-gray-300 rounded-[3px] placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+            onChange={(e) => setBrand(e.target.value)}
           />
         </div>
         <br />
@@ -334,6 +348,8 @@ const CreateEvent = () => {
                 !name ||
                 !description ||
                 !category ||
+                !unit ||
+                !brand ||
                 !discountPrice ||
                 !stock ||
                 !startDate ||
