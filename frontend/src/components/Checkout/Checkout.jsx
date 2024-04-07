@@ -160,7 +160,7 @@ const Checkout = () => {
         className={`${styles.button} w-[150px] 800px:w-[280px] mt-10`}
         onClick={paymentSubmit}
       >
-        <h5 className="text-white">Thanh toán</h5>
+        <h5 className="text-white">Hoàn tất</h5>
       </div>
     </div>
   );
@@ -178,8 +178,8 @@ const ShippingInfo = ({
   setAddress1,
   address2,
   setAddress2,
-  zipCode,
-  setZipCode,
+  // zipCode,
+  // setZipCode,
 }) => {
   return (
     <div className="w-full 800px:w-[95%] bg-white rounded-md p-5 pb-8">
@@ -300,7 +300,7 @@ const ShippingInfo = ({
                   onClick={() =>
                     setAddress1(item.address1) ||
                     setAddress2(item.address2) ||
-                    setZipCode(item.zipCode) ||
+                    // setZipCode(item.zipCode) ||
                     setCountry(item.country) ||
                     setCity(item.city)
                   }
@@ -360,7 +360,7 @@ const CartData = ({
         <input
           type="text"
           className={`${styles.input} h-[40px] pl-2`}
-          placeholder="Coupoun code"
+          placeholder="Mã giảm giá"
           value={couponCode}
           onChange={(e) => setCouponCode(e.target.value)}
           required

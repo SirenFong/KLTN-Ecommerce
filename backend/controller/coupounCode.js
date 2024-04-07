@@ -97,4 +97,19 @@ router.get(
   })
 );
 
+router.get(
+  "/get-all-coupons",
+  catchAsyncErrors(async (req, res, next) => {
+    try {
+      const couponCodes = await CoupounCode.find({});
+      res.status(200).json({
+        success: true,
+        couponCodes,
+      });
+    } catch (error) {
+      return next(new ErrorHandler(error, 400));
+    }
+  })
+);
+
 module.exports = router;
