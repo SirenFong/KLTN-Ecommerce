@@ -151,7 +151,7 @@ const CreateProduct = () => {
 
   return (
     <div className="w-[100%] 800px:w-[90%] bg-white shadow h-[80vh] rounded-[4px] p-3 overflow-y-scroll">
-      <h5 className="text-[30px] font-Poppins text-center">Tạo sản phẩm</h5>
+      <h5 className="text-[30px] font-Poppins text-center">Sửa sản phẩm</h5>
       <form onSubmit={handleSubmit}>
         <br />
         <div>

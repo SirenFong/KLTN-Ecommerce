@@ -1,7 +1,7 @@
 import { Button } from "@material-ui/core";
 import { DataGrid } from "@material-ui/data-grid";
 import React, { useEffect } from "react";
-import { AiOutlineDelete, AiOutlineEye } from "react-icons/ai";
+import { AiOutlineDelete, AiOutlineEdit, AiOutlineEye } from "react-icons/ai";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { getAllProductsShop } from "../../redux/actions/product";
@@ -73,7 +73,7 @@ const AllProducts = () => {
       },
     },
     {
-      field: "Delete",
+      field: "Xóa sản phẩm",
       flex: 0.8,
       minWidth: 120,
       headerName: "",
@@ -84,6 +84,23 @@ const AllProducts = () => {
           <>
             <Button onClick={() => handleDelete(params.id)}>
               <AiOutlineDelete size={20} />
+            </Button>
+          </>
+        );
+      },
+    },
+    {
+      field: "Sửa",
+      flex: 0.8,
+      minWidth: 120,
+      headerName: "",
+      type: "number",
+      sortable: false,
+      renderCell: (params) => {
+        return (
+          <>
+            <Button component={Link} to={`/edit-product/${params.id}`}>
+              <AiOutlineEdit size={20} />
             </Button>
           </>
         );
