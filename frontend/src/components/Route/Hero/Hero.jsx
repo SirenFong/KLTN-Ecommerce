@@ -9,9 +9,6 @@ const Hero = () => {
       style={{
         backgroundImage:
           "url(https://res.cloudinary.com/djxsh5hhw/image/upload/v1703686408/20773_yngarp.jpg)",
-        // backgroundSize: "cover", // Thêm thuộc tính kích thước ảnh nền
-        // backgroundPosition: "center", // Đặt ảnh ở trung tâm phần nền
-        // backgroundRepeat: "no-repeat", // Ngăn chặn ảnh lặp lại
       }}
     >
       <div className={`${styles.section} w-[90%] 800px:w-[60%]`}>

@@ -23,6 +23,8 @@ const ProductDetailsCard = ({ setOpen, data }) => {
   const dispatch = useDispatch();
   const [count, setCount] = useState(1);
   const [click, setClick] = useState(false);
+  const [displayCount, setDisplayCount] = useState(5);
+  const [showFullDescription, setShowFullDescription] = useState(false);
   //   const [select, setSelect] = useState(false);
 
   const handleMessageSubmit = () => {};
@@ -35,6 +37,14 @@ const ProductDetailsCard = ({ setOpen, data }) => {
 
   const incrementCount = () => {
     setCount(count + 1);
+  };
+
+  const handleShowMoreClick = () => {
+    setShowFullDescription(true);
+  };
+
+  const handleShowLessClick = () => {
+    setShowFullDescription(false);
   };
 
   const addToCartHandler = (id) => {
@@ -88,7 +98,7 @@ const ProductDetailsCard = ({ setOpen, data }) => {
                 <div className="flex">
                   <Link to={`/shop/preview/${data.shop._id}`} className="flex">
                     <img
-                      src={`${data.images && data.images[0]?.url}`}
+                      src={`${data?.shop?.avatar?.url}`}
                       alt=""
                       className="w-[50px] h-[50px] rounded-full mr-2"
                     />
@@ -117,7 +127,23 @@ const ProductDetailsCard = ({ setOpen, data }) => {
                 <h1 className={`${styles.productTitle} text-[20px]`}>
                   {data.name}
                 </h1>
-                <p>{data.description}</p>
+                <p className="py-2 text-[18px] leading-8 pb-10 whitespace-pre-line">
+                  {showFullDescription
+                    ? data?.description
+                    : `${data?.description.substring(0, 250)}...`}
+                  <br />
+                  {!showFullDescription && (
+                    <button className="font-bold" onClick={handleShowMoreClick}>
+                      Xem thêm
+                    </button>
+                  )}
+                  <br />
+                  {showFullDescription && (
+                    <button className="font-bold" onClick={handleShowLessClick}>
+                      Thu gọn
+                    </button>
+                  )}
+                </p>
 
                 <div className="flex pt-3">
                   <h3 className={`${styles.price}`}>
@@ -126,7 +152,8 @@ const ProductDetailsCard = ({ setOpen, data }) => {
                           style: "currency",
                           currency: "VND",
                         })
-                      : null}
+                      : null}{" "}
+                    / {data.unit}
                   </h3>
                 </div>
                 <div className="flex items-center mt-12 justify-between pr-3">

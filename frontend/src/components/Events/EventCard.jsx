@@ -43,8 +43,10 @@ const EventCard = ({ active, data }) => {
         <div className="flex py-2 justify-between">
           <div className="flex">
             <h5 className="font-bold text-[25px] text-[#016FD6] font-Roboto pr-3">
-              Giảm giá đặc biệt: {data.discountPrice.toLocaleString()}đ
+              Giảm giá đặc biệt: {data.discountPrice.toLocaleString()}đ /{" "}
+              {data.unit}
             </h5>
+
             <h5 className="font-[500] text-[18px] text-[#ff5837] ">
               {data.percentDiscount}(%)
             </h5>
