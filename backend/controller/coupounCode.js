@@ -16,10 +16,15 @@ router.post(
         req.body;
 
       // Kiểm tra xem mã giảm giá có tồn tại chưa
-      const isCoupounCodeExists = await CoupounCode.find({ name });
+      const isCoupounCodeExists = await CoupounCode.findOne({ name });
 
-      if (isCoupounCodeExists.length !== 0) {
-        return next(new ErrorHandler("Mã giảm giá đã tồn tại!", 400));
+      if (
+        isCoupounCodeExists &&
+        isCoupounCodeExists.shopId.toString() === shopId
+      ) {
+        return next(
+          new ErrorHandler("Mã giảm giá đã tồn tại trong cửa hàng này!", 400)
+        );
       }
 
       // Tạo mã giảm giá
@@ -41,7 +46,6 @@ router.post(
     }
   })
 );
-
 // Load mã giảm giá
 router.get(
   "/get-coupon/:id",

@@ -133,10 +133,10 @@ const ProfileContent = ({ active }) => {
                 <div className=" w-[100%] 800px:w-[50%]">
                   <label className="block pb-2">Số điện thoại</label>
                   <input
-                    type="number"
+                    type="text"
                     className={`${styles.input} !w-[95%] mb-4 800px:mb-0`}
                     required
-                    value={phoneNumber}
+                    value={`0${phoneNumber}`}
                     onChange={(e) => setPhoneNumber(e.target.value)}
                   />
                 </div>
