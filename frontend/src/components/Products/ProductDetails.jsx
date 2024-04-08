@@ -194,12 +194,13 @@ const ProductDetails = ({ data }) => {
                     )}
 
                     {data.sellPrice === undefined && (
-                      <h3 className="font-[500] text-[18px] text-[#ff5837] absolute top-0 right-0 text-sm">
-                        {data.percentDiscount}(%)
+                      <h3 className="font-[800] text-[25px] text-[#ff5837] absolute top-0 right-0 text-sm">
+                        -{data.percentDiscount}(%)
                       </h3>
                     )}
                   </h3>
                 </div>
+
                 <p className="py-2 text-[18px] leading-8 pb-10 whitespace-pre-line">
                   {showFullDescription
                     ? data?.description

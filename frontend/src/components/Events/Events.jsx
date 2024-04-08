@@ -51,16 +51,16 @@ const Events = () => {
                 {allEvents.length > 1 && (
                   <>
                     <IoIosArrowDropleftCircle
-                      className="cursor-pointer p-2"
-                      size={70}
+                      className="cursor-pointer p-1 "
+                      // size={20}
                       onClick={handlePrevEvent}
-                      style={{ width: "70px", height: "70px" }}
+                      style={{ width: "50px", height: "50px" }}
                     />
                     <IoIosArrowDroprightCircle
-                      className="cursor-pointer p-2"
-                      size={70}
+                      className="cursor-pointer p-1"
+                      // size={20}
                       onClick={handleNextEvent}
-                      style={{ width: "70px", height: "70px" }}
+                      style={{ width: "50px", height: "50px" }}
                     />
                   </>
                 )}
