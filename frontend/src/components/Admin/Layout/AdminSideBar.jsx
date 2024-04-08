@@ -54,7 +54,7 @@ const AdminSideBar = ({ active }) => {
               active === 3 ? "text-[crimson]" : "text-[#555]"
             }`}
           >
-            Quản lý dược sỹ
+            Quản lý Cửa hàng
           </h5>
         </Link>
       </div>

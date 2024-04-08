@@ -14,14 +14,12 @@ const AdminDashboardOrders = () => {
 
   useEffect(() => {
     dispatch(getAllOrdersOfAdmin());
-  }, []);
+  }, [dispatch]);
 
   const columns = [
-    { field: "id", headerName: "Order ID", minWidth: 150, flex: 0.7 },
-
     {
       field: "status",
-      headerName: "Status",
+      headerName: "Trạng thái",
       minWidth: 130,
       flex: 0.7,
       cellClassName: (params) => {
@@ -32,7 +30,7 @@ const AdminDashboardOrders = () => {
     },
     {
       field: "itemsQty",
-      headerName: "Items Qty",
+      headerName: "Số lượng sản phẩm",
       type: "number",
       minWidth: 130,
       flex: 0.7,
@@ -40,18 +38,18 @@ const AdminDashboardOrders = () => {
 
     {
       field: "total",
-      headerName: "Total",
+      headerName: "Tổng tiền",
       type: "number",
       minWidth: 130,
       flex: 0.8,
     },
     {
-        field: "createdAt",
-        headerName: "Order Date",
-        type: "number",
-        minWidth: 130,
-        flex: 0.8,
-      },
+      field: "createdAt",
+      headerName: "Ngày đặt",
+      type: "number",
+      minWidth: 130,
+      flex: 0.8,
+    },
   ];
 
   const row = [];
@@ -60,9 +58,13 @@ const AdminDashboardOrders = () => {
       row.push({
         id: item._id,
         itemsQty: item?.cart?.reduce((acc, item) => acc + item.qty, 0),
-        total: item?.totalPrice + " $",
+        total: item?.totalPrice.toLocaleString("vi-VN", {
+          structuredClone: false,
+          style: "currency",
+          currency: "VND",
+        }),
         status: item?.status,
-        createdAt: item?.createdAt.slice(0,10),
+        createdAt: item?.createdAt.slice(0, 10),
       });
     });
   return (

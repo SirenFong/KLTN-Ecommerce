@@ -76,7 +76,6 @@ const AllCoupons = () => {
   };
 
   const columns = [
-    // { field: "id", headerName: "Id", minWidth: 150, flex: 0.7 },
     {
       field: "name",
       headerName: "Mã giảm giá",

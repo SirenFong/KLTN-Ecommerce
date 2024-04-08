@@ -5,12 +5,23 @@ import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { useEffect } from "react";
 import axios from "axios";
+import { DataGrid } from "@material-ui/data-grid";
 import { server } from "../../server";
 import { toast } from "react-toastify";
+import Loader from "../Layout/Loader";
+import { RxCross1 } from "react-icons/rx";
 
 const Checkout = () => {
   const { user } = useSelector((state) => state.user);
   const { cart } = useSelector((state) => state.cart);
+
+  //
+  const [open, setOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  // const [coupons, setCoupons] = useState([]);
+  const [coupouns, setCoupouns] = useState([]);
+  const [row, setRow] = useState([]);
+  //
 
   const [country, setCountry] = useState("");
   const [city, setCity] = useState("");
@@ -126,6 +137,68 @@ const Checkout = () => {
 
   console.log(discountPercentenge);
 
+  useEffect(() => {
+    setIsLoading(true);
+    axios
+      .get(`${server}/coupon/get-all-coupons`, {
+        withCredentials: true,
+      })
+      .then((res) => {
+        setIsLoading(false);
+        setCoupouns(res.data.couponCodes);
+      })
+      .catch((error) => {
+        setIsLoading(false);
+      });
+  }, []);
+
+  // useEffect(() => {
+  //   setIsLoading(true);
+  //   axios
+  //     .get(`${server}/coupon/get-all-coupons`)
+  //     .then((res) => {
+  //       setIsLoading(false);
+  //       if (Array.isArray(res.data)) {
+  //         setCoupons(res.data);
+  //       } else {
+  //         console.error("res.data is not an array:", res.data);
+
+  //         setCoupons([]);
+  //       }
+  //     })
+  //     .catch((error) => {
+  //       setIsLoading(false);
+  //       console.error("Error fetching coupons:", error);
+  //       toast.error("Failed to fetch coupons");
+  //       // Handle the error
+  //       // For example, you can set coupons to an empty array
+  //       setCoupons([]);
+  //     });
+  // }, []);
+
+  const columns = [
+    { field: "name", headerName: "Mã giảm giá", flex: 2 },
+    { field: "price", headerName: "Giảm giá (%)", flex: 1 },
+  ];
+
+  useEffect(() => {
+    const newRow = coupouns.map((item) => ({
+      id: item._id,
+      name: item.name,
+      price: item.value + " %",
+    }));
+    setRow(newRow);
+  }, [coupouns]);
+
+  // coupouns &&
+  //   coupouns.forEach((item) => {
+  //     row.push({
+  //       id: item._id,
+  //       name: item.name,
+  //       price: item.value + " %",
+  //     });
+  //   });
+
   return (
     <div className="w-full flex flex-col items-center py-8">
       <div className="w-[90%] 1000px:w-[70%] block 800px:flex">
@@ -153,7 +226,29 @@ const Checkout = () => {
             couponCode={couponCode}
             setCouponCode={setCouponCode}
             discountPercentenge={discountPercentenge}
+            open={open}
+            setOpen={setOpen}
+            coupouns={coupouns}
           />
+
+          <>
+            {isLoading ? (
+              <Loader />
+            ) : (
+              <div className="w-full mt-5 bg-white">
+                <DataGrid
+                  rows={row}
+                  columns={columns}
+                  pageSize={10}
+                  disableSelectionOnClick
+                  autoHeight
+                />
+                {open && (
+                  <div className="fixed top-0 left-0 w-full h-screen bg-[#00000062] z-[20000] flex items-center justify-center"></div>
+                )}
+              </div>
+            )}
+          </>
         </div>
       </div>
       <div
@@ -322,6 +417,7 @@ const CartData = ({
   couponCode,
   setCouponCode,
   discountPercentenge,
+  setCoupons,
 }) => {
   return (
     <div className="w-full bg-[#fff] rounded-md p-5 pb-8">
@@ -352,6 +448,7 @@ const CartData = ({
             : null}
         </h5>
       </div>
+
       <h5 className="text-[18px] font-[600] text-end pt-3">
         {Math.round(totalPrice).toLocaleString("vi-VN")} VNĐ
       </h5>
@@ -365,6 +462,7 @@ const CartData = ({
           onChange={(e) => setCouponCode(e.target.value)}
           required
         />
+
         <input
           className={`w-full h-[40px] border border-[#f63b60] text-center text-[#f63b60] rounded-[3px] mt-8 cursor-pointer`}
           required

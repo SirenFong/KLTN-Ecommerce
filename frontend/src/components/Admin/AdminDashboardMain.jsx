@@ -23,10 +23,15 @@ const AdminDashboardMain = () => {
   }, [dispatch]);
 
   const adminEarning =
-    adminOrders &&
-    adminOrders.reduce((acc, item) => acc + item.totalPrice * 0.1, 0);
+    adminOrders && adminOrders.reduce((acc, item) => acc + item.totalPrice, 0);
 
   const adminBalance = adminEarning?.toFixed(0);
+
+  // Convert adminBalance to Vietnamese currency format
+  const adminBalanceInVND = Number(adminBalance)?.toLocaleString("vi-VN", {
+    style: "currency",
+    currency: "VND",
+  });
 
   const columns = [
     {
@@ -70,7 +75,7 @@ const AdminDashboardMain = () => {
       row.push({
         id: item._id,
         itemsQty: item?.cart?.reduce((acc, item) => acc + item.qty, 0),
-        total: item?.totalPrice + " $",
+        total: item?.totalPrice.toLocaleString() + " VNĐ",
         status: item?.status,
         createdAt: item?.createdAt.slice(0, 10),
       });
@@ -94,11 +99,14 @@ const AdminDashboardMain = () => {
                 <h3
                   className={`${styles.productTitle} !text-[18px] leading-5 !font-[400] text-[#00000085]`}
                 >
-                  Tổng tiền nhận
+                  Tổng thu nhập
                 </h3>
               </div>
               <h5 className="pt-2 pl-[36px] text-[22px] font-[500]">
-                {adminBalance?.toLocaleString() ?? 0} VNĐ
+                {adminBalanceInVND?.toLocaleString("vi-VN", {
+                  style: "currency",
+                  currency: "VND",
+                }) ?? 0}
               </h5>
             </div>
 

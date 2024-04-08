@@ -17,7 +17,6 @@ const AllEvents = () => {
   }, []);
 
   const columns = [
-    // { field: "id", headerName: "Product Id", minWidth: 150, flex: 0.7 },
     {
       field: "name",
       headerName: "Tên sự kiện",
@@ -39,7 +38,7 @@ const AllEvents = () => {
       flex: 0.6,
     },
     {
-      field: "Preview",
+      field: "Xem sự kiện",
       flex: 0.8,
       minWidth: 100,
       headerName: "",
