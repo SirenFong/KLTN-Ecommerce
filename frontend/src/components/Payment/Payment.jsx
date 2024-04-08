@@ -23,6 +23,7 @@ const Payment = () => {
   const navigate = useNavigate();
   const stripe = useStripe();
   const elements = useElements();
+  console.log(orderData);
 
   useEffect(() => {
     const orderData = JSON.parse(localStorage.getItem("latestOrder"));
@@ -55,6 +56,7 @@ const Payment = () => {
     shippingAddress: orderData?.shippingAddress,
     user: user && user,
     totalPrice: orderData?.totalPrice,
+    discountPercentenge: orderData?.discountPercentenge,
   };
 
   const onApprove = async (data, actions) => {
@@ -442,7 +444,7 @@ const CartData = ({ orderData }) => {
       <div className="flex justify-between border-b pb-3">
         <h3 className="text-[16px] font-[400] text-[#000000a4]">Giảm giá:</h3>
         <h5 className="text-[18px] font-[600]">
-          {formatCurrency(orderData?.discountPrice)}
+          {formatCurrency(orderData?.discountPercentenge)}
         </h5>
       </div>
       <h3 className="text-[16px] font-[400] text-[#000000a4]">Thành tiền</h3>
