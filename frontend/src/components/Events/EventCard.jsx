@@ -34,12 +34,16 @@ const EventCard = ({ active, data }) => {
         <img
           src={`${data.images[0]?.url}`}
           alt=""
-          style={{ width: "500px", height: "500px", objectFit: "cover" }}
+          style={{ width: "300px", height: "300px", objectFit: "cover" }}
         />
       </div>
       <div className="w-full lg:[w-50%] flex flex-col justify-center">
         <h2 className={`${styles.productTitle}`}>{data.name}</h2>
-        <p>{data.description}</p>
+        <p>
+          {data.description.length > 200
+            ? data.description.substring(0, 200) + "..."
+            : data.description}
+        </p>
         <div className="flex py-2 justify-between">
           <div className="flex">
             <h5 className="font-bold text-[25px] text-[#016FD6] font-Roboto pr-3">
@@ -48,7 +52,7 @@ const EventCard = ({ active, data }) => {
             </h5>
 
             <h5 className="font-[500] text-[18px] text-[#ff5837] ">
-              {data.percentDiscount}(%)
+              -{data.percentDiscount}(%)
             </h5>
           </div>
           <span className="pr-3 font-[400] text-[17px] text-[#44a55e]">

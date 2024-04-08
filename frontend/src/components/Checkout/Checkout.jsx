@@ -152,30 +152,6 @@ const Checkout = () => {
       });
   }, []);
 
-  // useEffect(() => {
-  //   setIsLoading(true);
-  //   axios
-  //     .get(`${server}/coupon/get-all-coupons`)
-  //     .then((res) => {
-  //       setIsLoading(false);
-  //       if (Array.isArray(res.data)) {
-  //         setCoupons(res.data);
-  //       } else {
-  //         console.error("res.data is not an array:", res.data);
-
-  //         setCoupons([]);
-  //       }
-  //     })
-  //     .catch((error) => {
-  //       setIsLoading(false);
-  //       console.error("Error fetching coupons:", error);
-  //       toast.error("Failed to fetch coupons");
-  //       // Handle the error
-  //       // For example, you can set coupons to an empty array
-  //       setCoupons([]);
-  //     });
-  // }, []);
-
   const columns = [
     { field: "name", headerName: "Mã giảm giá", flex: 2 },
     { field: "price", headerName: "Giảm giá (%)", flex: 1 },
@@ -239,7 +215,7 @@ const Checkout = () => {
                 <DataGrid
                   rows={row}
                   columns={columns}
-                  pageSize={10}
+                  pageSize={2}
                   disableSelectionOnClick
                   autoHeight
                 />

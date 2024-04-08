@@ -83,11 +83,24 @@ const AllCoupons = () => {
       flex: 1.4,
     },
     {
+      field: "minAmount",
+      headerName: "Số tiền yêu cầu",
+      minWidth: 100,
+      flex: 0.6,
+    },
+    {
+      field: "maxAmount",
+      headerName: "Giảm tối đa",
+      minWidth: 100,
+      flex: 0.6,
+    },
+    {
       field: "price",
       headerName: "(%) Giảm giá",
       minWidth: 100,
       flex: 0.6,
     },
+
     {
       field: "Xóa",
       flex: 0.8,
@@ -114,6 +127,14 @@ const AllCoupons = () => {
       row.push({
         id: item._id,
         name: item.name,
+        minAmount: item.minAmount.toLocaleString("vi-VN", {
+          style: "currency",
+          currency: "VND",
+        }),
+        maxAmount: item.maxAmount.toLocaleString("vi-VN", {
+          style: "currency",
+          currency: "VND",
+        }),
         price: item.value + " %",
       });
     });
@@ -187,11 +208,20 @@ const AllCoupons = () => {
                   <div>
                     <label className="pb-2">Số tiền nhỏ nhất</label>
                     <input
-                      type="number"
+                      type="text"
                       name="value"
-                      value={minAmount}
+                      value={
+                        minAmount
+                          ? minAmount.toLocaleString("vi-VN", {
+                              style: "currency",
+                              currency: "VND",
+                            })
+                          : ""
+                      }
                       className="mt-2 appearance-none block w-full px-3 h-[35px] border border-gray-300 rounded-[3px] placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                      onChange={(e) => setMinAmout(e.target.value)}
+                      onChange={(e) =>
+                        setMinAmout(Number(e.target.value.replace(/\D/g, "")))
+                      }
                       placeholder="Nhập số tiền nhỏ nhất"
                     />
                   </div>
@@ -199,11 +229,20 @@ const AllCoupons = () => {
                   <div>
                     <label className="pb-2">Giảm tối đa</label>
                     <input
-                      type="number"
+                      type="text"
                       name="value"
-                      value={maxAmount}
+                      value={
+                        maxAmount
+                          ? maxAmount.toLocaleString("vi-VN", {
+                              style: "currency",
+                              currency: "VND",
+                            })
+                          : ""
+                      }
                       className="mt-2 appearance-none block w-full px-3 h-[35px] border border-gray-300 rounded-[3px] placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                      onChange={(e) => setMaxAmount(e.target.value)}
+                      onChange={(e) =>
+                        setMaxAmount(Number(e.target.value.replace(/\D/g, "")))
+                      }
                       placeholder="Giảm tối đa"
                     />
                   </div>
