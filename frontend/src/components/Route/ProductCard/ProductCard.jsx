@@ -77,9 +77,9 @@ const ProductCard = ({ data, isEvent }) => {
             className="w-full h-[170px] object-contain"
           />
         </Link>
-        <Link to={`/shop/preview/${data?.shop._id}`}>
+        {/* <Link to={`/shop/preview/${data?.shop?._id}`}>
           <h5 className={`${styles.shop_name}`}>{data.shop.name}</h5>
-        </Link>
+        </Link> */}
         <Link
           to={`${
             isEvent === true
@@ -98,13 +98,15 @@ const ProductCard = ({ data, isEvent }) => {
           <div className="py-2 flex items-center justify-between">
             <div className="flex">
               <h4 className={`${styles.price} pr-2`}>
-                {(data.discountPrice || data.sellPrice).toLocaleString(
-                  "vi-VN",
-                  {
-                    style: "currency",
-                    currency: "VND",
-                  }
-                ) || "0"}
+                {data.discountPrice || data.sellPrice
+                  ? (data.discountPrice || data.sellPrice).toLocaleString(
+                      "vi-VN",
+                      {
+                        style: "currency",
+                        currency: "VND",
+                      }
+                    )
+                  : "0"}
               </h4>
               {data.discountPrice && (
                 <h5 className="font-[500] text-[15px] text-[#ff5837] ">

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import styles from "../../styles/styles";
 import { categoriesData, productData } from "../../static/data";
@@ -15,7 +15,7 @@ import Navbar from "./Navbar";
 import { useSelector } from "react-redux";
 import Cart from "../cart/Cart";
 import Wishlist from "../Wishlist/Wishlist";
-import { RxCross1 } from "react-icons/rx";
+import { FaArrowAltCircleDown } from "react-icons/fa";
 
 const Header = ({ activeHeading }) => {
   const { isAuthenticated, user } = useSelector((state) => state.user);
@@ -30,6 +30,27 @@ const Header = ({ activeHeading }) => {
   const [openCart, setOpenCart] = useState(false);
   const [openWishlist, setOpenWishlist] = useState(false);
   const [open, setOpen] = useState(false);
+  const [showAllResults, setShowAllResults] = useState(false);
+
+  const searchBoxRef = useRef(); // reference to the search box
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (
+        searchBoxRef.current &&
+        !searchBoxRef.current.contains(event.target)
+      ) {
+        setSearchData(null); // clear search data if click was outside the search box
+      }
+    };
+    // add the event listener
+    document.addEventListener("mousedown", handleClickOutside);
+
+    // remove the event listener when the component unmounts
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   const handleSearchChange = (e) => {
     const term = e.target.value;
@@ -41,6 +62,7 @@ const Header = ({ activeHeading }) => {
         product.name.toLowerCase().includes(term.toLowerCase())
       );
     setSearchData(filteredProducts);
+    setShowAllResults(false); // Reset to show limited results initially
   };
 
   window.addEventListener("scroll", () => {
@@ -50,6 +72,9 @@ const Header = ({ activeHeading }) => {
       setActive(false);
     }
   });
+  const handleShowAllResults = () => {
+    setShowAllResults(true);
+  };
 
   return (
     <>
@@ -71,8 +96,8 @@ const Header = ({ activeHeading }) => {
             </Link>
           </div>
 
-          <div className="w-[100%] flex justify-center items-center h-screen">
-            <div className="w-[70%] relative">
+          <div className="w-[70%] flex items-center h-screen">
+            <div className="w-[70%] relative" ref={searchBoxRef}>
               <input
                 type="text"
                 placeholder="Tìm sản phẩm..."
@@ -86,21 +111,54 @@ const Header = ({ activeHeading }) => {
               />
               {searchData && searchData.length !== 0 ? (
                 <div className="absolute min-h-[30vh] bg-slate-50 shadow-sm-2 z-[9] p-4">
-                  {searchData &&
-                    searchData.map((i) => {
-                      return (
-                        <Link to={`/product/${i._id}`}>
-                          <div className="w-full flex items-start-py-3">
+                  {showAllResults
+                    ? searchData.map((i, index) => (
+                        <Link key={index} to={`/product/${i._id}`}>
+                          <div className="w-full flex items-start py-3">
                             <img
                               src={`${i.images[0]?.url}`}
-                              alt=""
+                              alt={i.name}
                               className="w-[40px] h-[40px] mr-[10px]"
                             />
                             <h1>{i.name}</h1>
                           </div>
                         </Link>
-                      );
-                    })}
+                      ))
+                    : searchData.slice(0, 5).map((i, index) => (
+                        <Link key={index} to={`/product/${i._id}`}>
+                          <div className="w-full flex items-start py-3">
+                            <img
+                              src={`${i.images[0]?.url}`}
+                              alt={i.name}
+                              className="w-[40px] h-[40px] mr-[10px]"
+                            />
+                            <h1>{i.name}</h1>
+                          </div>
+                        </Link>
+                      ))}
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                    }}
+                  >
+                    {searchData.length > 5 && !showAllResults && (
+                      <div
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                        }}
+                      >
+                        <FaArrowAltCircleDown
+                          size={20}
+                          className="flex"
+                          onClick={handleShowAllResults}
+                        ></FaArrowAltCircleDown>
+                        <p> Xem thêm</p>
+                      </div>
+                    )}
+                  </div>
                 </div>
               ) : null}
             </div>
