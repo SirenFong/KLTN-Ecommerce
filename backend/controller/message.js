@@ -13,20 +13,24 @@ router.post(
       const messageData = req.body;
 
       if (req.body.images) {
+        // nếu có hình ảnh
         const myCloud = await cloudinary.v2.uploader.upload(req.body.images, {
+          // tải hình ảnh lên cloudinary
           folder: "messages",
         });
         messageData.images = {
+          // trả về thông tin hình ảnh
           public_id: myCloud.public_id,
           url: myCloud.url,
         };
       }
 
-      messageData.conversationId = req.body.conversationId;
-      messageData.sender = req.body.sender;
-      messageData.text = req.body.text;
+      messageData.conversationId = req.body.conversationId; // lấy thông tin từ body
+      messageData.sender = req.body.sender; // lấy thông tin từ body
+      messageData.text = req.body.text; // lấy thông tin từ body
 
       const message = new Messages({
+        // tạo tin nhắn mới
         conversationId: messageData.conversationId,
         text: messageData.text,
         sender: messageData.sender,
@@ -51,6 +55,7 @@ router.get(
   catchAsyncErrors(async (req, res, next) => {
     try {
       const messages = await Messages.find({
+        // tìm kiếm tin nhắn
         conversationId: req.params.id,
       });
 

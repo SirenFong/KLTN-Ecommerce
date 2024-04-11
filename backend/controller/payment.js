@@ -9,11 +9,13 @@ router.post(
   "/process",
   catchAsyncErrors(async (req, res, next) => {
     try {
+      // xử lý thanh toán
       const myPayment = await stripe.paymentIntents.create({
+        // tạo paymentIntent
         amount: req.body.amount,
         currency: "VND",
         metadata: {
-          company: "ThanhThuong",
+          company: "ThanhThuong", // thông tin metadata
         },
       });
 
@@ -25,16 +27,16 @@ router.post(
       console.error(error);
       res
         .status(500)
-        .json({ success: false, message: "Payment processing failed" });
+        .json({ success: false, message: "Payment processing failed" }); // thông báo lỗi
     }
   })
 );
 
 // Get Stripe API key route
 router.get(
-  "/stripeapikey",
+  "/stripeapikey", // lấy api key của stripe
   catchAsyncErrors(async (req, res, next) => {
-    res.status(200).json({ stripeApikey: process.env.STRIPE_API_KEY });
+    res.status(200).json({ stripeApikey: process.env.STRIPE_API_KEY }); // trả về api key
   })
 );
 

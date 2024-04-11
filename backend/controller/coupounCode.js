@@ -84,7 +84,7 @@ router.delete(
   })
 );
 
-// get coupon code value by its name
+// Lấy giá trị mã giảm giá
 router.get(
   "/get-coupon-value/:name",
   catchAsyncErrors(async (req, res, next) => {
@@ -101,6 +101,7 @@ router.get(
   })
 );
 
+// Lấy tất cả mã giảm giá
 router.get(
   "/get-all-coupons",
   catchAsyncErrors(async (req, res, next) => {

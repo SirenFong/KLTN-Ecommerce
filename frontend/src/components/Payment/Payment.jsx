@@ -19,31 +19,48 @@ import { RxCross1 } from "react-icons/rx";
 const Payment = () => {
   const [orderData, setOrderData] = useState([]);
   const [open, setOpen] = useState(false);
-  const { user } = useSelector((state) => state.user);
+  const { user } = useSelector((state) => state.user); //Lấy thông tin user từ redux
   const navigate = useNavigate();
   const stripe = useStripe();
   const elements = useElements();
   console.log(orderData);
 
   useEffect(() => {
-    const orderData = JSON.parse(localStorage.getItem("latestOrder"));
-    setOrderData(orderData);
+    const orderData = JSON.parse(localStorage.getItem("latestOrder")); //Lấy dữ liệu order từ localStorage
+    setOrderData(orderData); //Set dữ liệu order vào state
   }, []);
 
-  const createOrder = (data, actions) => {
+  //Sử dụng https://app.exchangerate-api.com/keys để lấy mã chuyển đổi tiền tệ
+  const convertToSupportedCurrency = async (amount) => {
+    try {
+      const response = await axios.get(
+        "https://api.exchangerate-api.com/v4/latest/VND",
+        { headers: { Authorization: "Bearer 1f4090abbfa4c92e4078bb61" } } //Call api để lấy mã chuyển đổi tiền tệ
+      );
+      const exchangeRate = response.data.rates.USD;
+      const amountInUSD = amount * exchangeRate;
+      return amountInUSD;
+    } catch (error) {
+      console.error("Error fetching exchange rate:", error);
+      return amount; //Trả về số tiền ban đầu nếu không lấy được mã chuyển đổi
+    }
+  };
+
+  const createOrder = async (data, actions) => {
+    const amountInUSD = await convertToSupportedCurrency(orderData?.totalPrice); //Chuyển đổi tiền VND sang USD
     return actions.order
       .create({
         purchase_units: [
           {
             description: "Sunflower",
             amount: {
-              currency_code: "VND",
-              value: orderData?.totalPrice,
+              currency_code: "USD", //Chuyển đổi sang USD
+              value: amountInUSD,
             },
           },
         ],
         application_context: {
-          shipping_preference: "NO_SHIPPING",
+          shipping_preference: "NO_SHIPPING", //Không cần địa chỉ giao hàng
         },
       })
       .then((orderID) => {
@@ -60,46 +77,56 @@ const Payment = () => {
   };
 
   const onApprove = async (data, actions) => {
+    //Xử lý thanh toán
     return actions.order.capture().then(function (details) {
+      //Lấy thông tin thanh toán
       const { payer } = details;
-
+      //Kiểm tra xem thông tin thanh toán có tồn tại không
       let paymentInfo = payer;
-
+      //Nếu tồn tại thì gọi hàm paypalPaymentHandler
       if (paymentInfo !== undefined) {
+        //Gọi hàm paypalPaymentHandler
         paypalPaymentHandler(paymentInfo);
       }
     });
   };
 
   const paypalPaymentHandler = async (paymentInfo) => {
+    //Hàm xử lý thanh toán Paypal
     const config = {
       headers: {
         "Content-Type": "application/json",
       },
     };
 
+    //Gán thông tin thanh toán vào order
     order.paymentInfo = {
       id: paymentInfo.payer_id,
-      status: "succeeded",
+      status: "Thành công",
       type: "Paypal",
     };
 
     await axios
+      //Gửi request tới server để tạo order
       .post(`${server}/order/create-order`, order, config)
       .then((res) => {
         setOpen(false);
         navigate("/order/success");
         toast.success("Thanh toán thành công!");
+        //Lưu thông tin giỏ hàng và order vào localStorage
         localStorage.setItem("cartItems", JSON.stringify([]));
         localStorage.setItem("latestOrder", JSON.stringify([]));
         window.location.reload();
       });
   };
 
+  //Dữ liệu thanh toán
   const paymentData = {
-    amount: Math.round(orderData?.totalPrice * 100),
+    //Số tiền cần thanh toán
+    amount: Math.round(orderData?.totalPrice * 100), //Chuyển đổi tiền VND sang cent
   };
 
+  //Hàm xử lý thanh toán
   const paymentHandler = async (e) => {
     e.preventDefault();
     try {
@@ -108,20 +135,22 @@ const Payment = () => {
           "Content-Type": "application/json",
         },
       };
-
+      //Gán thông tin thanh toán vào order
       order.paymentInfo = {
         type: "Cash by Payment",
       };
-
+      //Gửi request tới server để tạo order
       const { data } = await axios.post(
         `${server}/payment/process`,
         paymentData,
         config
       );
 
+      //Kiểm tra xem stripe và elements có tồn tại không
       const client_secret = data.client_secret;
-
       if (!stripe || !elements) return;
+
+      //Gọi hàm confirmCardPayment để xác nhận thanh toán
       const result = await stripe.confirmCardPayment(client_secret, {
         payment_method: {
           card: elements.getElement(CardNumberElement),
@@ -131,7 +160,7 @@ const Payment = () => {
       if (result.error) {
         toast.error(result.error.message);
       } else {
-        if (result.paymentIntent.status === "succeeded") {
+        if (result.paymentIntent.status === "Thành công") {
           order.paymnentInfo = {
             id: result.paymentIntent.id,
             status: result.paymentIntent.status,
@@ -364,11 +393,12 @@ const PaymentInfo = ({
                   <PayPalScriptProvider
                     options={{
                       "client-id":
-                        "Aczac4Ry9_QA1t4c7TKH9UusH3RTe6onyICPoCToHG10kjlNdI-qwobbW9JAHzaRQwFMn2-k660853jn",
+                        "AV4FzNuU1gi3eQJ2FYZNVhst663uyq51RJk9Kh7_7DMq7LOTV_n0q6d1Mb4aRusepml9v-OvCZyNzsJV",
                     }}
                   >
                     <PayPalButtons
                       style={{ layout: "vertical" }}
+                      // currency="VNĐ"
                       onApprove={onApprove}
                       createOrder={createOrder}
                     />

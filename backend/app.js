@@ -16,8 +16,8 @@ app.use("/test", (req, res) => {
   res.send("Hello world!");
 });
 
-app.use(express.json({ limit: "100mb" }));
-app.use(express.urlencoded({ extended: true, limit: "100mb" }));
+app.use(express.json({ limit: "100mb" })); // for parsing application/json
+app.use(express.urlencoded({ extended: true, limit: "100mb" })); // for parsing application/x-www-form-urlencoded
 app.use(cookieParser());
 
 // config

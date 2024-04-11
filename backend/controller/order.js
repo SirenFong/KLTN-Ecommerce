@@ -49,7 +49,7 @@ router.post(
   })
 );
 
-// get all orders of user
+// get single order
 router.get(
   "/get-all-orders/:userId",
   catchAsyncErrors(async (req, res, next) => {
@@ -68,7 +68,6 @@ router.get(
   })
 );
 
-// get all orders of seller
 router.get(
   "/get-seller-all-orders/:shopId",
   catchAsyncErrors(async (req, res, next) => {

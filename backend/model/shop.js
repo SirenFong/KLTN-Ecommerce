@@ -80,24 +80,26 @@ const shopSchema = new mongoose.Schema({
   resetPasswordTime: Date,
 });
 
-// Hash password
+// Mã hóa mật khẩu trước khi lưu vào database
 shopSchema.pre("save", async function (next) {
+  // Hash password
   if (!this.isModified("password")) {
-    next();
+    // Nếu mật khẩu không được thay đổi thì next
+    next(); // Bỏ qua
   }
-  this.password = await bcrypt.hash(this.password, 10);
+  this.password = await bcrypt.hash(this.password, 10); // Hash password
 });
 
 // jwt token
 shopSchema.methods.getJwtToken = function () {
   return jwt.sign({ id: this._id }, process.env.JWT_SECRET_KEY, {
-    expiresIn: process.env.JWT_EXPIRES,
+    expiresIn: process.env.JWT_EXPIRES, // Thời gian hết hạn của token
   });
 };
 
 // comapre password
 shopSchema.methods.comparePassword = async function (enteredPassword) {
-  return await bcrypt.compare(enteredPassword, this.password);
+  return await bcrypt.compare(enteredPassword, this.password); // So sánh mật khẩu
 };
 
 module.exports = mongoose.model("Shop", shopSchema);

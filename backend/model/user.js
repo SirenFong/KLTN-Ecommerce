@@ -74,29 +74,32 @@ const userSchema = new mongoose.Schema({
     type: Date,
     default: Date.now(),
   },
-  resetPasswordToken: String,
-  resetPasswordTime: Date,
+  resetPasswordToken: String, // Reset password token
+  resetPasswordTime: Date, // Reset password time
 });
 
 //  Hash password
 userSchema.pre("save", async function (next) {
+  // Hash password
   if (!this.isModified("password")) {
-    next();
+    // Nếu mật khẩu không được thay đổi
+    next(); // Bỏ qua
   }
 
-  this.password = await bcrypt.hash(this.password, 10);
+  this.password = await bcrypt.hash(this.password, 10); // Hash password
 });
 
 // jwt token
 userSchema.methods.getJwtToken = function () {
   return jwt.sign({ id: this._id }, process.env.JWT_SECRET_KEY, {
-    expiresIn: process.env.JWT_EXPIRES,
+    // Tạo token
+    expiresIn: process.env.JWT_EXPIRES, // Thời gian hết hạn của token
   });
 };
 
 // compare password
 userSchema.methods.comparePassword = async function (enteredPassword) {
-  return await bcrypt.compare(enteredPassword, this.password);
+  return await bcrypt.compare(enteredPassword, this.password); // So sánh mật khẩu
 };
 
 module.exports = mongoose.model("User", userSchema);

@@ -15,44 +15,52 @@ router.post(
   "/create-shop",
   catchAsyncErrors(async (req, res, next) => {
     try {
-      const { email } = req.body;
-      const sellerEmail = await Shop.findOne({ email });
+      const { email } = req.body; // Lấy email từ req.body
+      const sellerEmail = await Shop.findOne({ email }); // Tìm cửa hàng theo email
       if (sellerEmail) {
+        // Nếu cửa hàng đã tồn tại
         return next(new ErrorHandler("User already exists", 400));
       }
 
       const myCloud = await cloudinary.v2.uploader.upload(req.body.avatar, {
+        // Lưu ảnh cửa hàng lên cloudinary
         folder: "avatars",
       });
 
       const seller = {
+        // Tạo cửa hàng mới
         name: req.body.name,
         email: email,
         password: req.body.password,
         avatar: {
+          // Thêm ảnh vào cửa hàng
           public_id: myCloud.public_id,
           url: myCloud.secure_url,
         },
+        // Thêm thông tin cửa hàng
         address: req.body.address,
         phoneNumber: req.body.phoneNumber,
         zipCode: req.body.zipCode,
       };
 
-      const activationToken = createActivationToken(seller);
+      const activationToken = createActivationToken(seller); // Tạo token kích hoạt
 
-      const activationUrl = `http://localhost:3000/seller/activation/${activationToken}`;
+      const activationUrl = `http://localhost:3000/seller/activation/${activationToken}`; // Tạo đường link kích hoạt
 
       try {
         await sendMail({
+          // Gửi email kích hoạt
           email: seller.email,
           subject: "Kích hoạt cửa hàng",
-          message: `Xin chào ${seller.name}, Nhấn vào đường link bên dưới để kích hoạt tài khoản: ${activationUrl}`,
+          message: `Xin chào ${seller.name}, Nhấn vào đường link bên dưới để kích hoạt tài khoản: ${activationUrl}`, // Nội dung email
         });
         res.status(201).json({
+          // Trả về thông báo gửi email kích hoạt thành công
           success: true,
           message: `Đã gửi Email:- ${seller.email} để kích hoạt!`,
         });
       } catch (error) {
+        // Bắt lỗi
         return next(new ErrorHandler(error.message, 500));
       }
     } catch (error) {
@@ -72,27 +80,32 @@ const createActivationToken = (seller) => {
 router.post(
   "/activation",
   catchAsyncErrors(async (req, res, next) => {
+    // Bắt lỗi
     try {
-      const { activation_token } = req.body;
+      const { activation_token } = req.body; // Lấy token từ req.body
 
       const newSeller = jwt.verify(
+        // Xác thực token
         activation_token,
         process.env.ACTIVATION_SECRET
       );
 
       if (!newSeller) {
+        // Nếu không có token
         return next(new ErrorHandler("Invalid token", 400));
       }
       const { name, email, password, avatar, zipCode, address, phoneNumber } =
-        newSeller;
+        newSeller; // Lấy thông tin cửa hàng từ token
 
-      let seller = await Shop.findOne({ email });
+      let seller = await Shop.findOne({ email }); // Tìm cửa hàng theo email
 
       if (seller) {
+        //  Nếu cửa hàng đã tồn tại
         return next(new ErrorHandler("User already exists", 400));
       }
 
       seller = await Shop.create({
+        // Tạo cửa hàng mới
         name,
         email,
         avatar,
@@ -102,7 +115,7 @@ router.post(
         phoneNumber,
       });
 
-      sendShopToken(seller, 201, res);
+      sendShopToken(seller, 201, res); // Gửi token
     } catch (error) {
       return next(new ErrorHandler(error.message, 500));
     }
@@ -143,10 +156,12 @@ router.get(
   "/getSeller",
   isSeller,
   catchAsyncErrors(async (req, res, next) => {
+    // Middleware kiểm tra người dùng có phải là người bán không
     try {
       const seller = await Shop.findById(req.seller._id);
 
       if (!seller) {
+        // Nếu không tìm thấy người dùng
         return next(new ErrorHandler("Người dùng không hợp lệ", 400));
       }
 
@@ -165,6 +180,7 @@ router.get(
   catchAsyncErrors(async (req, res, next) => {
     try {
       res.cookie("seller_token", null, {
+        // Xóa cookie
         expires: new Date(Date.now()),
         httpOnly: true,
         sameSite: "none",
@@ -202,29 +218,33 @@ router.put(
   isSeller,
   catchAsyncErrors(async (req, res, next) => {
     try {
-      let existsSeller = await Shop.findById(req.seller._id);
+      let existsSeller = await Shop.findById(req.seller._id); // Tìm cửa hàng theo id
 
-      const imageId = existsSeller.avatar.public_id;
+      const imageId = existsSeller.avatar.public_id; // Lấy public_id của ảnh
 
-      await cloudinary.v2.uploader.destroy(imageId);
+      await cloudinary.v2.uploader.destroy(imageId); // Xóa ảnh trên cloudinary
 
       const myCloud = await cloudinary.v2.uploader.upload(req.body.avatar, {
+        // Tải ảnh lên cloudinary
         folder: "avatars",
         width: 150,
       });
 
       existsSeller.avatar = {
+        // Cập nhật ảnh mới
         public_id: myCloud.public_id,
         url: myCloud.secure_url,
       };
 
-      await existsSeller.save();
+      await existsSeller.save(); // Lưu cửa hàng
 
       res.status(200).json({
+        // Trả về thông báo cập nhật ảnh thành công
         success: true,
         seller: existsSeller,
       });
     } catch (error) {
+      // Bắt lỗi
       return next(new ErrorHandler(error.message, 500));
     }
   })
@@ -235,28 +255,31 @@ router.put(
   "/update-seller-info",
   isSeller,
   catchAsyncErrors(async (req, res, next) => {
+    // Middleware kiểm tra người dùng có phải là người bán không
     try {
-      const { name, description, address, phoneNumber, zipCode } = req.body;
+      const { name, description, address, phoneNumber, zipCode } = req.body; // Lấy thông tin cửa hàng từ req.body
 
-      const shop = await Shop.findOne(req.seller._id);
+      const shop = await Shop.findOne(req.seller._id); // Tìm cửa hàng theo id
 
       if (!shop) {
+        // Nếu không tìm thấy cửa hàng
         return next(new ErrorHandler("Không tìm thấy người dùng", 400));
       }
-
+      // Cập nhật thông tin cửa hàng
       shop.name = name;
       shop.description = description;
       shop.address = address;
       shop.phoneNumber = phoneNumber;
       shop.zipCode = zipCode;
 
-      await shop.save();
+      await shop.save(); // Lưu cửa hàng
 
       res.status(201).json({
         success: true,
         shop,
       });
     } catch (error) {
+      // Bắt lỗi
       return next(new ErrorHandler(error.message, 500));
     }
   })
@@ -270,7 +293,8 @@ router.get(
   catchAsyncErrors(async (req, res, next) => {
     try {
       const sellers = await Shop.find().sort({
-        createdAt: -1,
+        // Lấy danh sách cửa hàng
+        createdAt: -1, // Sắp xếp theo thời gian tạo
       });
       res.status(201).json({
         success: true,
@@ -307,50 +331,51 @@ router.delete(
   })
 );
 
-router.put(
-  "/update-payment-methods",
-  isSeller,
-  catchAsyncErrors(async (req, res, next) => {
-    try {
-      const { withdrawMethod } = req.body;
+// router.put(
+//   "/update-payment-methods",
+//   isSeller,
+//   catchAsyncErrors(async (req, res, next) => {
+//     try {
+//       const { withdrawMethod } = req.body;
 
-      const seller = await Shop.findByIdAndUpdate(req.seller._id, {
-        withdrawMethod,
-      });
+//       const seller = await Shop.findByIdAndUpdate(req.seller._id, {
+//         // Cập nhật phương thức thanh toán
+//         withdrawMethod,
+//       });
 
-      res.status(201).json({
-        success: true,
-        seller,
-      });
-    } catch (error) {
-      return next(new ErrorHandler(error.message, 500));
-    }
-  })
-);
+//       res.status(201).json({
+//         success: true,
+//         seller,
+//       });
+//     } catch (error) {
+//       return next(new ErrorHandler(error.message, 500));
+//     }
+//   })
+// );
 
-router.delete(
-  "/delete-withdraw-method/",
-  isSeller,
-  catchAsyncErrors(async (req, res, next) => {
-    try {
-      const seller = await Shop.findById(req.seller._id);
+// router.delete(
+//   "/delete-withdraw-method/",
+//   isSeller,
+//   catchAsyncErrors(async (req, res, next) => {
+//     try {
+//       const seller = await Shop.findById(req.seller._id);
 
-      if (!seller) {
-        return next(new ErrorHandler("Không tìm thấy cửa hàng", 400));
-      }
+//       if (!seller) {
+//         return next(new ErrorHandler("Không tìm thấy cửa hàng", 400));
+//       }
 
-      seller.withdrawMethod = null;
+//       seller.withdrawMethod = null;
 
-      await seller.save();
+//       await seller.save();
 
-      res.status(201).json({
-        success: true,
-        seller,
-      });
-    } catch (error) {
-      return next(new ErrorHandler(error.message, 500));
-    }
-  })
-);
+//       res.status(201).json({
+//         success: true,
+//         seller,
+//       });
+//     } catch (error) {
+//       return next(new ErrorHandler(error.message, 500));
+//     }
+//   })
+// );
 
 module.exports = router;
