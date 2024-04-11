@@ -7,6 +7,7 @@ const server = http.createServer(app);
 const io = socketIO(server);
 
 require("dotenv").config({
+  // Load environment variables
   path: "./.env",
 });
 
@@ -14,26 +15,30 @@ app.use(cors());
 app.use(express.json());
 
 app.get("/", (req, res) => {
-  res.send("Hello world from socket server!");
+  res.send("Hello world from socket server!"); // Send a response to the client
 });
 
 let users = [];
 
 const addUser = (userId, socketId) => {
-  !users.some((user) => user.userId === userId) &&
-    users.push({ userId, socketId });
+  // Add a user to the users array
+  !users.some((user) => user.userId === userId) && // Check if the user is already in the array
+    users.push({ userId, socketId }); // Add the user to the array
 };
 
 const removeUser = (socketId) => {
-  users = users.filter((user) => user.socketId !== socketId);
+  // Remove a user from the users array
+  users = users.filter((user) => user.socketId !== socketId); // Filter out the user with the given socketId
 };
 
 const getUser = (receiverId) => {
-  return users.find((user) => user.userId === receiverId);
+  // Get a user from the users array
+  return users.find((user) => user.userId === receiverId); // Find the user with the given userId
 };
 
 // Define a message object with a seen property
 const createMessage = ({ senderId, receiverId, text, images }) => ({
+  // Create a message object
   senderId,
   receiverId,
   text,
@@ -42,6 +47,7 @@ const createMessage = ({ senderId, receiverId, text, images }) => ({
 });
 
 io.on("connection", (socket) => {
+  // Listen for a connection event
   // when connect
   console.log(`a user is connected`);
 
