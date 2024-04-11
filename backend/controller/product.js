@@ -119,6 +119,75 @@ router.get(
   })
 );
 
+//Chỉnh sửa sản phẩm
+"/edit-product/:id",
+  isSeller,
+  catchAsyncErrors(async (req, res, next) => {
+    try {
+      const productId = req.params.id;
+      const product = await Product.findById(productId);
+
+      if (!product) {
+        return next(new ErrorHandler("Không tìm thấy sản phẩm", 404));
+      }
+
+      const {
+        name,
+        entryDate,
+        expiryDate,
+        price,
+        origin,
+        tags,
+        description,
+        specifications,
+        category,
+        ingredient,
+        unit,
+        brand,
+        quantity,
+        originalPrice,
+        sellPrice,
+        vat,
+        weight,
+        material,
+        guarantee,
+        selectedCategory,
+        stock,
+      } = req.body;
+
+      product.name = name;
+      product.price = price;
+      product.description = description;
+      product.category = category;
+      product.stock = stock;
+      product.origin = origin;
+      product.tags = tags;
+      product.entryDate = entryDate;
+      product.expiryDate = expiryDate;
+      product.specifications = specifications;
+      product.ingredient = ingredient;
+      product.unit = unit;
+      product.brand = brand;
+      product.quantity = quantity;
+      product.originalPrice = originalPrice;
+      product.sellPrice = sellPrice;
+      product.vat = vat;
+      product.weight = weight;
+      product.material = material;
+      product.guarantee = guarantee;
+      product.selectedCategory = selectedCategory;
+
+      const updatedProduct = await product.save();
+
+      res.status(200).json({
+        success: true,
+        product: updatedProduct,
+      });
+    } catch (error) {
+      return next(new ErrorHandler(error, 400));
+    }
+  });
+
 // Đánh giá người dùng
 router.put(
   "/create-new-review",

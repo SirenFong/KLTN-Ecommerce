@@ -3,14 +3,18 @@ import React, { useEffect, useState } from "react";
 import { AiOutlineCloseCircle, AiOutlinePlusCircle } from "react-icons/ai";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { createProduct } from "../../redux/actions/product";
+import { editProduct } from "../../redux/actions/product";
 import { categoriesData } from "../../static/data";
+import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 
-const CreateProduct = () => {
-  const { seller } = useSelector((state) => state.seller);
-  const { success, error } = useSelector((state) => state.products);
+const ShopEditProduct = () => {
+  // const product = useSelector((state) => state.products.product);
+  // const { seller } = useSelector((state) => state.seller);
+  const { success, error, products } = useSelector((state) => state.products);
+
   const navigate = useNavigate();
+  const { id } = useParams();
   const dispatch = useDispatch();
 
   const [images, setImages] = useState([]);
@@ -37,17 +41,6 @@ const CreateProduct = () => {
   const [guarantee, setGuarantee] = useState("");
   const [fileKey, setFileKey] = useState(0);
   const [selectedCategory, setSelectedCategory] = useState("");
-
-  useEffect(() => {
-    if (error) {
-      toast.error(error);
-    }
-    if (success) {
-      toast.success("Tạo sản phẩm thành công!");
-      navigate("/dashboard");
-      window.location.reload();
-    }
-  }, [dispatch, error, navigate, success]);
 
   const removeImage = (index) => {
     const newImages = [...images];
@@ -96,58 +89,61 @@ const CreateProduct = () => {
     });
   };
 
+  // ... populate state variables with product data
+  // ... other code ...
+
+  // Fetch product data using _id
+  useEffect(() => {
+    if (id) {
+      dispatch();
+      dispatch(editProduct(id));
+    } else {
+      console.error("Product ID is undefined");
+    }
+  }, [dispatch, id]);
+
+  // ... other code ...
+
   const handleSubmit = (e) => {
     e.preventDefault();
-
-    const newForm = new FormData();
-
-    images.forEach((image) => {
-      newForm.set("images", image);
-    });
-    newForm.append("name", name);
-    newForm.append("description", description);
-    newForm.append("category", category);
-    newForm.append("origin", origin);
-    newForm.append("entryDate", entryDate);
-    newForm.append("expiryDate", expiryDate);
-    newForm.append("quantity", quantity);
-    newForm.append("brand", brand);
-    newForm.append("specifications", specifications);
-    newForm.append("unit", unit);
-    newForm.append("ingredient", ingredient);
-    newForm.append("weight", weight);
-    newForm.append("material", material);
-    newForm.append("guarantee", guarantee);
-    newForm.append("originalPrice", originalPrice);
-    newForm.append("vat", vat);
-    newForm.append("sellPrice", sellPrice);
-    newForm.append("stock", stock);
-    newForm.append("shopId", seller._id);
     dispatch(
-      createProduct({
+      editProduct(
+        // products.id,
         name,
-        description,
-        category,
-        origin,
         entryDate,
         expiryDate,
-        quantity,
-        brand,
+        origin,
+        tags,
+        description,
         specifications,
-        unit,
+        category,
         ingredient,
+        unit,
+        brand,
+        quantity,
+        originalPrice,
+        sellPrice,
+        vat,
         weight,
         material,
         guarantee,
-        originalPrice,
-        vat,
-        sellPrice,
+        selectedCategory,
         stock,
-        shopId: seller._id,
-        images,
-      })
+        images
+      )
     );
   };
+
+  useEffect(() => {
+    if (error) {
+      toast.error(error);
+    }
+    if (success) {
+      toast.success("Product updated successfully!");
+      navigate("/dashboard");
+      window.location.reload();
+    }
+  }, [error, success, navigate]);
 
   return (
     <div className="w-[100%] 800px:w-[90%] bg-white shadow h-[80vh] rounded-[4px] p-3 overflow-y-scroll">
@@ -572,4 +568,4 @@ const CreateProduct = () => {
   );
 };
 
-export default CreateProduct;
+export default ShopEditProduct;

@@ -92,6 +92,79 @@ export const deleteProduct = (id) => async (dispatch) => {
   }
 };
 
+// edit product
+export const editProduct =
+  (
+    id,
+    name,
+    entryDate,
+    expiryDate,
+    price,
+    origin,
+    tags,
+    description,
+    specifications,
+    category,
+    ingredient,
+    unit,
+    brand,
+    quantity,
+    originalPrice,
+    sellPrice,
+    vat,
+    weight,
+    material,
+    guarantee,
+    selectedCategory,
+    stock,
+    images
+  ) =>
+  async (dispatch) => {
+    try {
+      dispatch({
+        type: "editProductRequest",
+      });
+
+      const { data } = await axios.put(
+        `${server}/product/edit-product/${id}`,
+        {
+          name,
+          entryDate,
+          expiryDate,
+          price,
+          origin,
+          tags,
+          description,
+          specifications,
+          category,
+          ingredient,
+          unit,
+          originalPrice,
+          sellPrice,
+          vat,
+          weight,
+          brand,
+          quantity,
+          material,
+          guarantee,
+          selectedCategory,
+          stock,
+          images,
+        },
+        { withCredentials: true }
+      );
+      dispatch({
+        type: "editProductSuccess",
+        payload: data.product,
+      });
+    } catch (error) {
+      dispatch({
+        type: "editProductFailed",
+        payload: error.response.data.message,
+      });
+    }
+  };
+
 // get all products
 export const getAllProducts = () => async (dispatch) => {
   try {
