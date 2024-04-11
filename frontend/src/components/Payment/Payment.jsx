@@ -37,7 +37,7 @@ const Payment = () => {
           {
             description: "Sunflower",
             amount: {
-              currency_code: "VNĐ",
+              currency_code: "VND",
               value: orderData?.totalPrice,
             },
           },
@@ -89,7 +89,7 @@ const Payment = () => {
       .then((res) => {
         setOpen(false);
         navigate("/order/success");
-        toast.success("Order successful!");
+        toast.success("Thanh toán thành công!");
         localStorage.setItem("cartItems", JSON.stringify([]));
         localStorage.setItem("latestOrder", JSON.stringify([]));
         window.location.reload();
@@ -107,6 +107,10 @@ const Payment = () => {
         headers: {
           "Content-Type": "application/json",
         },
+      };
+
+      order.paymentInfo = {
+        type: "Cash by Payment",
       };
 
       const { data } = await axios.post(
@@ -139,7 +143,7 @@ const Payment = () => {
             .then((res) => {
               setOpen(false);
               navigate("/order/success");
-              toast.success("Order successful!");
+              toast.success("Thanh toán thành công!");
               localStorage.setItem("cartItems", JSON.stringify([]));
               localStorage.setItem("latestOrder", JSON.stringify([]));
               window.location.reload();
@@ -169,7 +173,7 @@ const Payment = () => {
       .then((res) => {
         setOpen(false);
         navigate("/order/success");
-        toast.success("Order successful!");
+        toast.success("Thanh toán thành công!");
         localStorage.setItem("cartItems", JSON.stringify([]));
         localStorage.setItem("latestOrder", JSON.stringify([]));
         window.location.reload();

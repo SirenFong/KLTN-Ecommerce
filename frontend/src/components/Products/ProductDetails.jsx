@@ -136,6 +136,7 @@ const ProductDetails = ({ data }) => {
                   src={`${data && data.images[select]?.url}`}
                   alt=""
                   className="w-[80%]"
+                  style={{ objectFit: "contain" }}
                 />
                 <div className="w-full flex justify-center pr-5">
                   {data &&

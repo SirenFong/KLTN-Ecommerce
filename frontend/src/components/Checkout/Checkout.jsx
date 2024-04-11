@@ -83,7 +83,7 @@ const Checkout = () => {
   );
 
   // Phí vận chuyển
-  const shipping = subTotalPrice > 500000 ? 0 : 15000;
+  const shipping = subTotalPrice > 200000 ? 0 : 15000;
 
   const handleSubmit = async (e) => {
     e.preventDefault();

@@ -26,7 +26,7 @@ const UserOrderDetails = () => {
   }, [dispatch, user._id]);
 
   const data = orders && orders.find((item) => item._id === id);
-
+  console.log(data);
   const reviewHandler = async (e) => {
     await axios
       .put(

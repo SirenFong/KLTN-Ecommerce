@@ -133,10 +133,10 @@ const ProfileContent = ({ active }) => {
                 <div className=" w-[100%] 800px:w-[50%]">
                   <label className="block pb-2">Số điện thoại</label>
                   <input
-                    type="text"
+                    type="number"
                     className={`${styles.input} !w-[95%] mb-4 800px:mb-0`}
                     required
-                    value={`0${phoneNumber}`}
+                    value={`${phoneNumber}`}
                     onChange={(e) => setPhoneNumber(e.target.value)}
                   />
                 </div>
@@ -146,7 +146,7 @@ const ProfileContent = ({ active }) => {
                   <input
                     type="password"
                     className={`${styles.input} !w-[95%] mb-4 800px:mb-0`}
-                    required
+                    // required
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                   />
