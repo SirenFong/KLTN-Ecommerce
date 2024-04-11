@@ -37,9 +37,9 @@ const Payment = () => {
         "https://api.exchangerate-api.com/v4/latest/VND",
         { headers: { Authorization: "Bearer 1f4090abbfa4c92e4078bb61" } } //Call api để lấy mã chuyển đổi tiền tệ
       );
-      const exchangeRate = response.data.rates.USD;
-      const amountInUSD = amount * exchangeRate;
-      return amountInUSD;
+      const exchangeRate = response.data.rates.USD; //Lấy mã chuyển đổi tiền tệ
+      const amountInUSD = amount * exchangeRate; //Chuyển đổi tiền VND sang USD
+      return amountInUSD; //Trả về số tiền đã chuyển đổi
     } catch (error) {
       console.error("Error fetching exchange rate:", error);
       return amount; //Trả về số tiền ban đầu nếu không lấy được mã chuyển đổi

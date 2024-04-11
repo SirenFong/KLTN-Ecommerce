@@ -13,6 +13,7 @@ const Login = () => {
   const [visible, setVisible] = useState(false);
 
   const handleSubmit = async (e) => {
+    // Xử lý khi người dùng ấn nút đăng nhập
     e.preventDefault();
 
     await axios
@@ -25,7 +26,7 @@ const Login = () => {
         { withCredentials: true }
       )
       .then((res) => {
-        toast.success("Login Success!");
+        toast.success("Đăng nhập thành công!");
         navigate("/");
         window.location.reload(true);
       })

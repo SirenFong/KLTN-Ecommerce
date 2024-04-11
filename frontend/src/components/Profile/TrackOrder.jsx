@@ -8,13 +8,13 @@ const TrackOrder = () => {
   const { user } = useSelector((state) => state.user);
   const dispatch = useDispatch();
 
-  const { id } = useParams();
+  const { id } = useParams(); // Lấy id từ url
 
   useEffect(() => {
-    dispatch(getAllOrdersOfUser(user._id));
+    dispatch(getAllOrdersOfUser(user._id)); // Lấy tất cả đơn hàng của user
   }, [dispatch, user._id]);
 
-  const data = orders && orders.find((item) => item._id === id);
+  const data = orders && orders.find((item) => item._id === id); // Tìm đơn hàng theo id
 
   return (
     <div className="w-full h-[80vh] flex justify-center items-center">

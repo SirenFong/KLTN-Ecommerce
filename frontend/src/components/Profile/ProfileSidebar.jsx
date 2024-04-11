@@ -17,16 +17,19 @@ import { useSelector } from "react-redux";
 const ProfileSidebar = ({ setActive, active }) => {
   const navigate = useNavigate();
   const { user } = useSelector((state) => state.user);
+
   const logoutHandler = () => {
+    // Xử lý đăng xuất
     axios
-      .get(`${server}/user/logout`, { withCredentials: true })
+      .get(`${server}/user/logout`, { withCredentials: true }) // Đăng xuất
       .then((res) => {
+        // Nếu đăng xuất thành công
         toast.success(res.data.message);
         window.location.reload(true);
         navigate("/login");
       })
       .catch((error) => {
-        console.log(error.response.data.message);
+        console.log(error.response.data.message); // Hiển thị lỗi
       });
   };
   return (

@@ -36,19 +36,23 @@ const ProductDetails = ({ data }) => {
   useEffect(() => {
     window.scrollTo(0, 0);
 
-    dispatch(getAllProductsShop(data && data?.shop._id));
+    dispatch(getAllProductsShop(data && data?.shop._id)); // Lấy tất cả sản phẩm của cửa hàng
     if (wishlist && wishlist.find((i) => i._id === data?._id)) {
+      // Kiểm tra sản phẩm đã tồn tại trong danh sách yêu thích chưa
       setClick(true);
     } else {
+      // Nếu chưa tồn tại thì setClick(false)
       setClick(false);
     }
   }, [data, dispatch, wishlist]);
 
   const handleShowMoreClick = () => {
+    // Xem thêm mô tả sản phẩm
     setShowFullDescription(true);
   };
 
   const handleShowLessClick = () => {
+    // Thu gọn mô tả sản phẩm
     setShowFullDescription(false);
   };
 
@@ -73,6 +77,7 @@ const ProductDetails = ({ data }) => {
   };
 
   const addToCartHandler = (id) => {
+    // Thêm sản phẩm vào giỏ hàng
     const isItemExists = cart && cart.find((i) => i._id === id);
     if (isItemExists) {
       toast.error("Sản phẩm đã tồn tại trong giỏ hàng!");
@@ -87,35 +92,41 @@ const ProductDetails = ({ data }) => {
     }
   };
 
-  const totalReviewsLength =
+  const totalReviewsLength = // Tính tổng số lượng đánh giá
     products &&
-    products.reduce((acc, product) => acc + product.reviews.length, 0);
+    products.reduce((acc, product) => acc + product.reviews.length, 0); // Tính tổng số lượng đánh giá
 
-  const totalRatings =
+  const totalRatings = // Tính tổng số lượng đánh giá
     products &&
     products.reduce(
-      (acc, product) =>
-        acc + product.reviews.reduce((sum, review) => sum + review.rating, 0),
+      (
+        acc,
+        product // Tính tổng số lượng đánh giá
+      ) =>
+        acc + product.reviews.reduce((sum, review) => sum + review.rating, 0), // Tính tổng số lượng đánh giá
       0
     );
 
-  const avg = totalRatings / totalReviewsLength || 0;
+  const avg = totalRatings / totalReviewsLength || 0; // Tính trung bình đánh giá
 
-  const averageRating = avg.toFixed(2);
+  const averageRating = avg.toFixed(2); // Làm tròn đánh giá
 
   const handleMessageSubmit = async () => {
+    // Gửi tin nhắn
     if (isAuthenticated) {
-      const groupTitle = data._id + user._id;
-      const userId = user._id;
-      const sellerId = data.shop._id;
+      // Kiểm tra đã đăng nhập chưa
+      const groupTitle = data._id + user._id; // Tiêu đề nhóm
+      const userId = user._id; // ID người dùng
+      const sellerId = data.shop._id; // ID người bán
       await axios
         .post(`${server}/conversation/create-new-conversation`, {
+          // Tạo cuộc trò chuyện mới
           groupTitle,
           userId,
           sellerId,
         })
         .then((res) => {
-          navigate(`/inbox?${res.data.conversation._id}`);
+          navigate(`/inbox?${res.data.conversation._id}`); // Chuyển hướng đến trang inbox
         })
         .catch((error) => {
           toast.error(error.response.data.message);

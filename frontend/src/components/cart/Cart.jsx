@@ -13,16 +13,19 @@ const Cart = ({ setOpenCart }) => {
   const dispatch = useDispatch();
 
   const removeFromCartHandler = (data) => {
+    // Xóa sản phẩm khỏi giỏ hàng
     dispatch(removeFromCart(data));
   };
 
   const totalPrice = cart.reduce(
+    // Tính tổng giá tiền
     (acc, item) =>
       acc + item.qty * item.sellPrice || acc + item.discountPrice * item.qty,
     0
   );
 
   const quantityChangeHandler = (data) => {
+    // Thay đổi số lượng sản phẩm
     dispatch(addTocart(data));
   };
 

@@ -15,10 +15,10 @@ const ShopInfo = ({ isOwner }) => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(getAllProductsShop(id));
+    dispatch(getAllProductsShop(id)); // Lấy tất cả sản phẩm của shop
     setIsLoading(true);
     axios
-      .get(`${server}/shop/get-shop-info/${id}`)
+      .get(`${server}/shop/get-shop-info/${id}`) // Gửi request đến server
       .then((res) => {
         setData(res.data.shop);
         setIsLoading(false);
@@ -30,36 +30,41 @@ const ShopInfo = ({ isOwner }) => {
   }, [dispatch, id]);
 
   const logoutHandler = async () => {
+    // Đăng xuất
     axios.get(`${server}/shop/logout`, {
       withCredentials: true,
     });
     window.location.reload();
   };
 
-  const totalReviewsLength =
+  const totalReviewsLength = // Tính tổng số lượng đánh giá
     products &&
-    products.reduce((acc, product) => acc + product.reviews.length, 0);
+    products.reduce((acc, product) => acc + product.reviews.length, 0); // Tính tổng số lượng đánh giá
 
-  const totalRatings =
-    products &&
+  const totalRatings = // Tính tổng số lượng đánh giá
+    products && // Tính tổng số lượng đánh giá
     products.reduce(
-      (acc, product) =>
-        acc + product.reviews.reduce((sum, review) => sum + review.rating, 0),
+      // Tính tổng số lượng đánh giá
+      (
+        acc,
+        product // Tính tổng số lượng đánh giá
+      ) =>
+        acc + product.reviews.reduce((sum, review) => sum + review.rating, 0), // Tính tổng số lượng đánh giá
       0
     );
 
-  const averageRating = totalRatings / totalReviewsLength || 0;
+  const averageRating = totalRatings / totalReviewsLength || 0; // Tính trung bình đánh giá
 
   return (
     <>
       {isLoading ? (
-        <Loader />
+        <Loader /> // Hiển thị loader
       ) : (
         <div>
           <div className="w-full py-5">
             <div className="w-full flex item-center justify-center">
               <img
-                src={`${data.avatar?.url}`}
+                src={`${data.avatar?.url}`} // Hiển thị ảnh đại diện
                 alt=""
                 className="w-[150px] h-[150px] object-cover rounded-full"
               />

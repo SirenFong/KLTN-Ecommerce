@@ -5,17 +5,20 @@ import ProductCard from "../Route/ProductCard/ProductCard";
 
 const SuggestedProduct = ({ data }) => {
   const { allProducts } = useSelector((state) => state.products);
-  const [productData, setProductData] = useState();
+  const [productData, setProductData] = useState([]);
 
   useEffect(() => {
-    const d =
-      allProducts && allProducts.filter((i) => i.category === data.category);
-    setProductData(d);
-  }, [allProducts, data.category]);
+    if (data && data.category) {
+      // Nếu có dữ liệu và có category
+      const filteredProducts = // Lọc sản phẩm theo category
+        allProducts && allProducts.filter((i) => i.category === data.category); // Lọc sản phẩm theo category
+      setProductData(filteredProducts); // Gán sản phẩm đã lọc vào productData
+    }
+  }, [allProducts, data]); // useEffect chạy khi allProducts hoặc data thay đổi
 
   return (
     <div>
-      {data ? (
+      {data ? ( // Nếu có dữ liệu thì hiển thị
         <div className={`p-4 ${styles.section}`}>
           <h2
             className={`${styles.heading} text-[25px] font-[500] border-b mb-5`}
@@ -24,8 +27,8 @@ const SuggestedProduct = ({ data }) => {
           </h2>
           <div className="grid grid-cols-1 gap-[20px] md:grid-cols-2 md:gap-[25px] lg:grid-cols-4 lg:gap-[25px] xl:grid-cols-5 xl:gap-[30px] mb-12">
             {productData &&
-              productData.map((i, index) => (
-                <ProductCard data={i} key={index} />
+              productData.map((product) => (
+                <ProductCard data={product} key={product.id} />
               ))}
           </div>
         </div>

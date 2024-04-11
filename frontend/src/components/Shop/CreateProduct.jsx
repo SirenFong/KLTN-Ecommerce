@@ -35,7 +35,7 @@ const CreateProduct = () => {
   const [weight, setWeight] = useState("");
   const [material, setMaterial] = useState("");
   const [guarantee, setGuarantee] = useState("");
-  const [fileKey, setFileKey] = useState(0);
+  const [fileKey, setFileKey] = useState(0); // Key để cập nhật hình ảnh
   const [selectedCategory, setSelectedCategory] = useState("");
 
   useEffect(() => {
@@ -50,49 +50,56 @@ const CreateProduct = () => {
   }, [dispatch, error, navigate, success]);
 
   const removeImage = (index) => {
-    const newImages = [...images];
-    newImages.splice(index, 1);
-    setImages(newImages);
+    // Xóa hình ảnh
+    const newImages = [...images]; // Sao chép mảng hình ảnh
+    newImages.splice(index, 1); // Xóa hình ảnh tại vị trí index
+    setImages(newImages); // Cập nhật mảng hình ảnh
   };
 
   // Tính toán giá bán dựa trên giá nhập và % thuế
   const calculateSellPrice = () => {
-    const vatDecimal = parseFloat(vat) / 100;
-    const originalPriceFloat = parseFloat(originalPrice);
-    const sellPriceValue = originalPriceFloat + originalPriceFloat * vatDecimal;
+    const vatDecimal = parseFloat(vat) / 100; // Chuyển % thuế sang số thập phân
+    const originalPriceFloat = parseFloat(originalPrice); // Chuyển giá nhập sang số thực
+    const sellPriceValue = originalPriceFloat + originalPriceFloat * vatDecimal; // Tính giá bán
     setSellPrice(sellPriceValue.toFixed(2)); // Giữ 2 chữ số sau dấu phẩy
   };
   // Thêm hàm định dạng tiền tệ của Việt Nam
   const formatCurrency = (price) => {
     return new Intl.NumberFormat("vi-VN", {
+      // Định dạng tiền tệ của Việt Nam
       style: "currency",
       currency: "VND",
     }).format(price);
   };
 
   const handleCategoryChange = (e) => {
-    const selectedCategory = e.target.value;
-    setCategory(selectedCategory);
-    setSelectedCategory(selectedCategory);
+    // Xử lý khi thay đổi danh mục
+    const selectedCategory = e.target.value; // Lấy giá trị danh mục đã chọn
+    setCategory(selectedCategory); // Cập nhật danh mục đã chọn
+    setSelectedCategory(selectedCategory); // Cập nhật danh mục đã chọn
   };
 
   const handleImageChange = (e) => {
-    const files = Array.from(e.target.files);
-    let newImages = [];
+    const files = Array.from(e.target.files); // Chuyển FileList thành mảng
+    let newImages = []; // Mảng hình ảnh mới
 
     files.forEach((file) => {
-      const reader = new FileReader();
+      // Duyệt qua từng file
+      const reader = new FileReader(); // Đọc file
 
       reader.onload = () => {
+        // Khi file được load
         if (reader.readyState === 2) {
-          newImages.push(reader.result);
+          // Nếu file đã được load
+          newImages.push(reader.result); // Thêm hình ảnh vào mảng hình ảnh mới
           if (newImages.length === files.length) {
-            setImages((old) => [...old, ...newImages]);
-            setFileKey((prevKey) => prevKey + 1);
+            // Nếu đã đọc hết tất cả file
+            setImages((old) => [...old, ...newImages]); // Cập nhật mảng hình ảnh
+            setFileKey((prevKey) => prevKey + 1); // Cập nhật key để cập nhật hình ảnh
           }
         }
       };
-      reader.readAsDataURL(file);
+      reader.readAsDataURL(file); // Đọc file dưới dạng URL
     });
   };
 
@@ -102,7 +109,8 @@ const CreateProduct = () => {
     const newForm = new FormData();
 
     images.forEach((image) => {
-      newForm.set("images", image);
+      //  Duyệt qua mảng hình ảnh
+      newForm.set("images", image); // Thêm hình ảnh vào form data
     });
     newForm.append("name", name);
     newForm.append("description", description);

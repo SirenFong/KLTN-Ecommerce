@@ -5,7 +5,8 @@ const ProtectedRoute = ({ children }) => {
   const { loading, isAuthenticated } = useSelector((state) => state.user);
   if (loading === false) {
     if (!isAuthenticated) {
-      return <Navigate to="/login" replace />;
+      // Nếu chưa đăng nhập
+      return <Navigate to="/login" replace />; // Chuyển hướng đến trang login
     }
     return children;
   }

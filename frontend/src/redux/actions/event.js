@@ -3,12 +3,13 @@ import { server } from "../../server";
 
 // create event
 export const createevent = (data) => async (dispatch) => {
+  // Tạo sự kiện
   try {
     dispatch({
       type: "eventCreateRequest",
     });
 
-    const { d } = await axios.post(`${server}/event/create-event`, data);
+    const { d } = await axios.post(`${server}/event/create-event`, data); // Gửi request tạo sự kiện
     dispatch({
       type: "eventCreateSuccess",
       payload: d.event,

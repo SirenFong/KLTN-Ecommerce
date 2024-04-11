@@ -9,6 +9,7 @@ import { server } from "../../server";
 const AllEvents = () => {
   const [events, setEvents] = useState([]);
   useEffect(() => {
+    // Get all events
     axios
       .get(`${server}/event/admin-all-events`, { withCredentials: true })
       .then((res) => {

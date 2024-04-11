@@ -22,12 +22,12 @@ const UserOrderDetails = () => {
   const { id } = useParams();
 
   useEffect(() => {
-    dispatch(getAllOrdersOfUser(user._id));
+    dispatch(getAllOrdersOfUser(user._id)); // Lấy tất cả đơn hàng của user
   }, [dispatch, user._id]);
 
-  const data = orders && orders.find((item) => item._id === id);
-  console.log(data);
+  const data = orders && orders.find((item) => item._id === id); // Lấy đơn hàng theo id
   const reviewHandler = async (e) => {
+    // Hàm đánh giá
     await axios
       .put(
         `${server}/product/create-new-review`,
@@ -53,16 +53,19 @@ const UserOrderDetails = () => {
   };
 
   const refundHandler = async () => {
+    // Hàm yêu cầu hoàn trả
     await axios
       .put(`${server}/order/order-refund/${id}`, {
+        // Gửi request yêu cầu hoàn trả
         status: "Processing refund",
       })
       .then((res) => {
+        // Nếu thành công
         toast.success(res.data.message);
-        dispatch(getAllOrdersOfUser(user._id));
+        dispatch(getAllOrdersOfUser(user._id)); // Lấy lại tất cả đơn hàng của user
       })
       .catch((error) => {
-        toast.error(error.response.data.message);
+        toast.error(error.response.data.message); // Nếu lỗi thì hiển thị thông báo lỗi
       });
   };
 

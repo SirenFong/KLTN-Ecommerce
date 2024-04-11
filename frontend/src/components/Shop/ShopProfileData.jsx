@@ -21,7 +21,7 @@ const ShopProfileData = ({ isOwner }) => {
   const [active, setActive] = useState(1);
 
   const allReviews =
-    products && products.map((product) => product.reviews).flat();
+    products && products.map((product) => product.reviews).flat(); // Lấy tất cả đánh giá
 
   return (
     <div className="w-full">

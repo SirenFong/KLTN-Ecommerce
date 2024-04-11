@@ -13,17 +13,19 @@ const AdminDashboardMain = () => {
   const dispatch = useDispatch();
 
   const { adminOrders, adminOrderLoading } = useSelector(
+    // useSelector is a hook to access the redux store's state
     (state) => state.order
   );
-  const { sellers } = useSelector((state) => state.seller);
+  const { sellers } = useSelector((state) => state.seller); // Get sellers from redux store
 
   useEffect(() => {
+    // useEffect is a hook that runs after the first render and after every update
     dispatch(getAllOrdersOfAdmin());
     dispatch(getAllSellers());
   }, [dispatch]);
 
   const adminEarning =
-    adminOrders && adminOrders.reduce((acc, item) => acc + item.totalPrice, 0);
+    adminOrders && adminOrders.reduce((acc, item) => acc + item.totalPrice, 0); // Tính toán số tiền nhận
 
   const adminBalance = adminEarning?.toFixed(0);
 

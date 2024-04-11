@@ -11,29 +11,27 @@ const AllRefundOrders = () => {
   const { orders, isLoading } = useSelector((state) => state.order);
   const { seller } = useSelector((state) => state.seller);
 
-  const dispatch = useDispatch();
+  const dispatch = useDispatch(); // useDispatch is a hook to dispatch actions
 
   useEffect(() => {
-    dispatch(getAllOrdersOfShop(seller._id));
+    dispatch(getAllOrdersOfShop(seller._id)); // Lấy tất cả đơn hàng của shop
   }, [dispatch, seller._id]);
 
-  const refundOrders =
+  const refundOrders = // Lọc đơn hàng theo trạng thái hoàn trả
     orders &&
     orders.filter(
       (item) =>
-        item.status === "Processing refund" || item.status === "Refund Success"
+        item.status === "Đang yêu cầu hoàn trả" || item.status === "Đã hoàn trả"
     );
 
   const columns = [
-    // { field: "id", headerName: "Order ID", minWidth: 150, flex: 0.7 },
-
     {
       field: "status",
       headerName: "Trạng thái",
       minWidth: 130,
       flex: 0.7,
       cellClassName: (params) => {
-        return params.getValue(params.id, "status") === "Delivered"
+        return params.getValue(params.id, "status") === "Đã giao hàng"
           ? "greenColor"
           : "redColor";
       },

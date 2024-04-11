@@ -11,16 +11,19 @@ const EventCard = ({ active, data }) => {
   const dispatch = useDispatch();
 
   const addToCartHandler = (data) => {
-    const isItemExists = cart && cart.find((i) => i._id === data._id);
+    // Thêm sản phẩm vào giỏ hàng
+    const isItemExists = cart && cart.find((i) => i._id === data._id); // Kiểm tra sản phẩm đã tồn tại trong giỏ hàng chưa
     if (isItemExists) {
       toast.error("Sản phẩm đã được thêm vào giỏ hàng!");
     } else {
       if (data.stock < 1) {
+        // Kiểm tra số lượng sản phẩm còn lại
         toast.error("Số lượng sản phẩm đã hết!");
       } else {
-        const cartData = { ...data, qty: 1 };
-        dispatch(addTocart(cartData));
-        toast.success("Thêm vào giỏ hàng thành công!");
+        // Thêm sản phẩm vào giỏ hàng
+        const cartData = { ...data, qty: 1 }; // Thêm số lượng sản phẩm
+        dispatch(addTocart(cartData)); // Thêm sản phẩm vào giỏ hàng
+        toast.success("Thêm vào giỏ hàng thành công!"); // Thông báo thêm sản phẩm thành công
       }
     }
   };

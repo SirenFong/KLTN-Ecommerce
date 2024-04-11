@@ -13,19 +13,21 @@ const ShopSettings = () => {
   const [avatar, setAvatar] = useState();
   const [name, setName] = useState(seller && seller.name);
   const [description, setDescription] = useState(
-    seller && seller.description ? seller.description : ""
-  );
+    seller && seller.description ? seller.description : "" // Mô tả cửa hàng
+  ); // Mô tả cửa hàng
   const [address, setAddress] = useState(seller && seller.address);
-  const [phoneNumber, setPhoneNumber] = useState(seller && seller.phoneNumber);
+  const [phoneNumber, setPhoneNumber] = useState(seller && seller.phoneNumber); // Số điện thoại
   const [zipCode, setZipcode] = useState(seller && seller.zipCode);
 
   const dispatch = useDispatch();
 
   const handleImage = async (e) => {
-    const reader = new FileReader();
+    const reader = new FileReader(); // Đọc file
 
+    // Khi file đã được đọc
     reader.onload = () => {
       if (reader.readyState === 2) {
+        // Nếu file đã được đọc
         setAvatar(reader.result);
         axios
           .put(
@@ -45,10 +47,11 @@ const ShopSettings = () => {
       }
     };
 
-    reader.readAsDataURL(e.target.files[0]);
+    reader.readAsDataURL(e.target.files[0]); // Đọc file dưới dạng URL
   };
 
   const updateHandler = async (e) => {
+    // Cập nhật thông tin cửa hàng
     e.preventDefault();
 
     await axios
@@ -61,7 +64,7 @@ const ShopSettings = () => {
           phoneNumber,
           description,
         },
-        { withCredentials: true }
+        { withCredentials: true } // Gửi request đến server
       )
       .then((res) => {
         toast.success("Thông tin cập nhật thành công!");

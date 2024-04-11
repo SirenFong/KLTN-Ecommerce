@@ -21,30 +21,34 @@ const OrderDetails = () => {
     dispatch(getAllOrdersOfShop(seller._id));
   }, [dispatch, seller._id]);
 
-  const data = orders && orders.find((item) => item._id === id);
+  const data = orders && orders.find((item) => item._id === id); // Tìm đơn hàng theo id
 
   const orderUpdateHandler = async (e) => {
+    // Cập nhật trạng thái đơn hàng
     await axios
       .put(
-        `${server}/order/update-order-status/${id}`,
+        `${server}/order/update-order-status/${id}`, // Gửi request đến server
         {
           status,
         },
         { withCredentials: true }
       )
       .then((res) => {
+        // Nếu thành công
         toast.success("Thành công!");
         navigate("/dashboard-orders");
       })
       .catch((error) => {
+        // Nếu thất bại
         toast.error(error.response.data.message);
       });
   };
 
   const refundOrderUpdateHandler = async (e) => {
+    // Cập nhật trạng thái đơn hàng hoàn trả
     await axios
       .put(
-        `${server}/order/order-refund-success/${id}`,
+        `${server}/order/order-refund-success/${id}`, // Gửi request đến server
         {
           status,
         },
@@ -52,14 +56,12 @@ const OrderDetails = () => {
       )
       .then((res) => {
         toast.success("Thành công!");
-        dispatch(getAllOrdersOfShop(seller._id));
+        dispatch(getAllOrdersOfShop(seller._id)); // Lấy tất cả đơn hàng của shop
       })
       .catch((error) => {
         toast.error(error.response.data.message);
       });
   };
-
-  console.log(data?.status);
 
   return (
     <div className={`py-4 min-h-screen ${styles.section}`}>

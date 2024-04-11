@@ -45,7 +45,8 @@ const CreateEvent = () => {
   };
 
   useEffect(() => {
-    const discount = originalPrice * (percentDiscount / 100);
+    // Tính giá giảm
+    const discount = originalPrice * (percentDiscount / 100); // Tính giá giảm
     setDiscountPrice(originalPrice - discount);
   }, [originalPrice, percentDiscount]);
 
@@ -62,23 +63,25 @@ const CreateEvent = () => {
   }, [dispatch, error, navigate, success]);
 
   const handleStartDateChange = (e) => {
-    const startDate = new Date(e.target.value);
-    const minEndDate = new Date(startDate.getTime() + 3 * 24 * 60 * 60 * 1000);
-    setStartDate(startDate);
-    setEndDate(null);
-    document.getElementById("end-date").min = minEndDate
+    // Xử lý thay đổi ngày bắt đầu
+    const startDate = new Date(e.target.value); // Lấy ngày bắt đầu
+    const minEndDate = new Date(startDate.getTime() + 3 * 24 * 60 * 60 * 1000); // Lấy ngày kết thúc
+    setStartDate(startDate); // Cập nhật ngày bắt đầu
+    setEndDate(null); // Xóa ngày kết thúc
+    document.getElementById("end-date").min = minEndDate // Cập nhật ngày kết thúc
       .toISOString()
       .slice(0, 10);
   };
 
   const handleEndDateChange = (e) => {
-    const endDate = new Date(e.target.value);
+    // Xử lý thay đổi ngày kết thúc
+    const endDate = new Date(e.target.value); // Lấy ngày kết thúc
     setEndDate(endDate);
   };
 
-  const today = new Date().toISOString().slice(0, 10);
+  const today = new Date().toISOString().slice(0, 10); // Lấy ngày hiện tại
 
-  const minEndDate = startDate
+  const minEndDate = startDate // Lấy ngày kết thúc
     ? new Date(startDate.getTime() + 3 * 24 * 60 * 60 * 1000)
         .toISOString()
         .slice(0, 10)
@@ -98,31 +101,37 @@ const CreateEvent = () => {
   }, [error, navigate, success]);
 
   const handleImageChange = (e) => {
-    const files = Array.from(e.target.files);
+    // Xử lý thay đổi hình ảnh
+    const files = Array.from(e.target.files); // Lấy hình ảnh
 
-    setImages([]);
+    setImages([]); // Xóa hình ảnh
 
     files.forEach((file) => {
-      const reader = new FileReader();
+      // Lặp qua từng hình ảnh
+      const reader = new FileReader(); // Đọc hình ảnh
 
       reader.onload = () => {
+        // Khi đã đọc xong
         if (reader.readyState === 2) {
-          setImages((old) => [...old, reader.result]);
+          // Nếu đã đọc xong
+          setImages((old) => [...old, reader.result]); // Thêm hình ảnh vào mảng images
         }
       };
-      reader.readAsDataURL(file);
+      reader.readAsDataURL(file); // Đọc hình ảnh
     });
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    const newForm = new FormData();
+    const newForm = new FormData(); // Tạo form data
 
     images.forEach((image) => {
+      // Lặp qua từng hình ảnh
       newForm.append("images", image);
     });
     const data = {
+      // Dữ liệu cần gửi
       name,
       description,
       category,
@@ -137,7 +146,7 @@ const CreateEvent = () => {
       shopId: seller._id,
       start_Date: startDate?.toISOString(),
       Finish_Date: endDate?.toISOString(),
-    };
+    }; // Dữ liệu cần gửi
     dispatch(createevent(data));
   };
 

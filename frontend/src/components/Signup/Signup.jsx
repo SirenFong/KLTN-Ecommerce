@@ -15,18 +15,22 @@ const Singup = () => {
   const [avatar, setAvatar] = useState(null);
 
   const handleFileInputChange = (e) => {
-    const reader = new FileReader();
+    // Xử lý khi người dùng chọn hình
+    const reader = new FileReader(); // Đọc file
 
     reader.onload = () => {
+      // Khi file đã được đọc
       if (reader.readyState === 2) {
-        setAvatar(reader.result);
+        // Nếu file đã được đọc
+        setAvatar(reader.result); // Set hình ảnh vào state
       }
     };
 
-    reader.readAsDataURL(e.target.files[0]);
+    reader.readAsDataURL(e.target.files[0]); // Đọc file hình ảnh
   };
 
   const handleSubmit = async (e) => {
+    // Xử lý khi người dùng ấn nút đăng ký
     e.preventDefault();
 
     axios

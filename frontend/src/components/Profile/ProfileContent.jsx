@@ -31,17 +31,17 @@ const ProfileContent = ({ active }) => {
   const [email, setEmail] = useState(user && user.email);
   const [phoneNumber, setPhoneNumber] = useState(user && user.phoneNumber);
   const [password, setPassword] = useState("");
-  const [avatar, setAvatar] = useState(null);
+  const [avatar, setAvatar] = useState(null); // Avatar
   const dispatch = useDispatch();
 
   useEffect(() => {
     if (error) {
       toast.error(error);
-      dispatch({ type: "clearErrors" });
+      dispatch({ type: "clearErrors" }); // Xóa lỗi
     }
     if (successMessage) {
       toast.success(successMessage);
-      dispatch({ type: "clearMessages" });
+      dispatch({ type: "clearMessages" }); // Xóa thông báo
     }
   }, [dispatch, error, successMessage]);
 
@@ -51,20 +51,23 @@ const ProfileContent = ({ active }) => {
   };
 
   const handleImage = async (e) => {
-    const reader = new FileReader();
+    const reader = new FileReader(); // Đọc file
 
     reader.onload = () => {
+      // Khi load file
       if (reader.readyState === 2) {
-        setAvatar(reader.result);
-        axios
+        // Nếu file đã load
+        setAvatar(reader.result); // Gán file đã load vào avatar
+        axios // Cập nhật ảnh đại diện của user
           .put(
-            `${server}/user/update-avatar`,
-            { avatar: reader.result },
+            `${server}/user/update-avatar`, // Đường dẫn cập nhật ảnh đại diện
+            { avatar: reader.result }, // Ảnh đại diện
             {
               withCredentials: true,
             }
           )
           .then((response) => {
+            // Nếu cập nhật thành công
             dispatch(loadUser());
             toast.success("Đã cập nhật ảnh đại diện!");
           })
@@ -74,7 +77,7 @@ const ProfileContent = ({ active }) => {
       }
     };
 
-    reader.readAsDataURL(e.target.files[0]);
+    reader.readAsDataURL(e.target.files[0]); // Đọc file dưới dạng URL
   };
 
   return (

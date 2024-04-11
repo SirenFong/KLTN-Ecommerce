@@ -29,6 +29,7 @@ const AllCoupons = () => {
     setIsLoading(true);
     axios
       .get(`${server}/coupon/get-coupon/${seller._id}`, {
+        // Get all coupons of a seller
         withCredentials: true,
       })
       .then((res) => {
@@ -42,7 +43,7 @@ const AllCoupons = () => {
 
   const handleDelete = async (id) => {
     axios
-      .delete(`${server}/coupon/delete-coupon/${id}`, { withCredentials: true })
+      .delete(`${server}/coupon/delete-coupon/${id}`, { withCredentials: true }) // Delete a coupon
       .then((res) => {
         toast.success("Xóa mã giảm giá thành công!");
       });
@@ -50,7 +51,7 @@ const AllCoupons = () => {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
+    e.preventDefault(); // Prevent the default form submission
 
     await axios
       .post(

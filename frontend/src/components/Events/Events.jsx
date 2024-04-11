@@ -14,7 +14,9 @@ const Events = () => {
 
   useEffect(() => {
     if (allEvents && allEvents.length > 1 && !autoSlide) {
+      // Nếu có nhiều hơn 1 sự kiện và không tự động chuyển đổi
       const timer = setInterval(() => {
+        // Tự động chuyển đổi sự kiện
         setCurrentEventIndex((prevIndex) => (prevIndex + 1) % allEvents.length);
       }, 5000); // thời gian chuyển đổi tự động, ở đây là 5 giây
       return () => clearInterval(timer);

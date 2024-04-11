@@ -43,6 +43,7 @@ const Checkout = () => {
   }, []);
 
   const paymentSubmit = () => {
+    // Submit payment
     if (
       address1 === "" ||
       address2 === "" ||
@@ -77,42 +78,48 @@ const Checkout = () => {
   };
 
   const subTotalPrice = cart.reduce(
+    // Tính tổng giá tiền
     (acc, item) =>
       acc + item.qty * item.sellPrice || acc + item.qty * item.discountPrice,
     0
   );
 
   // Phí vận chuyển
-  const shipping = subTotalPrice > 200000 ? 0 : 15000;
+  const shipping = subTotalPrice > 500000 ? 0 : 15000; // Nếu tổng giá trị đơn hàng lớn hơn 500k thì miễn phí vận chuyển
 
   const handleSubmit = async (e) => {
+    // Xử lý mã giảm giá
     e.preventDefault();
     const name = couponCode;
 
     await axios.get(`${server}/coupon/get-coupon-value/${name}`).then((res) => {
-      const shopId = res.data.couponCode?.shopId;
-      const couponCodeValue = res.data.couponCode?.value;
-      const minAmount = res.data.couponCode?.minAmount;
-      const maxAmount = res.data.couponCode?.maxAmount;
+      // Lấy mã giảm giá từ server
+      const shopId = res.data.couponCode?.shopId; // Lấy id shop
+      const couponCodeValue = res.data.couponCode?.value; // Lấy giá trị giảm giá
+      const minAmount = res.data.couponCode?.minAmount; // Lấy số tiền tối thiểu để áp mã
+      const maxAmount = res.data.couponCode?.maxAmount; // Lấy số tiền tối đa giảm giá
       if (res.data.couponCode !== null) {
+        // Nếu mã giảm giá tồn tại
         const isCouponValid =
           cart && cart.filter((item) => item.shopId === shopId);
 
         if (isCouponValid.length === 0) {
+          // Nếu mã giảm giá không hợp lệ
           toast.error("Mã giảm giá không hợp lệ");
           setCouponCode("");
         } else {
+          // Nếu mã giảm giá hợp lệ
           const eligiblePrice = isCouponValid.reduce(
             (acc, item) =>
               acc + item.qty * item.sellPrice ||
               acc + item.qty * item.discountPrice,
             0
-          );
+          ); // Tính tổng giá trị đơn hàng của shop
           if (eligiblePrice < minAmount) {
             toast.error("Số tiền chưa đủ để áp mã");
             setCouponCode("");
           } else {
-            let discountPrice = (eligiblePrice * couponCodeValue) / 100;
+            let discountPrice = (eligiblePrice * couponCodeValue) / 100; // Tính giá trị giảm giá
             if (discountPrice > maxAmount) {
               discountPrice = maxAmount;
             }
@@ -123,21 +130,21 @@ const Checkout = () => {
         }
       }
       if (res.data.couponCode === null) {
+        // Nếu mã giảm giá không tồn tại
         toast.error("Mã giảm giá không tồn tại!");
         setCouponCode("");
       }
     });
   };
 
-  const discountPercentenge = couponCodeData ? sellPrice : "";
+  const discountPercentenge = couponCodeData ? sellPrice : ""; // Giá trị giảm giá
 
-  const totalPrice = couponCodeData
+  const totalPrice = couponCodeData // Tính tổng giá trị đơn hàng
     ? (subTotalPrice + shipping - discountPercentenge).toFixed(2)
     : (subTotalPrice + shipping).toFixed(2);
 
-  console.log(discountPercentenge);
-
   useEffect(() => {
+    // Lấy danh sách mã giảm giá
     setIsLoading(true);
     axios
       .get(`${server}/coupon/get-all-coupons`, {
@@ -153,6 +160,7 @@ const Checkout = () => {
   }, []);
 
   const columns = [
+    // Cột bảng mã giảm giá
     { field: "name", headerName: "Mã giảm giá", flex: 2 },
     { field: "price", headerName: "Giảm giá (%)", flex: 1 },
   ];
@@ -165,15 +173,6 @@ const Checkout = () => {
     }));
     setRow(newRow);
   }, [coupouns]);
-
-  // coupouns &&
-  //   coupouns.forEach((item) => {
-  //     row.push({
-  //       id: item._id,
-  //       name: item.name,
-  //       price: item.value + " %",
-  //     });
-  //   });
 
   return (
     <div className="w-full flex flex-col items-center py-8">
