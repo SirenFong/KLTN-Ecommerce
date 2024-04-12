@@ -9,7 +9,7 @@ import { addTocart, removeFromCart } from "../../redux/actions/cart";
 import { toast } from "react-toastify";
 
 const Cart = ({ setOpenCart }) => {
-  const { cart } = useSelector((state) => state.cart);
+  const { cart } = useSelector((state) => state.cart); // Lấy giỏ hàng từ store
   const dispatch = useDispatch();
 
   const removeFromCartHandler = (data) => {
@@ -20,7 +20,7 @@ const Cart = ({ setOpenCart }) => {
   const totalPrice = cart.reduce(
     // Tính tổng giá tiền
     (acc, item) =>
-      acc + item.qty * item.sellPrice || acc + item.discountPrice * item.qty,
+      acc + item.qty * item.sellPrice || acc + item.discountPrice * item.qty, // Tính giá tiền sau khi giảm giá
     0
   );
 

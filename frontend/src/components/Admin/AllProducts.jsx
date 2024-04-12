@@ -11,7 +11,7 @@ const AllProducts = () => {
   const [data, setData] = useState([]);
 
   useEffect(() => {
-    axios
+    axios // Get all products
       .get(`${server}/product/admin-all-products`, { withCredentials: true })
       .then((res) => {
         setData(res.data.products);
@@ -19,7 +19,6 @@ const AllProducts = () => {
   }, []);
 
   const columns = [
-    // { field: "id", headerName: "Product Id", minWidth: 150, flex: 0.7 },
     {
       field: "name",
       headerName: "Tên sản phẩm",

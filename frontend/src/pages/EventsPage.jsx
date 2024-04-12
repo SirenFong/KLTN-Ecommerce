@@ -10,7 +10,7 @@ const EventsPage = () => {
   const [visibleEvents, setVisibleEvents] = useState(3); // State to control the number of visible events
 
   const showMoreEvents = () => {
-    setVisibleEvents(visibleEvents + 3); // Show 3 more events when the button is clicked
+    setVisibleEvents(visibleEvents + 3); // Show more events
   };
 
   return (
@@ -22,22 +22,28 @@ const EventsPage = () => {
           <Header activeHeading={4} />
 
           {allEvents &&
-            allEvents.slice(0, visibleEvents).map((event, index) => (
-              <div
-                key={index}
-                style={{ border: "1px solid black", margin: "10px" }}
+            allEvents.slice(0, visibleEvents).map(
+              (
+                event,
+                index // Show only visible events
+              ) => (
+                <div
+                  key={index}
+                  style={{ border: "1px solid black", margin: "10px" }}
+                >
+                  <EventCard active={true} data={event} />
+                </div>
+              )
+            )}
+          {allEvents &&
+            allEvents.length > visibleEvents && ( // Show the button to show more events if there are more events to show
+              <button
+                onClick={showMoreEvents}
+                style={{ display: "flex", alignItems: "center" }}
               >
-                <EventCard active={true} data={event} />
-              </div>
-            ))}
-          {allEvents && allEvents.length > visibleEvents && (
-            <button
-              onClick={showMoreEvents}
-              style={{ display: "flex", alignItems: "center" }}
-            >
-              Xem thêm <BsArrowRight />
-            </button>
-          )}
+                Xem thêm <BsArrowRight />
+              </button>
+            )}
         </div>
       )}
     </>

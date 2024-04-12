@@ -67,7 +67,7 @@ router.post(
 // Load tất cả sự kiện
 router.get("/get-all-events", async (req, res, next) => {
   try {
-    const events = await Event.find();
+    const events = await Event.find(); // tìm kiếm sự kiện
     res.status(201).json({
       success: true,
       events,
@@ -99,16 +99,16 @@ router.delete(
   "/delete-shop-event/:id",
   catchAsyncErrors(async (req, res, next) => {
     try {
-      const event = await Event.findById(req.params.id);
+      const event = await Event.findById(req.params.id); // tìm kiếm sự kiện
 
       if (!event) {
         // kiểm tra sự kiện
         return next(new ErrorHandler("Không tìm thấy sự kiện", 404));
       }
 
-      for (let i = 0; i < event.images.length; i++) {
+      for (let i = 0; i < event.images.length; i++) { // duyệt qua từng hình ảnh
         // xóa hình ảnh
-        await cloudinary.v2.uploader.destroy(event.images[i].public_id);
+        await cloudinary.v2.uploader.destroy(event.images[i].public_id); 
       }
 
       await event.deleteOne(); // xóa sự kiện

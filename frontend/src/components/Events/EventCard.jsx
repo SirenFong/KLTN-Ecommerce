@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback } from "react";
 import styles from "../../styles/styles";
 import CountDown from "./CountDown";
 import { Link } from "react-router-dom";
@@ -7,26 +7,29 @@ import { addTocart } from "../../redux/actions/cart";
 import { toast } from "react-toastify";
 
 const EventCard = ({ active, data }) => {
-  const { cart } = useSelector((state) => state.cart);
+  //
+  const { cart } = useSelector((state) => state.cart); // Lấy giỏ hàng từ store
   const dispatch = useDispatch();
 
-  const addToCartHandler = (data) => {
-    // Thêm sản phẩm vào giỏ hàng
-    const isItemExists = cart && cart.find((i) => i._id === data._id); // Kiểm tra sản phẩm đã tồn tại trong giỏ hàng chưa
-    if (isItemExists) {
-      toast.error("Sản phẩm đã được thêm vào giỏ hàng!");
-    } else {
-      if (data.stock < 1) {
-        // Kiểm tra số lượng sản phẩm còn lại
-        toast.error("Số lượng sản phẩm đã hết!");
+  const addToCartHandler = useCallback(
+    (data) => {
+      const isItemExists = cart?.some((i) => i._id === data._id); // Kiểm tra sản phẩm đã tồn tại trong giỏ hàng chưa
+      if (isItemExists) {
+        toast.error("Sản phẩm đã được thêm vào giỏ hàng!");
       } else {
-        // Thêm sản phẩm vào giỏ hàng
-        const cartData = { ...data, qty: 1 }; // Thêm số lượng sản phẩm
-        dispatch(addTocart(cartData)); // Thêm sản phẩm vào giỏ hàng
-        toast.success("Thêm vào giỏ hàng thành công!"); // Thông báo thêm sản phẩm thành công
+        if (data.stock < 1) {
+          // Kiểm tra số lượng sản phẩm còn lại
+          toast.error("Số lượng sản phẩm đã hết!");
+        } else {
+          const cartData = { ...data, qty: 1 }; // Thêm sản phẩm vào giỏ hàng
+          dispatch(addTocart(cartData));
+          toast.success("Thêm vào giỏ hàng thành công!");
+        }
       }
-    }
-  };
+    },
+    [cart, dispatch]
+  );
+
   return (
     <div
       className={`w-full block bg-white rounded-lg ${
@@ -35,7 +38,7 @@ const EventCard = ({ active, data }) => {
     >
       <div className="w-full lg:-w[50%] m-auto ml-20">
         <img
-          src={`${data.images[0]?.url}`}
+          src={data.images[0]?.url}
           alt=""
           style={{ width: "300px", height: "300px", objectFit: "cover" }}
         />
@@ -43,8 +46,8 @@ const EventCard = ({ active, data }) => {
       <div className="w-full lg:[w-50%] flex flex-col justify-center">
         <h2 className={`${styles.productTitle}`}>{data.name}</h2>
         <p>
-          {data.description.length > 200
-            ? data.description.substring(0, 200) + "..."
+          {data.description.length > 200 // Kiểm tra độ dài của description
+            ? `${data.description.substring(0, 200)}...` // Giới hạn số ký tự hiển thị
             : data.description}
         </p>
         <div className="flex py-2 justify-between">
@@ -62,7 +65,7 @@ const EventCard = ({ active, data }) => {
             {data.sold_out} Đã bán
           </span>
         </div>
-        <CountDown data={data} />
+        <CountDown data={data} /> {/* Hiển thị thời gian còn lại */}
         <br />
         <div className="flex items-center">
           <Link to={`/product/${data._id}?isEvent=true`}>

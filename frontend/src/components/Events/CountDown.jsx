@@ -31,10 +31,10 @@ const CountDown = ({ data }) => {
     if (difference > 0) {
       // Nếu thời gian còn lại lớn hơn 0
       timeLeft = {
-        Ngày: Math.floor(difference / (1000 * 60 * 60 * 24)),
-        Giờ: Math.floor((difference / (1000 * 60 * 60)) % 24),
-        Phút: Math.floor((difference / 1000 / 60) % 60),
-        Giây: Math.floor((difference / 1000) % 60),
+        Ngày: Math.floor(difference / (1000 * 60 * 60 * 24)), // Tính số ngày
+        Giờ: Math.floor((difference / (1000 * 60 * 60)) % 24), // Tính số giờ
+        Phút: Math.floor((difference / 1000 / 60) % 60), // Tính số phút
+        Giây: Math.floor((difference / 1000) % 60), // Tính số giây
       };
     }
 

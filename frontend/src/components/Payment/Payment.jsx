@@ -34,7 +34,7 @@ const Payment = () => {
   const convertToSupportedCurrency = async (amount) => {
     try {
       const response = await axios.get(
-        "https://api.exchangerate-api.com/v4/latest/VND",
+        "https://api.exchangerate-api.com/v4/latest/VND", //Gọi api để lấy mã chuyển đổi tiền tệ
         { headers: { Authorization: "Bearer 1f4090abbfa4c92e4078bb61" } } //Call api để lấy mã chuyển đổi tiền tệ
       );
       const exchangeRate = response.data.rates.USD; //Lấy mã chuyển đổi tiền tệ
@@ -50,9 +50,10 @@ const Payment = () => {
     const amountInUSD = await convertToSupportedCurrency(orderData?.totalPrice); //Chuyển đổi tiền VND sang USD
     return actions.order
       .create({
+        //Tạo order
         purchase_units: [
           {
-            description: "Sunflower",
+            description: "Sunflower", //Mô tả sản phẩm
             amount: {
               currency_code: "USD", //Chuyển đổi sang USD
               value: amountInUSD,

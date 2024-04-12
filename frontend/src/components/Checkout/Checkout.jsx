@@ -9,7 +9,6 @@ import { DataGrid } from "@material-ui/data-grid";
 import { server } from "../../server";
 import { toast } from "react-toastify";
 import Loader from "../Layout/Loader";
-import { RxCross1 } from "react-icons/rx";
 
 const Checkout = () => {
   const { user } = useSelector((state) => state.user);
@@ -32,6 +31,7 @@ const Checkout = () => {
   const [couponCode, setCouponCode] = useState("");
   const [couponCodeData, setCouponCodeData] = useState(null);
   const [sellPrice, setSellPrice] = useState(null);
+  const [selectedCoupons, setSelectedCoupons] = useState([]);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -45,6 +45,7 @@ const Checkout = () => {
   const paymentSubmit = () => {
     // Submit payment
     if (
+      // Kiểm tra thông tin địa chỉ
       address1 === "" ||
       address2 === "" ||
       // zipCode === null ||
@@ -53,6 +54,7 @@ const Checkout = () => {
     ) {
       toast.error("Vui lòng nhập địa chỉ nhận hàng!");
     } else {
+      // Nếu thông tin địa chỉ hợp lệ
       const shippingAddress = {
         address1,
         address2,
@@ -62,6 +64,7 @@ const Checkout = () => {
       };
 
       const orderData = {
+        //  Dữ liệu đơn hàng
         cart,
         totalPrice,
         subTotalPrice,
@@ -77,71 +80,67 @@ const Checkout = () => {
     }
   };
 
-  const subTotalPrice = cart.reduce(
-    // Tính tổng giá tiền
-    (acc, item) =>
-      acc + item.qty * item.sellPrice || acc + item.qty * item.discountPrice,
-    0
-  );
-
-  // Phí vận chuyển
-  const shipping = subTotalPrice > 500000 ? 0 : 15000; // Nếu tổng giá trị đơn hàng lớn hơn 500k thì miễn phí vận chuyển
-
   const handleSubmit = async (e) => {
-    // Xử lý mã giảm giá
     e.preventDefault();
+    // Xử lý mã giảm giá
     const name = couponCode;
 
     await axios.get(`${server}/coupon/get-coupon-value/${name}`).then((res) => {
-      // Lấy mã giảm giá từ server
-      const shopId = res.data.couponCode?.shopId; // Lấy id shop
-      const couponCodeValue = res.data.couponCode?.value; // Lấy giá trị giảm giá
-      const minAmount = res.data.couponCode?.minAmount; // Lấy số tiền tối thiểu để áp mã
-      const maxAmount = res.data.couponCode?.maxAmount; // Lấy số tiền tối đa giảm giá
-      if (res.data.couponCode !== null) {
-        // Nếu mã giảm giá tồn tại
-        const isCouponValid =
-          cart && cart.filter((item) => item.shopId === shopId);
-
-        if (isCouponValid.length === 0) {
-          // Nếu mã giảm giá không hợp lệ
-          toast.error("Mã giảm giá không hợp lệ");
-          setCouponCode("");
-        } else {
-          // Nếu mã giảm giá hợp lệ
-          const eligiblePrice = isCouponValid.reduce(
-            (acc, item) =>
-              acc + item.qty * item.sellPrice ||
-              acc + item.qty * item.discountPrice,
-            0
-          ); // Tính tổng giá trị đơn hàng của shop
-          if (eligiblePrice < minAmount) {
-            toast.error("Số tiền chưa đủ để áp mã");
-            setCouponCode("");
-          } else {
-            let discountPrice = (eligiblePrice * couponCodeValue) / 100; // Tính giá trị giảm giá
-            if (discountPrice > maxAmount) {
-              discountPrice = maxAmount;
-            }
-            setSellPrice(discountPrice);
-            setCouponCodeData(res.data.couponCode);
-            setCouponCode("");
-          }
-        }
-      }
-      if (res.data.couponCode === null) {
-        // Nếu mã giảm giá không tồn tại
+      const coupon = res.data.couponCode;
+      if (!coupon) {
         toast.error("Mã giảm giá không tồn tại!");
-        setCouponCode("");
+        return;
       }
+
+      // Kiểm tra số lượng mã giảm giá đã chọn, chỉ cho phép tối đa 2 mã
+      if (selectedCoupons.length >= 2) {
+        toast.error("Chỉ được áp dụng tối đa 2 mã giảm giá!");
+        return;
+      }
+
+      // Kiểm tra xem mã giảm giá đã được áp dụng cho mục trong giỏ hàng chưa
+      const isCouponApplicable = cart.some(
+        (item) => item.shopId === coupon.shopId
+      );
+      if (!isCouponApplicable) {
+        toast.error("Mã giảm giá không áp dụng cho sản phẩm trong giỏ hàng!");
+        return;
+      }
+
+      // Kiểm tra xem mã giảm giá đã được chọn trước đó chưa
+      const isCouponSelected = selectedCoupons.some(
+        (selectedCoupon) => selectedCoupon._id === coupon._id
+      );
+      if (isCouponSelected) {
+        toast.error("Mã giảm giá đã được chọn trước đó!");
+        return;
+      }
+
+      // Kiểm tra minAmount của mã giảm giá
+      if (subTotalPrice < coupon.minAmount) {
+        toast.error("Chưa đủ tiền để áp mã giảm giá này!");
+        return;
+      }
+
+      // Tính toán số tiền giảm giá dựa trên phần trăm giảm
+      let discountAmount = (coupon.value / 100) * subTotalPrice;
+
+      // Nếu số tiền giảm vượt quá maxAmount của mã giảm giá, chỉ lấy maxAmount
+      if (discountAmount > coupon.maxAmount) {
+        discountAmount = coupon.maxAmount;
+      }
+
+      // Thêm mã giảm giá vào danh sách đã chọn
+      setSelectedCoupons([
+        ...selectedCoupons,
+        { ...coupon, actualDiscount: discountAmount },
+      ]);
+      setCouponCode("");
+
+      // Cập nhật couponCodeData
+      setCouponCodeData({ ...coupon, actualDiscount: discountAmount });
     });
   };
-
-  const discountPercentenge = couponCodeData ? sellPrice : ""; // Giá trị giảm giá
-
-  const totalPrice = couponCodeData // Tính tổng giá trị đơn hàng
-    ? (subTotalPrice + shipping - discountPercentenge).toFixed(2)
-    : (subTotalPrice + shipping).toFixed(2);
 
   useEffect(() => {
     // Lấy danh sách mã giảm giá
@@ -173,6 +172,28 @@ const Checkout = () => {
     }));
     setRow(newRow);
   }, [coupouns]);
+
+  // Tính tổng giá tiền của giỏ hàng
+  const subTotalPrice = cart.reduce((acc, item) => {
+    return acc + (item.qty * item.sellPrice || item.qty * item.discountPrice);
+  }, 0);
+
+  const shipping = subTotalPrice > 500000 ? 0 : 15000;
+
+  const discountPercentenge =
+    couponCodeData && subTotalPrice !== null
+      ? (subTotalPrice * couponCodeData.value) / 100
+      : 0;
+
+  console.log(discountPercentenge);
+  console.log(couponCodeData);
+  console.log(sellPrice);
+
+  // Tính tổng giá tiền sau khi áp dụng mã giảm giá
+  const totalDiscount = selectedCoupons.reduce((acc, coupon) => {
+    return acc + (subTotalPrice * coupon.value) / 100;
+  }, 0);
+  const totalPrice = (subTotalPrice + shipping - totalDiscount).toFixed(2);
 
   return (
     <div className="w-full flex flex-col items-center py-8">
@@ -392,7 +413,6 @@ const CartData = ({
   couponCode,
   setCouponCode,
   discountPercentenge,
-  setCoupons,
 }) => {
   return (
     <div className="w-full bg-[#fff] rounded-md p-5 pb-8">

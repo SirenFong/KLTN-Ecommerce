@@ -8,9 +8,9 @@ import {
 } from "react-icons/io";
 
 const Events = () => {
-  const { allEvents, isLoading } = useSelector((state) => state.events);
-  const [currentEventIndex, setCurrentEventIndex] = useState(0);
-  const [autoSlide, setAutoSlide] = useState(false);
+  const { allEvents, isLoading } = useSelector((state) => state.events); // Lấy tất cả sự kiện từ store
+  const [currentEventIndex, setCurrentEventIndex] = useState(0); // Sự kiện hiện tại
+  const [autoSlide, setAutoSlide] = useState(false); // Tự động chuyển đổi sự kiện
 
   useEffect(() => {
     if (allEvents && allEvents.length > 1 && !autoSlide) {
@@ -24,13 +24,13 @@ const Events = () => {
   }, [autoSlide, allEvents]);
 
   const handleNextEvent = () => {
-    setCurrentEventIndex((prevIndex) => (prevIndex + 1) % allEvents.length);
+    setCurrentEventIndex((prevIndex) => (prevIndex + 1) % allEvents.length); // Chuyển đổi sự kiện tiếp theo
     setAutoSlide(false); // Dừng tự động chuyển đổi khi người dùng chọn sự kiện tiếp theo
   };
 
   const handlePrevEvent = () => {
     setCurrentEventIndex(
-      (prevIndex) => (prevIndex - 1 + allEvents.length) % allEvents.length
+      (prevIndex) => (prevIndex - 1 + allEvents.length) % allEvents.length // Chuyển đổi sự kiện trước đó
     );
     setAutoSlide(false); // Dừng tự động chuyển đổi khi người dùng chọn sự kiện trước đó
   };
@@ -47,8 +47,8 @@ const Events = () => {
             {allEvents && allEvents.length > 0 ? (
               <div className="flex items-center">
                 <EventCard
-                  key={currentEventIndex}
-                  data={allEvents[currentEventIndex]}
+                  key={currentEventIndex} // Hiển thị sự kiện hiện tại
+                  data={allEvents[currentEventIndex]} // Hiển thị thông tin sự kiện
                 />
                 {allEvents.length > 1 && (
                   <>
