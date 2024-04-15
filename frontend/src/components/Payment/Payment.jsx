@@ -162,7 +162,7 @@ const Payment = () => {
       if (result.error) {
         toast.error(result.error.message);
       } else {
-        if (result.paymentIntent.status === "Thành công") {
+        if (result.paymentIntent.status === "succeeded") {
           order.paymnentInfo = {
             id: result.paymentIntent.id,
             status: result.paymentIntent.status,
@@ -454,11 +454,6 @@ const CartData = ({ orderData }) => {
     });
     return formatter.format(value).replace(/\D00(?=\D*$)/, "");
   };
-  // const formatCurrency = (value) => {
-  //   return value
-  //     ? value.toLocaleString("vi-VN", { style: "currency", currency: "VND" })
-  //     : "-";
-  // };
   return (
     <div className="w-full bg-[#fff] rounded-md p-5 pb-8">
       <div className="flex justify-between">
