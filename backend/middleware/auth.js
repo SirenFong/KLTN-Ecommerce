@@ -10,19 +10,20 @@ exports.isAuthenticated = catchAsyncErrors(async (req, res, next) => {
 
   if (!token) {
     // Nếu chưa đăng nhập
-    return next(new ErrorHandler("Vui lòng đăng nhập", 401));
+    return next(new ErrorHandler("Vui lòng đăng nhập", 401)); // Trả về lỗi 401
   }
 
-  const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY);
+  const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY); // Giải mã token
 
-  req.user = await User.findById(decoded.id);
+  req.user = await User.findById(decoded.id); // Tìm người dùng theo id
 
   next();
 });
 
 exports.isSeller = catchAsyncErrors(async (req, res, next) => {
-  const { seller_token } = req.cookies;
+  const { seller_token } = req.cookies; // Lấy token từ cookie
   if (!seller_token) {
+    // Nếu không có token
     return next(new ErrorHandler("Vui lòng đăng nhập", 401));
   }
 

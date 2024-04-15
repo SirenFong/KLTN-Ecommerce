@@ -23,7 +23,6 @@ const Payment = () => {
   const navigate = useNavigate();
   const stripe = useStripe();
   const elements = useElements();
-  console.log(orderData);
 
   useEffect(() => {
     const orderData = JSON.parse(localStorage.getItem("latestOrder")); //Lấy dữ liệu order từ localStorage
@@ -33,7 +32,9 @@ const Payment = () => {
   //Sử dụng https://app.exchangerate-api.com/keys để lấy mã chuyển đổi tiền tệ
   const convertToSupportedCurrency = async (amount) => {
     try {
+      // Bắt lỗi
       const response = await axios.get(
+        // Gọi api để lấy mã chuyển đổi tiền tệ
         "https://api.exchangerate-api.com/v4/latest/VND", //Gọi api để lấy mã chuyển đổi tiền tệ
         { headers: { Authorization: "Bearer 1f4090abbfa4c92e4078bb61" } } //Call api để lấy mã chuyển đổi tiền tệ
       );

@@ -11,8 +11,8 @@ import { toast } from "react-toastify";
 import Loader from "../Layout/Loader";
 
 const Checkout = () => {
-  const { user } = useSelector((state) => state.user);
-  const { cart } = useSelector((state) => state.cart);
+  const { user } = useSelector((state) => state.user); // Lấy thông tin người dùng
+  const { cart } = useSelector((state) => state.cart); // Lấy giỏ hàng
 
   //
   const [open, setOpen] = useState(false);
@@ -258,6 +258,7 @@ const Checkout = () => {
 };
 
 const ShippingInfo = ({
+  // Thông tin giao hàng
   user,
   country,
   setCountry,
@@ -406,6 +407,7 @@ const ShippingInfo = ({
 };
 
 const CartData = ({
+  // Thông tin giỏ hàng
   handleSubmit,
   totalPrice,
   shipping,

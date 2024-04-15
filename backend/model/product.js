@@ -68,7 +68,7 @@ const productSchema = new mongoose.Schema({
   },
   stock: {
     type: Number,
-    required: [true, "Please enter your product stock!"],
+    required: [true, "Vui lòng nhập tồn sản phẩm!"],
   },
   images: [
     {
