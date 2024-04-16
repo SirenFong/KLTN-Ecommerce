@@ -1,6 +1,8 @@
 import React from "react";
 import styles from "../../../styles/styles";
 import { Link } from "react-router-dom";
+// import Stack from "@mui/material/Stack";
+import Button from "@mui/material/Button";
 
 const Hero = () => {
   return (
@@ -26,10 +28,8 @@ const Hero = () => {
           sản phẩm chăm sóc sức khoẻ, tiêu dùng hàng ngày,....
         </p>
         <Link to="/products" className="inline-block">
-          <div className={`${styles.button} mt-5`}>
-            <span className="text-[#fff] font-[Times New Roman] text-[18px]">
-              Mua ngay !!
-            </span>
+          <div className="mt-5">
+            <Button variant="contained">Mua ngay !!</Button>
           </div>
         </Link>
       </div>
