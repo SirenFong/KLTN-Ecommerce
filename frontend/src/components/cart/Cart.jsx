@@ -7,6 +7,7 @@ import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { addTocart, removeFromCart } from "../../redux/actions/cart";
 import { toast } from "react-toastify";
+import { Button } from "@material-ui/core";
 
 const Cart = ({ setOpenCart }) => {
   const { cart } = useSelector((state) => state.cart); // Lấy giỏ hàng từ store
@@ -78,11 +79,11 @@ const Cart = ({ setOpenCart }) => {
             <div className="px-5 mb-3">
               <Link to="/checkout">
                 <div
-                  className={`h-[45px] flex items-center justify-center w-[100%] bg-[#e44343] rounded-[5px]`}
+                  className={`h-[45px] flex items-center justify-center w-[100%] rounded-[5px]`}
                 >
-                  <h1 className="text-[#fff] text-[18px] font-[600]">
+                  <Button variant="contained" color="primary">
                     Thanh toán ngay ({totalPrice.toLocaleString("vi-VN")} VNĐ)
-                  </h1>
+                  </Button>
                 </div>
               </Link>
             </div>

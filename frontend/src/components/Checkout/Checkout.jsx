@@ -9,6 +9,7 @@ import { DataGrid } from "@material-ui/data-grid";
 import { server } from "../../server";
 import { toast } from "react-toastify";
 import Loader from "../Layout/Loader";
+import { Button, Select } from "@material-ui/core";
 
 const Checkout = () => {
   const { user } = useSelector((state) => state.user); // Lấy thông tin người dùng
@@ -185,10 +186,6 @@ const Checkout = () => {
       ? (subTotalPrice * couponCodeData.value) / 100
       : 0;
 
-  console.log(discountPercentenge);
-  console.log(couponCodeData);
-  console.log(sellPrice);
-
   // Tính tổng giá tiền sau khi áp dụng mã giảm giá
   const totalDiscount = selectedCoupons.reduce((acc, coupon) => {
     return acc + (subTotalPrice * coupon.value) / 100;
@@ -247,11 +244,10 @@ const Checkout = () => {
           </>
         </div>
       </div>
-      <div
-        className={`${styles.button} w-[150px] 800px:w-[280px] mt-10`}
-        onClick={paymentSubmit}
-      >
-        <h5 className="text-white">Hoàn tất</h5>
+      <div className={"w-[150px] 800px:w-[280px]"} onClick={paymentSubmit}>
+        <Button color="primary" variant="contained">
+          Hoàn tất
+        </Button>
       </div>
     </div>
   );
@@ -331,21 +327,20 @@ const ShippingInfo = ({
             </select>
           </div>
           <div className="w-[50%]">
-            <select
+            <Select
+              placeholder="Chọn Tỉnh/Thành Phố"
+              color="primary"
               className="w-[95%] border h-[40px] rounded-[5px]"
               value={city}
               onChange={(e) => setCity(e.target.value)}
             >
-              <option className="block pb-2" value="">
-                Chọn Tỉnh/Thành Phố
-              </option>
               {State &&
                 State.getStatesOfCountry(country).map((item) => (
                   <option key={item.isoCode} value={item.isoCode}>
                     {item.name}
                   </option>
                 ))}
-            </select>
+            </Select>
           </div>
         </div>
 
