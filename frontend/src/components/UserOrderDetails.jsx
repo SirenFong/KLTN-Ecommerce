@@ -57,7 +57,7 @@ const UserOrderDetails = () => {
     await axios
       .put(`${server}/order/order-refund/${id}`, {
         // Gửi request yêu cầu hoàn trả
-        status: "Processing refund",
+        status: "Đang yêu cầu hoàn trả",
       })
       .then((res) => {
         // Nếu thành công
@@ -114,7 +114,7 @@ const UserOrderDetails = () => {
                   đ x {item.qty}
                 </h5>
               </div>
-              {!item.isReviewed && data?.status === "Delivered" ? (
+              {!item.isReviewed && data?.status === "Đã giao hàng" ? (
                 <div
                   className={`${styles.button} text-[#fff]`}
                   onClick={() => setOpen(true) || setSelectedItem(item)}
@@ -189,7 +189,7 @@ const UserOrderDetails = () => {
               <label className="block text-[20px] font-[500]">
                 Cảm nhận của bạn
                 <span className="ml-1 font-[400] text-[16px] text-[#00000052]">
-                  (optional)
+                  (Tùy chọn)
                 </span>
               </label>
               <textarea
@@ -199,13 +199,13 @@ const UserOrderDetails = () => {
                 rows="5"
                 value={comment}
                 onChange={(e) => setComment(e.target.value)}
-                placeholder="How was your product? write your expresion about it!"
+                placeholder="Để lại đánh giá sản phẩm!"
                 className="mt-2 w-[95%] border p-2 outline-none"
               ></textarea>
             </div>
             <div
               className={`${styles.button} text-white text-[20px] ml-3`}
-              onClick={rating > 1 ? reviewHandler : null}
+              onClick={rating > 0 ? reviewHandler : null}
             >
               Gửi
             </div>
@@ -247,7 +247,7 @@ const UserOrderDetails = () => {
               : "Chưa thanh toán"}
           </h4>
           <br />
-          {data?.status === "Delivered" && (
+          {data?.status === "Đã giao hàng" && (
             <div
               className={`${styles.button} text-white`}
               onClick={refundHandler}

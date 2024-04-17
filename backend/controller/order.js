@@ -190,7 +190,7 @@ router.put(
         message: "Hoàn trả đơn hàng thành công!",
       });
 
-      if (req.body.status === "Refund Success") {
+      if (req.body.status === "Hoàn trả đơn hàng thành công!") {
         order.cart.forEach(async (o) => {
           await updateOrder(o._id, o.qty);
         });

@@ -147,8 +147,8 @@ const OrderDetails = () => {
       <br />
       <br />
       <h4 className="pt-3 text-[20px] font-[600]">Trạng thái đơn hàng:</h4>
-      {data?.status !== "Đang yêu cầu hoàn tiền" &&
-        data?.status !== "Hoàn tiền thành công" && (
+      {data?.status !== "Đang yêu cầu hoàn trả" &&
+        data?.status !== "Đã hoàn trả" && (
           <select
             value={status}
             onChange={(e) => setStatus(e.target.value)}
@@ -179,18 +179,16 @@ const OrderDetails = () => {
               ))}
           </select>
         )}
-      {data?.status === "Đang yêu cầu hoàn tiền" ||
-      data?.status === "Hoàn tiền thành công" ? (
+      {data?.status === "Đang yêu cầu hoàn trả" ||
+      data?.status === "Đã hoàn trả" ? (
         <select
           value={status}
           onChange={(e) => setStatus(e.target.value)}
           className="w-[200px] mt-2 border h-[35px] rounded-[5px]"
         >
-          {["Đang yêu cầu hoàn tiền", "Hoàn tiền thành công"]
+          {["Đang yêu cầu hoàn trả", "Đã hoàn trả"]
             .slice(
-              ["Đang yêu cầu hoàn tiền", "Hoàn tiền thành công"].indexOf(
-                data?.status
-              )
+              ["Đang yêu cầu hoàn trả", "Đã hoàn trả"].indexOf(data?.status)
             )
             .map((option, index) => (
               <option value={option} key={index}>
@@ -203,7 +201,7 @@ const OrderDetails = () => {
       <div
         className={`${styles.button} mt-5 !bg-[#FCE1E6] !rounded-[4px] text-[#E94560] font-[600] !h-[45px] text-[18px]`}
         onClick={
-          data?.status !== "Đang yêu cầu hoàn tiền"
+          data?.status !== "Đang yêu cầu hoàn trả"
             ? orderUpdateHandler
             : refundOrderUpdateHandler
         }
