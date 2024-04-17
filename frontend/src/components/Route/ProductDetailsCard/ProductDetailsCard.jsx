@@ -1,13 +1,8 @@
 import React, { useEffect, useState } from "react";
-import {
-  AiFillHeart,
-  AiOutlineHeart,
-  AiOutlineMessage,
-  AiOutlineShoppingCart,
-} from "react-icons/ai";
+import { AiOutlineMessage, AiOutlineShoppingCart } from "react-icons/ai";
 import { Button } from "@nextui-org/react";
 import { RxCross1 } from "react-icons/rx";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import styles from "../../../styles/styles";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
@@ -16,6 +11,8 @@ import {
   addToWishlist,
   removeFromWishlist,
 } from "../../../redux/actions/wishlist";
+import axios from "axios";
+import { server } from "../../../server";
 
 const ProductDetailsCard = ({ setOpen, data }) => {
   const { cart } = useSelector((state) => state.cart);
@@ -23,11 +20,36 @@ const ProductDetailsCard = ({ setOpen, data }) => {
   const dispatch = useDispatch();
   const [count, setCount] = useState(1);
   const [click, setClick] = useState(false);
-  const [displayCount, setDisplayCount] = useState(5);
+  const { user, isAuthenticated } = useSelector((state) => state.user);
+  // const [displayCount, setDisplayCount] = useState(5);
   const [showFullDescription, setShowFullDescription] = useState(false);
+  const navigate = useNavigate();
   //   const [select, setSelect] = useState(false);
 
-  const handleMessageSubmit = () => {};
+  const handleMessageSubmit = async () => {
+    // Gửi tin nhắn
+    if (isAuthenticated) {
+      // Kiểm tra đã đăng nhập chưa
+      const groupTitle = data._id + user._id; // Tiêu đề nhóm
+      const userId = user._id; // ID người dùng
+      const sellerId = data.shop._id; // ID người bán
+      await axios
+        .post(`${server}/conversation/create-new-conversation`, {
+          // Tạo cuộc trò chuyện mới
+          groupTitle,
+          userId,
+          sellerId,
+        })
+        .then((res) => {
+          navigate(`/inbox?${res.data.conversation._id}`); // Chuyển hướng đến trang inbox
+        })
+        .catch((error) => {
+          toast.error(error.response.data.message);
+        });
+    } else {
+      toast.error("Vui lòng đăng nhập để trò chuyện");
+    }
+  };
 
   const decrementCount = () => {
     if (count > 1) {

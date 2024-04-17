@@ -10,32 +10,30 @@ router.post(
   "/create-new-conversation",
   catchAsyncErrors(async (req, res, next) => {
     try {
-      const { groupTitle, userId, sellerId } = req.body; // lấy thông tin từ body
+      const { groupTitle, userId, sellerId } = req.body;
 
-      const isConversationExist = await Conversation.findOne({ groupTitle }); // kiểm tra xem cuộc trò chuyện đã tồn tại chưa
+      const isConversationExist = await Conversation.findOne({ groupTitle });
 
       if (isConversationExist) {
-        // nếu tồn tại
-        const conversation = isConversationExist;
-        res.status(201).json({
+        return res.status(201).json({
           success: true,
-          conversation,
-        });
-      } else {
-        // nếu chưa tồn tại
-        const conversation = await Conversation.create({
-          // tạo mới cuộc trò chuyện
-          members: [userId, sellerId],
-          groupTitle: groupTitle,
-        });
-
-        res.status(201).json({
-          success: true,
-          conversation,
+          conversation: isConversationExist,
         });
       }
+
+      const conversation = await Conversation.create({
+        members: [userId, sellerId],
+        groupTitle: groupTitle,
+      });
+
+      return res.status(201).json({
+        success: true,
+        conversation,
+      });
     } catch (error) {
-      return next(new ErrorHandler(error.response.message), 500);
+      return next(
+        new ErrorHandler(error.message || "Internal server error", 500)
+      );
     }
   })
 );

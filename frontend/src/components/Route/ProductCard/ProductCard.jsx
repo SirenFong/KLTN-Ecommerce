@@ -1,11 +1,9 @@
 import React, { useState } from "react";
 import {
   AiFillHeart,
-  AiFillStar,
   AiOutlineEye,
   AiOutlineHeart,
   AiOutlineShoppingCart,
-  AiOutlineStar,
 } from "react-icons/ai";
 import { Link } from "react-router-dom";
 import styles from "../../../styles/styles";
@@ -62,7 +60,7 @@ const ProductCard = ({ data, isEvent }) => {
 
   return (
     <>
-      <div className="w-full h-[370px] bg-white rounded-lg shadow-sm p-3 relative cursor-pointer">
+      <div className="w-full h-[330px] bg-white rounded-lg shadow-sm p-3 relative cursor-pointer">
         <div className="flex justify-end"></div>
         <Link
           to={`${
