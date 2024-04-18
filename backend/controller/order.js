@@ -14,7 +14,7 @@ router.post(
     try {
       const { cart, shippingAddress, user, totalPrice, paymentInfo } = req.body;
 
-      //   group cart items by shopId
+      // group cart items by shopId
       const shopItemsMap = new Map();
 
       for (const item of cart) {
@@ -24,18 +24,21 @@ router.post(
         }
         shopItemsMap.get(shopId).push(item);
       }
-
-      // create an order for each shop
       const orders = [];
 
       for (const [shopId, items] of shopItemsMap) {
-        const order = await Order.create({
+        const orderData = {
           cart: items,
           shippingAddress,
-          user,
           totalPrice,
           paymentInfo,
-        });
+        };
+
+        if (user) {
+          orderData.user = user;
+        }
+
+        const order = await Order.create(orderData);
         orders.push(order);
       }
 

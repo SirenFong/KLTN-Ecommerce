@@ -62,7 +62,7 @@ const AllOrders = () => {
     },
     {
       field: "itemsQty",
-      headerName: "Số lượng",
+      headerName: "Số lượng sản phẩm",
       type: "number",
       minWidth: 130,
       flex: 0.7,
@@ -104,7 +104,7 @@ const AllOrders = () => {
       console.log(item.user);
       row.push({
         id: item._id,
-        phoneNumber: `${item.user.phoneNumber}`,
+        phoneNumber: item.user ? `${item.user.phoneNumber}` : "N/A",
         itemsQty: item.cart.length,
         total: item.totalPrice.toLocaleString("vi-VN", {
           style: "currency",

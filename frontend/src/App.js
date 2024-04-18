@@ -78,7 +78,7 @@ const App = () => {
   }, []);
 
   return (
-  <BrowserRouter>
+    <BrowserRouter>
       {stripeApikey && (
         <Elements stripe={loadStripe(stripeApikey)}>
           <Routes>
@@ -103,7 +103,7 @@ const App = () => {
         <Route path="/best-selling" element={<BestSellingPage />} />
         <Route path="/events" element={<EventsPage />} />
         <Route path="/faq" element={<FAQPage />} />
-        <Route path="/checkout" element={<CheckoutPage />} />
+
         <Route path="/order/success" element={<OrderSuccessPage />} />
         <Route
           path="/profile"
@@ -113,6 +113,7 @@ const App = () => {
             </ProtectedRoute>
           }
         />
+        <Route path="/checkout" element={<CheckoutPage />} />
         <Route
           path="/inbox"
           element={
