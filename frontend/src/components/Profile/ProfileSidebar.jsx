@@ -13,157 +13,127 @@ import axios from "axios";
 import { server } from "../../server";
 import { toast } from "react-toastify";
 import { useSelector } from "react-redux";
+import {
+  List,
+  ListItem,
+  ListItemIcon,
+  ListItemText,
+  makeStyles,
+} from "@material-ui/core";
+
+const useStyles = makeStyles((theme) => ({
+  root: {
+    width: "100%",
+    backgroundColor: theme.palette.background.paper,
+  },
+  active: {
+    color: "red",
+  },
+}));
 
 const ProfileSidebar = ({ setActive, active }) => {
+  const classes = useStyles();
   const navigate = useNavigate();
   const { user } = useSelector((state) => state.user);
 
   const logoutHandler = () => {
-    // Xử lý đăng xuất
     axios
-      .get(`${server}/user/logout`, { withCredentials: true }) // Đăng xuất
+      .get(`${server}/user/logout`, { withCredentials: true })
       .then((res) => {
-        // Nếu đăng xuất thành công
         toast.success(res.data.message);
         window.location.reload(true);
         navigate("/login");
       })
       .catch((error) => {
-        console.log(error.response.data.message); // Hiển thị lỗi
+        console.log(error.response.data.message);
       });
   };
+
   return (
-    <div className="w-full bg-white shadow-sm rounded-[10px] p-4 pt-8">
-      <div
-        className="flex items-center cursor-pointer w-full mb-8"
-        onClick={() => setActive(1)}
-      >
-        <RxPerson size={20} color={active === 1 ? "red" : ""} />
-        <span
-          className={`pl-3 ${
-            active === 1 ? "text-[red]" : ""
-          } 800px:block hidden`}
-        >
-          Thông tin cá nhân
-        </span>
-      </div>
-      <div
-        className="flex items-center cursor-pointer w-full mb-8"
-        onClick={() => setActive(2)}
-      >
-        <HiOutlineShoppingBag size={20} color={active === 2 ? "red" : ""} />
-        <span
-          className={`pl-3 ${
-            active === 2 ? "text-[red]" : ""
-          } 800px:block hidden`}
-        >
-          Đơn hàng
-        </span>
-      </div>
-      <div
-        className="flex items-center cursor-pointer w-full mb-8"
-        onClick={() => setActive(3)}
-      >
-        <HiOutlineReceiptRefund size={20} color={active === 3 ? "red" : ""} />
-        <span
-          className={`pl-3 ${
-            active === 3 ? "text-[red]" : ""
-          } 800px:block hidden`}
-        >
-          Hoàn trả
-        </span>
-      </div>
-
-      <div
-        className="flex items-center cursor-pointer w-full mb-8"
-        onClick={() => setActive(4) || navigate("/inbox")}
-      >
-        <AiOutlineMessage size={20} color={active === 4 ? "red" : ""} />
-        <span
-          className={`pl-3 ${
-            active === 4 ? "text-[red]" : ""
-          } 800px:block hidden`}
-        >
-          Tin nhắn
-        </span>
-      </div>
-
-      <div
-        className="flex items-center cursor-pointer w-full mb-8"
-        onClick={() => setActive(5)}
-      >
-        <MdOutlineTrackChanges size={20} color={active === 5 ? "red" : ""} />
-        <span
-          className={`pl-3 ${
-            active === 5 ? "text-[red]" : ""
-          } 800px:block hidden`}
-        >
-          Theo dõi đơn hàng
-        </span>
-      </div>
-
-      <div
-        className="flex items-center cursor-pointer w-full mb-8"
-        onClick={() => setActive(6)}
-      >
-        <RiLockPasswordLine size={20} color={active === 6 ? "red" : ""} />
-        <span
-          className={`pl-3 ${
-            active === 6 ? "text-[red]" : ""
-          } 800px:block hidden`}
-        >
-          Đổi mật khẩu
-        </span>
-      </div>
-
-      <div
-        className="flex items-center cursor-pointer w-full mb-8"
-        onClick={() => setActive(7)}
-      >
-        <TbAddressBook size={20} color={active === 7 ? "red" : ""} />
-        <span
-          className={`pl-3 ${
-            active === 7 ? "text-[red]" : ""
-          } 800px:block hidden`}
-        >
-          Địa chỉ giao hàng
-        </span>
-      </div>
-
+    <List component="nav" className={classes.root}>
+      <ListItem button onClick={() => setActive(1)}>
+        <ListItemIcon>
+          <RxPerson size={20} className={active === 1 ? classes.active : ""} />
+        </ListItemIcon>
+        <ListItemText primary="Thông tin cá nhân" />
+      </ListItem>
+      <ListItem button onClick={() => setActive(2)}>
+        <ListItemIcon>
+          <HiOutlineShoppingBag
+            size={20}
+            className={active === 2 ? classes.active : ""}
+          />
+        </ListItemIcon>
+        <ListItemText primary="Đơn hàng" />
+      </ListItem>
+      <ListItem button onClick={() => setActive(3)}>
+        <ListItemIcon>
+          <HiOutlineReceiptRefund
+            size={20}
+            className={active === 3 ? classes.active : ""}
+          />
+        </ListItemIcon>
+        <ListItemText primary="Hoàn trả" />
+      </ListItem>
+      <ListItem button onClick={() => setActive(4) || navigate("/inbox")}>
+        <ListItemIcon>
+          <AiOutlineMessage
+            size={20}
+            className={active === 4 ? classes.active : ""}
+          />
+        </ListItemIcon>
+        <ListItemText primary="Tin nhắn" />
+      </ListItem>
+      <ListItem button onClick={() => setActive(5)}>
+        <ListItemIcon>
+          <MdOutlineTrackChanges
+            size={20}
+            className={active === 5 ? classes.active : ""}
+          />
+        </ListItemIcon>
+        <ListItemText primary="Theo dõi đơn hàng" />
+      </ListItem>
+      <ListItem button onClick={() => setActive(6)}>
+        <ListItemIcon>
+          <RiLockPasswordLine
+            size={20}
+            className={active === 6 ? classes.active : ""}
+          />
+        </ListItemIcon>
+        <ListItemText primary="Đổi mật khẩu" />
+      </ListItem>
+      <ListItem button onClick={() => setActive(7)}>
+        <ListItemIcon>
+          <TbAddressBook
+            size={20}
+            className={active === 7 ? classes.active : ""}
+          />
+        </ListItemIcon>
+        <ListItemText primary="Địa chỉ giao hàng" />
+      </ListItem>
       {user && user?.role === "Admin" && (
         <Link to="/admin/dashboard">
-          <div
-            className="flex items-center cursor-pointer w-full mb-8"
-            onClick={() => setActive(8)}
-          >
-            <MdOutlineAdminPanelSettings
-              size={20}
-              color={active === 7 ? "red" : ""}
-            />
-            <span
-              className={`pl-3 ${
-                active === 8 ? "text-[red]" : ""
-              } 800px:block hidden`}
-            >
-              Quản lý Admin
-            </span>
-          </div>
+          <ListItem button onClick={() => setActive(8)}>
+            <ListItemIcon>
+              <MdOutlineAdminPanelSettings
+                size={20}
+                className={active === 8 ? classes.active : ""}
+              />
+            </ListItemIcon>
+            <ListItemText primary="Quản lý Admin" />
+          </ListItem>
         </Link>
       )}
-      <div
-        className="single_item flex items-center cursor-pointer w-full mb-8"
-        onClick={logoutHandler}
-      >
-        <AiOutlineLogin size={20} color={active === 8 ? "red" : ""} />
-        <span
-          className={`pl-3 ${
-            active === 8 ? "text-[red]" : ""
-          } 800px:block hidden`}
-        >
-          Đăng xuất
-        </span>
-      </div>
-    </div>
+      <ListItem button onClick={logoutHandler}>
+        <ListItemIcon>
+          <AiOutlineLogin
+            size={20}
+            className={active === 8 ? classes.active : ""}
+          />
+        </ListItemIcon>
+        <ListItemText primary="Đăng xuất" />
+      </ListItem>
+    </List>
   );
 };
 

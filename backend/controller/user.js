@@ -17,7 +17,7 @@ router.post("/create-user", async (req, res, next) => {
 
     if (userEmail) {
       // kiểm tra email đã tồn tại chưa
-      return next(new ErrorHandler("User already exists", 400));
+      return next(new ErrorHandler("Email đã được sử dụng", 400));
     }
 
     const myCloud = await cloudinary.v2.uploader.upload(avatar, {

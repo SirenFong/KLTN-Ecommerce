@@ -10,9 +10,9 @@ import { useNavigate } from "react-router-dom";
 import { AiOutlineArrowRight, AiOutlineSend } from "react-icons/ai";
 import { TfiGallery } from "react-icons/tfi";
 import styles from "../styles/styles";
-// const ENDPOINT = "https://socket-ecommerce-tu68.onrender.com/";
+// const ENDPOINT = "https://socket-ecommerce-tu68.onrender.com/"; // Server socket  (https://socket-ecommerce-tu68.onrender.com/)
 const ENDPOINT = "http://localhost:4000/";
-const socketId = socketIO(ENDPOINT, { transports: ["websocket"] });
+const socketId = socketIO(ENDPOINT, { transports: ["websocket"] }); // Kết nối socket với server
 
 const UserInbox = () => {
   const { user, loading } = useSelector((state) => state.user);
@@ -30,23 +30,29 @@ const UserInbox = () => {
   const scrollRef = useRef(null);
 
   useEffect(() => {
+    // Lấy tin nhắn mới
     socketId.on("getMessage", (data) => {
+      // Lắng nghe sự kiện getMessage
       setArrivalMessage({
-        sender: data.senderId,
-        text: data.text,
-        createdAt: Date.now(),
+        // Cập nhật tin nhắn mới
+        sender: data.senderId, // Người gửi
+        text: data.text, // Nội dung tin nhắn
+        createdAt: Date.now(), // Thời gian gửi
       });
     });
   }, []);
 
   useEffect(() => {
-    arrivalMessage &&
+    // Kiểm tra tin nhắn mới
+    arrivalMessage && // Nếu có tin nhắn mới
       currentChat?.members.includes(arrivalMessage.sender) &&
-      setMessages((prev) => [...prev, arrivalMessage]);
+      // Và người gửi có trong cuộc trò chuyện hiện tại thì thêm vào danh sách tin nhắn mới của cuộc trò chuyện
+      setMessages((prev) => [...prev, arrivalMessage]); // Thêm tin nhắn mới vào danh sách tin nhắn
   }, [arrivalMessage, currentChat]);
 
   useEffect(() => {
     const getConversation = async () => {
+      // Lấy danh sách cuộc trò chuyện của người dùng
       try {
         const resonse = await axios.get(
           `${server}/conversation/get-all-conversation-user/${user?._id}`,
@@ -55,7 +61,7 @@ const UserInbox = () => {
           }
         );
 
-        setConversations(resonse.data.conversations);
+        setConversations(resonse.data.conversations); // Cập nhật danh sách cuộc trò chuyện của người dùng
       } catch (error) {
         // console.log(error);
       }
@@ -65,27 +71,31 @@ const UserInbox = () => {
 
   useEffect(() => {
     if (user) {
-      const sellerId = user?._id;
-      socketId.emit("addUser", sellerId);
+      // Nếu người dùng đã đăng nhập thì thêm người dùng vào danh sách người dùng online
+      const sellerId = user?._id; // Lấy id người dùng
+      socketId.emit("addUser", sellerId); // Thêm người dùng vào danh sách người dùng online
       socketId.on("getUsers", (data) => {
-        setOnlineUsers(data);
+        // Lắng nghe sự kiện getUsers
+        setOnlineUsers(data); //  Cập nhật danh sách người dùng online
       });
     }
   }, [user]);
 
   const onlineCheck = (chat) => {
-    const chatMembers = chat.members.find((member) => member !== user?._id);
-    const online = onlineUsers.find((user) => user.userId === chatMembers);
+    // Kiểm tra người dùng online trong cuộc trò chuyện
+    const chatMembers = chat.members.find((member) => member !== user?._id); // Lấy id người dùng trong cuộc trò chuyện
+    const online = onlineUsers.find((user) => user.userId === chatMembers); // Kiểm tra người dùng online
 
-    return online ? true : false;
+    return online ? true : false; // Trả về true nếu người dùng online, ngược lại trả về false
   };
 
   // get messages
   useEffect(() => {
     const getMessage = async () => {
+      // Lấy danh sách tin nhắn của cuộc trò chuyện
       try {
         const response = await axios.get(
-          `${server}/message/get-all-messages/${currentChat?._id}`
+          `${server}/message/get-all-messages/${currentChat?._id}` // Lấy danh sách tin nhắn theo id cuộc trò chuyện
         );
         setMessages(response.data.messages);
       } catch (error) {
@@ -95,32 +105,36 @@ const UserInbox = () => {
     getMessage();
   }, [currentChat]);
 
-  // create new message
+  // Gửi tin nhắn
   const sendMessageHandler = async (e) => {
     e.preventDefault();
 
     const message = {
-      sender: user._id,
-      text: newMessage,
-      conversationId: currentChat._id,
+      // Tạo tin nhắn mới với nội dung và người gửi
+      sender: user._id, // Người gửi
+      text: newMessage, // Nội dung tin nhắn
+      conversationId: currentChat._id, // Id cuộc trò chuyện của tin nhắn
     };
     const receiverId = currentChat.members.find(
-      (member) => member !== user?._id
+      // Lấy id người nhận tin nhắn trong cuộc trò chuyện
+      (member) => member !== user?._id // Lấy id người nhận tin nhắn trong cuộc trò chuyện hiện tại
     );
 
     socketId.emit("sendMessage", {
-      senderId: user?._id,
-      receiverId,
-      text: newMessage,
+      // Gửi tin nhắn mới thông qua socket với người nhận
+      senderId: user?._id, // Người gửi tin nhắn mới là người dùng hiện tại
+      receiverId, // Người nhận tin nhắn mới là người nhận trong cuộc trò chuyện
+      text: newMessage, // Nội dung tin nhắn mới là nội dung tin nhắn
     });
 
     try {
       if (newMessage !== "") {
+        // Nếu nội dung tin nhắn không rỗng thì gửi tin nhắn
         await axios
-          .post(`${server}/message/create-new-message`, message)
+          .post(`${server}/message/create-new-message`, message) // Gửi tin nhắn mới thông qua api
           .then((res) => {
-            setMessages([...messages, res.data.message]);
-            updateLastMessage();
+            setMessages([...messages, res.data.message]); // Thêm tin nhắn mới vào danh sách tin nhắn của cuộc trò chuyện
+            updateLastMessage(); // Cập nhật tin nhắn cuối cùng của cuộc trò chuyện
           })
           .catch((error) => {
             console.log(error);
@@ -132,18 +146,20 @@ const UserInbox = () => {
   };
 
   const updateLastMessage = async () => {
+    // Cập nhật tin nhắn cuối cùng của cuộc trò chuyện khi gửi tin nhắn
     socketId.emit("updateLastMessage", {
-      lastMessage: newMessage,
-      lastMessageId: user._id,
+      lastMessage: newMessage, // Tin nhắn cuối cùng là tin nhắn mới gửi
+      lastMessageId: user._id, // Id người gửi tin nhắn cuối cùng
     });
 
     await axios
       .put(`${server}/conversation/update-last-message/${currentChat._id}`, {
-        lastMessage: newMessage,
-        lastMessageId: user._id,
+        // Cập nhật tin nhắn cuối cùng của cuộc trò chuyện thông qua api
+        lastMessage: newMessage, // Tin nhắn cuối cùng là tin nhắn mới gửi
+        lastMessageId: user._id, // Id người gửi tin nhắn cuối cùng
       })
       .then((res) => {
-        setNewMessage("");
+        setNewMessage(""); // Xóa nội dung tin nhắn sau khi gửi
       })
       .catch((error) => {
         console.log(error);
@@ -151,25 +167,31 @@ const UserInbox = () => {
   };
 
   const handleImageUpload = async (e) => {
-    const reader = new FileReader();
+    // Xử lý upload ảnh trong tin nhắn
+    const reader = new FileReader(); // Đọc file ảnh từ máy người dùng
 
     reader.onload = () => {
+      // Khi đọc file ảnh thành công thì thực hiện
       if (reader.readyState === 2) {
-        setImages(reader.result);
-        imageSendingHandler(reader.result);
+        // Nếu file ảnh đã được đọc thành công
+        setImages(reader.result); // Cập nhật ảnh vào state images để hiển thị
+        imageSendingHandler(reader.result); // Gửi ảnh thông qua hàm imageSendingHandler để lưu vào database
       }
     };
 
-    reader.readAsDataURL(e.target.files[0]);
+    reader.readAsDataURL(e.target.files[0]); // Đọc file ảnh từ máy người dùng khi người dùng chọn file ảnh
   };
 
   const imageSendingHandler = async (e) => {
+    // Gửi ảnh trong tin nhắn mới
     const receiverId = currentChat.members.find(
+      // Lấy id người nhận tin nhắn trong cuộc trò chuyện
       (member) => member !== user._id
     );
 
     socketId.emit("sendMessage", {
-      senderId: user._id,
+      // Gửi tin nhắn mới thông qua socket với người nhận
+      senderId: user._id, // Người gửi tin nhắn mới là người dùng hiện tại
       receiverId,
       images: e,
     });
@@ -185,7 +207,7 @@ const UserInbox = () => {
         .then((res) => {
           setImages();
           setMessages([...messages, res.data.message]);
-          updateLastMessageForImage();
+          updateLastMessageForImage(); // Cập nhật tin nhắn cuối cùng của cuộc trò chuyện khi gửi ảnh
         });
     } catch (error) {
       console.log(error);
@@ -193,17 +215,18 @@ const UserInbox = () => {
   };
 
   const updateLastMessageForImage = async () => {
+    // Cập nhật tin nhắn cuối cùng của cuộc trò chuyện khi gửi ảnh
     await axios.put(
       `${server}/conversation/update-last-message/${currentChat._id}`,
       {
-        lastMessage: "Photo",
+        lastMessage: "Photo", // Tin nhắn cuối cùng là ảnh
         lastMessageId: user._id,
       }
     );
   };
 
   useEffect(() => {
-    scrollRef.current?.scrollIntoView({ beahaviour: "smooth" });
+    scrollRef.current?.scrollIntoView({ beahaviour: "smooth" }); // Cuộn xuống cuối danh sách tin nhắn khi có tin nhắn mới
   }, [messages]);
 
   return (
@@ -212,25 +235,30 @@ const UserInbox = () => {
         <>
           <Header />
           <h1 className="text-center text-[30px] py-3 font-Poppins">
-            All Messages
+            Tin nhắn
           </h1>
-          {/* All messages list */}
+
           {conversations &&
-            conversations.map((item, index) => (
-              <MessageList
-                data={item}
-                key={index}
-                index={index}
-                setOpen={setOpen}
-                setCurrentChat={setCurrentChat}
-                me={user?._id}
-                setUserData={setUserData}
-                userData={userData}
-                online={onlineCheck(item)}
-                setActiveStatus={setActiveStatus}
-                loading={loading}
-              />
-            ))}
+            conversations.map(
+              (
+                item,
+                index // Hiển thị danh sách cuộc trò chuyện
+              ) => (
+                <MessageList
+                  data={item}
+                  key={index}
+                  index={index}
+                  setOpen={setOpen}
+                  setCurrentChat={setCurrentChat}
+                  me={user?._id}
+                  setUserData={setUserData}
+                  userData={userData}
+                  online={onlineCheck(item)}
+                  setActiveStatus={setActiveStatus}
+                  loading={loading}
+                />
+              )
+            )}
         </>
       )}
 
@@ -253,6 +281,7 @@ const UserInbox = () => {
 };
 
 const MessageList = ({
+  // Hiển thị danh sách cuộc trò chuyện của người dùng với người bán
   data,
   index,
   setOpen,
@@ -274,17 +303,17 @@ const MessageList = ({
 
   useEffect(() => {
     setActiveStatus(online);
-    const userId = data.members.find((user) => user !== me);
+    const userId = data.members.find((user) => user !== me); // Lấy id người bán trong cuộc trò chuyện
     const getUser = async () => {
       try {
-        const res = await axios.get(`${server}/shop/get-shop-info/${userId}`);
+        const res = await axios.get(`${server}/shop/get-shop-info/${userId}`); // Lấy thông tin người bán thông qua id
         setUser(res.data.shop);
       } catch (error) {
         console.log(error);
       }
     };
     getUser();
-  }, [me, data, setActiveStatus, online]);
+  }, [me, data, setActiveStatus, online]); // Lấy thông tin người bán khi cuộc trò chuyện thay đổi
 
   return (
     <div
@@ -325,6 +354,7 @@ const MessageList = ({
 };
 
 const SellerInbox = ({
+  // Hiển thị cuộc trò chuyện giữa người dùng và người bán hàng
   setOpen,
   newMessage,
   setNewMessage,
@@ -338,7 +368,6 @@ const SellerInbox = ({
 }) => {
   return (
     <div className="w-[full] min-h-full flex flex-col justify-between p-5">
-      {/* message header */}
       <div className="w-full flex p-3 items-center justify-between bg-slate-200">
         <div className="flex">
           <img
@@ -357,10 +386,8 @@ const SellerInbox = ({
           onClick={() => setOpen(false)}
         />
       </div>
-
-      {/* messages */}
       <div className="px-3 h-[75vh] py-3 overflow-y-scroll">
-        {messages &&
+        {messages && // Hiển thị danh sách tin nhắn giữa người dùng và người bán hàng
           messages.map((item, index) => (
             <div
               className={`flex w-full my-2 ${
@@ -368,7 +395,7 @@ const SellerInbox = ({
               }`}
               ref={scrollRef}
             >
-              {item.sender !== sellerId && (
+              {item.sender !== sellerId && ( // Hiển thị tin nhắn của người dùng với người bán
                 <img
                   src={`${userData?.avatar?.url}`}
                   className="w-[40px] h-[40px] rounded-full mr-3"
@@ -400,8 +427,6 @@ const SellerInbox = ({
             </div>
           ))}
       </div>
-
-      {/* send message input */}
       <form
         aria-required={true}
         className="p-3 relative w-full flex justify-between items-center"

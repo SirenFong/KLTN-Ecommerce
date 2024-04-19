@@ -9,10 +9,24 @@ import { useDispatch, useSelector } from "react-redux";
 import { server } from "../../server";
 import styles from "../../styles/styles";
 import { DataGrid } from "@material-ui/data-grid";
-import { Button } from "@material-ui/core";
+import {
+  Box,
+  Button,
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  Grid,
+  IconButton,
+  List,
+  ListItem,
+  ListItemSecondaryAction,
+  ListItemText,
+  TextField,
+  makeStyles,
+} from "@material-ui/core";
 import { Link } from "react-router-dom";
 import { MdTrackChanges } from "react-icons/md";
-import { RxCross1 } from "react-icons/rx";
+// import { RxCross1 } from "react-icons/rx";
 import {
   deleteUserAddress,
   loadUser,
@@ -32,7 +46,25 @@ const ProfileContent = ({ active }) => {
   const [phoneNumber, setPhoneNumber] = useState(user && user.phoneNumber);
   const [password, setPassword] = useState("");
   const [avatar, setAvatar] = useState(null); // Avatar
+  const useStyles = makeStyles((theme) => ({
+    button: {
+      width: 250,
+      height: 40,
+      borderColor: theme.palette.primary.main,
+      color: theme.palette.primary.main,
+      marginTop: theme.spacing(3),
+      cursor: "pointer",
+      backgroundColor: "transparent",
+      border: `1px solid ${theme.palette.primary.main}`,
+      "&:hover": {
+        backgroundColor: theme.palette.primary.main,
+        color: theme.palette.common.white,
+      },
+    },
+  }));
+
   const dispatch = useDispatch();
+  const classes = useStyles();
 
   useEffect(() => {
     if (error) {
@@ -109,58 +141,62 @@ const ProfileContent = ({ active }) => {
           <br />
           <div className="w-full px-5">
             <form onSubmit={handleSubmit} aria-required={true}>
-              <div className="w-full 800px:flex block pb-3">
-                <div className=" w-[100%] 800px:w-[50%]">
-                  <label className="block pb-2">Họ và tên</label>
-                  <input
-                    type="text"
-                    className={`${styles.input} !w-[95%] mb-4 800px:mb-0`}
+              <Grid container spacing={3}>
+                <Grid item xs={12} sm={6}>
+                  <TextField
                     required
+                    id="name"
+                    name="name"
+                    label="Họ và tên"
+                    fullWidth
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                   />
-                </div>
-                <div className=" w-[100%] 800px:w-[50%]">
-                  <label className="block pb-2">Địa chỉ Email</label>
-                  <input
-                    type="text"
-                    className={`${styles.input} !w-[95%] mb-1 800px:mb-0`}
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <TextField
                     required
+                    id="email"
+                    name="email"
+                    label="Địa chỉ Email"
+                    fullWidth
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                   />
-                </div>
-              </div>
+                </Grid>
+              </Grid>
 
-              <div className="w-full 800px:flex block pb-3">
-                <div className=" w-[100%] 800px:w-[50%]">
-                  <label className="block pb-2">Số điện thoại</label>
-                  <input
-                    type="number"
-                    className={`${styles.input} !w-[95%] mb-4 800px:mb-0`}
+              <Grid container spacing={3}>
+                <Grid item xs={12} sm={6}>
+                  <TextField
                     required
-                    value={`${phoneNumber}`}
+                    id="phoneNumber"
+                    name="phoneNumber"
+                    label="Số điện thoại"
+                    fullWidth
+                    value={phoneNumber}
                     onChange={(e) => setPhoneNumber(e.target.value)}
                   />
-                </div>
-
-                <div className=" w-[100%] 800px:w-[50%]">
-                  <label className="block pb-2">Nhập mật khẩu</label>
-                  <input
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <TextField
+                    id="password"
+                    name="password"
+                    label="Nhập mật khẩu"
                     type="password"
-                    className={`${styles.input} !w-[95%] mb-4 800px:mb-0`}
-                    // required
+                    fullWidth
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                   />
-                </div>
-              </div>
-              <input
-                className={`w-[250px] h-[40px] border border-[#3a24db] text-center text-[#3a24db] rounded-[3px] mt-8 cursor-pointer`}
-                required
-                value="Cập nhật"
+                </Grid>
+              </Grid>
+              <Button
+                variant="contained"
+                className={classes.button}
                 type="submit"
-              />
+              >
+                Cập nhật
+              </Button>
             </form>
           </div>
         </>
@@ -496,55 +532,51 @@ const ChangePassword = () => {
       });
   };
   return (
-    <div className="w-full px-5">
-      <h1 className="block text-[25px] text-center font-[600] text-[#000000ba] pb-2">
+    <Box p={2}>
+      <h1 className="text-[25px] text-center font-[600] text-[#000000ba] pb-2">
         Đổi mật khẩu
       </h1>
-      <div className="w-full">
-        <form
-          aria-required
-          onSubmit={passwordChangeHandler}
-          className="flex flex-col items-center"
-        >
-          <div className=" w-[100%] 800px:w-[50%] mt-5">
-            <label className="block pb-2">Nhập mật khẩu cũ</label>
-            <input
+      <Grid container justify="center">
+        <Grid item xs={12} sm={8} md={6}>
+          <form onSubmit={passwordChangeHandler}>
+            <TextField
+              label="Nhập mật khẩu cũ"
               type="password"
-              className={`${styles.input} !w-[95%] mb-4 800px:mb-0`}
+              fullWidth
               required
               value={oldPassword}
               onChange={(e) => setOldPassword(e.target.value)}
+              margin="normal"
             />
-          </div>
-          <div className=" w-[100%] 800px:w-[50%] mt-2">
-            <label className="block pb-2">Nhập mật khẩu mới</label>
-            <input
+
+            <TextField
+              label="Nhập mật khẩu mới"
               type="password"
-              className={`${styles.input} !w-[95%] mb-4 800px:mb-0`}
+              fullWidth
               required
               value={newPassword}
               onChange={(e) => setNewPassword(e.target.value)}
+              margin="normal"
             />
-          </div>
-          <div className=" w-[100%] 800px:w-[50%] mt-2">
-            <label className="block pb-2">Xác nhận mật khẩu</label>
-            <input
+
+            <TextField
+              label="Xác nhận mật khẩu"
               type="password"
-              className={`${styles.input} !w-[95%] mb-4 800px:mb-0`}
+              fullWidth
               required
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
+              margin="normal"
             />
-            <input
-              className={`w-[95%] h-[40px] border border-[#3a24db] text-center text-[#3a24db] rounded-[3px] mt-8 cursor-pointer`}
-              required
-              value="Đổi mật khẩu"
-              type="submit"
-            />
-          </div>
-        </form>
-      </div>
-    </div>
+            <br />
+            <br />
+            <Button type="submit" color="primary" variant="contained" fullWidth>
+              Đổi mật khẩu
+            </Button>
+          </form>
+        </Grid>
+      </Grid>
+    </Box>
   );
 };
 
@@ -603,184 +635,128 @@ const Address = () => {
   };
 
   return (
-    <div className="w-full px-5">
-      {open && (
-        <div className="fixed w-full h-screen bg-[#0000004b] top-0 left-0 flex items-center justify-center ">
-          <div className="w-[35%] h-[80vh] bg-white rounded shadow relative overflow-y-scroll">
-            <div className="w-full flex justify-end p-3">
-              <RxCross1
-                size={30}
-                className="cursor-pointer"
-                onClick={() => setOpen(false)}
+    <div>
+      <Dialog open={open} onClose={() => setOpen(false)} fullWidth>
+        <DialogTitle>Thêm địa chỉ</DialogTitle>
+        <DialogContent>
+          <form onSubmit={handleSubmit}>
+            <TextField
+              label="Chọn quốc gia"
+              select
+              fullWidth
+              value={country}
+              onChange={(e) => setCountry(e.target.value)}
+              SelectProps={{ native: true }}
+            >
+              <option value=""></option>
+              {Country &&
+                Country.getAllCountries().map((item) => (
+                  <option key={item.isoCode} value={item.isoCode}>
+                    {item.name}
+                  </option>
+                ))}
+            </TextField>
+            <br />
+            <br />
+
+            <TextField
+              label="Chọn Tỉnh/Thành phố"
+              select
+              fullWidth
+              value={city}
+              onChange={(e) => setCity(e.target.value)}
+              SelectProps={{ native: true }}
+            >
+              <option value=""></option>
+              {State &&
+                State.getStatesOfCountry(country).map((item) => (
+                  <option key={item.isoCode} value={item.isoCode}>
+                    {item.name}
+                  </option>
+                ))}
+            </TextField>
+
+            <br />
+            <br />
+
+            <TextField
+              label="Địa chỉ nhà"
+              fullWidth
+              required
+              value={address1}
+              onChange={(e) => setAddress1(e.target.value)}
+            />
+
+            <br />
+            <br />
+
+            <TextField
+              label="Nhập Quận/Huyện"
+              fullWidth
+              required
+              value={address2}
+              onChange={(e) => setAddress2(e.target.value)}
+            />
+
+            <br />
+            <br />
+
+            <TextField
+              label="Zip Code"
+              fullWidth
+              required
+              value={zipCode}
+              onChange={(e) => setZipCode(e.target.value)}
+            />
+
+            <br />
+            <br />
+
+            <TextField
+              label="Loại địa chỉ"
+              select
+              fullWidth
+              value={addressType}
+              onChange={(e) => setAddressType(e.target.value)}
+              SelectProps={{ native: true }}
+            >
+              <option value=""></option>
+              {addressTypeData &&
+                addressTypeData.map((item) => (
+                  <option key={item.name} value={item.name}>
+                    {item.name}
+                  </option>
+                ))}
+            </TextField>
+            <br />
+            <br />
+            <Button type="submit" color="primary" variant="contained" fullWidth>
+              Lưu
+            </Button>
+          </form>
+        </DialogContent>
+      </Dialog>
+
+      <Button variant="contained" color="primary" onClick={() => setOpen(true)}>
+        Thêm địa chỉ
+      </Button>
+
+      <List>
+        {user &&
+          user.addresses.map((item, index) => (
+            <ListItem key={index}>
+              <ListItemText
+                primary={item.addressType}
+                secondary={`${item.address1} ${item.address2}`}
               />
-            </div>
-            <h1 className="text-center text-[25px] font-Poppins">
-              Thêm địa chỉ
-            </h1>
-            <div className="w-full">
-              <form aria-required onSubmit={handleSubmit} className="w-full">
-                <div className="w-full block p-4">
-                  <div className="w-full pb-2">
-                    <label className="block pb-2">Country</label>
-                    <select
-                      name=""
-                      id=""
-                      value={country}
-                      onChange={(e) => setCountry(e.target.value)}
-                      className="w-[95%] border h-[40px] rounded-[5px]"
-                    >
-                      <option value="" className="block border pb-2">
-                        Chọn quốc gia
-                      </option>
-                      {Country &&
-                        Country.getAllCountries().map((item) => (
-                          <option
-                            className="block pb-2"
-                            key={item.isoCode}
-                            value={item.isoCode}
-                          >
-                            {item.name}
-                          </option>
-                        ))}
-                    </select>
-                  </div>
-
-                  <div className="w-full pb-2">
-                    <label className="block pb-2">Choose your City</label>
-                    <select
-                      name=""
-                      id=""
-                      value={city}
-                      onChange={(e) => setCity(e.target.value)}
-                      className="w-[95%] border h-[40px] rounded-[5px]"
-                    >
-                      <option value="" className="block border pb-2">
-                        Chọn Tỉnh/Thành phố
-                      </option>
-                      {State &&
-                        State.getStatesOfCountry(country).map((item) => (
-                          <option
-                            className="block pb-2"
-                            key={item.isoCode}
-                            value={item.isoCode}
-                          >
-                            {item.name}
-                          </option>
-                        ))}
-                    </select>
-                  </div>
-
-                  <div className="w-full pb-2">
-                    <label className="block pb-2">Địa chỉ nhà</label>
-                    <input
-                      type="address"
-                      className={`${styles.input}`}
-                      required
-                      value={address1}
-                      onChange={(e) => setAddress1(e.target.value)}
-                    />
-                  </div>
-                  <div className="w-full pb-2">
-                    <label className="block pb-2">Nhập Quận/Huyện</label>
-                    <input
-                      type="address"
-                      className={`${styles.input}`}
-                      required
-                      value={address2}
-                      onChange={(e) => setAddress2(e.target.value)}
-                    />
-                  </div>
-
-                  <div className="w-full pb-2">
-                    <label className="block pb-2">Zip Code</label>
-                    <input
-                      type="number"
-                      className={`${styles.input}`}
-                      required
-                      value={zipCode}
-                      onChange={(e) => setZipCode(e.target.value)}
-                    />
-                  </div>
-
-                  <div className="w-full pb-2">
-                    <label className="block pb-2">Loại địa chỉ</label>
-                    <select
-                      name=""
-                      id=""
-                      value={addressType}
-                      onChange={(e) => setAddressType(e.target.value)}
-                      className="w-[95%] border h-[40px] rounded-[5px]"
-                    >
-                      <option value="" className="block border pb-2">
-                        Chọn loại địa chỉ
-                      </option>
-                      {addressTypeData &&
-                        addressTypeData.map((item) => (
-                          <option
-                            className="block pb-2"
-                            key={item.name}
-                            value={item.name}
-                          >
-                            {item.name}
-                          </option>
-                        ))}
-                    </select>
-                  </div>
-
-                  <div className=" w-full pb-2">
-                    <input
-                      type="submit"
-                      className={`${styles.input} mt-5 cursor-pointer`}
-                      required
-                      readOnly
-                    />
-                  </div>
-                </div>
-              </form>
-            </div>
-          </div>
-        </div>
-      )}
-      <div className="flex w-full items-center justify-between">
-        <h1 className="text-[25px] font-[600] text-[#000000ba] pb-2">
-          Địa chỉ đã lưu
-        </h1>
-        <div
-          className={`${styles.button} !rounded-md`}
-          onClick={() => setOpen(true)}
-        >
-          <span className="text-[#fff]">Thêm địa chỉ</span>
-        </div>
-      </div>
-      <br />
-      {user &&
-        user.addresses.map((item, index) => (
-          <div
-            className="w-full bg-white h-min 800px:h-[70px] rounded-[4px] flex items-center px-3 shadow justify-between pr-10 mb-5"
-            key={index}
-          >
-            <div className="flex items-center">
-              <h5 className="pl-5 font-[600]">{item.addressType}</h5>
-            </div>
-            <div className="pl-8 flex items-center">
-              <h6 className="text-[12px] 800px:text-[unset]">
-                {item.address1} {item.address2}
-              </h6>
-            </div>
-            <div className="pl-8 flex items-center">
-              <h6 className="text-[12px] 800px:text-[unset]">
-                {user && user.phoneNumber}
-              </h6>
-            </div>
-            <div className="min-w-[10%] flex items-center justify-between pl-8">
-              <AiOutlineDelete
-                size={25}
-                className="cursor-pointer"
-                onClick={() => handleDelete(item)}
-              />
-            </div>
-          </div>
-        ))}
+              <ListItemSecondaryAction>
+                <IconButton edge="end" onClick={() => handleDelete(item)}>
+                  <AiOutlineDelete />
+                </IconButton>
+              </ListItemSecondaryAction>
+            </ListItem>
+          ))}
+      </List>
 
       {user && user.addresses.length === 0 && (
         <h5 className="text-center pt-8 text-[18px]">

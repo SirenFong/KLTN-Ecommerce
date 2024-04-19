@@ -104,7 +104,7 @@ export const updatUserAddress =
       dispatch({
         type: "updateUserAddressSuccess",
         payload: {
-          successMessage: "User address updated succesfully!",
+          successMessage: "Đã cập nhật địa chỉ thành công!",
           user: data.user,
         },
       });
@@ -131,7 +131,7 @@ export const deleteUserAddress = (id) => async (dispatch) => {
     dispatch({
       type: "deleteUserAddressSuccess",
       payload: {
-        successMessage: "User deleted successfully!",
+        successMessage: "Đã xóa địa chỉ thành công!",
         user: data.user,
       },
     });
@@ -143,7 +143,6 @@ export const deleteUserAddress = (id) => async (dispatch) => {
   }
 };
 
-// get all users --- admin
 export const getAllUsers = () => async (dispatch) => {
   try {
     dispatch({
