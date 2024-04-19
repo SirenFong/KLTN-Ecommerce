@@ -103,7 +103,7 @@ const App = () => {
         <Route path="/best-selling" element={<BestSellingPage />} />
         <Route path="/events" element={<EventsPage />} />
         <Route path="/faq" element={<FAQPage />} />
-
+        z
         <Route path="/order/success" element={<OrderSuccessPage />} />
         <Route
           path="/profile"
@@ -113,7 +113,6 @@ const App = () => {
             </ProtectedRoute>
           }
         />
-        <Route path="/checkout" element={<CheckoutPage />} />
         <Route
           path="/inbox"
           element={
@@ -140,7 +139,6 @@ const App = () => {
         />
         <Route path="/shop/preview/:id" element={<ShopPreviewPage />} />
         {/* shop Routes */}
-
         <Route path="/shop-login" element={<ShopLoginPage />} />
         <Route
           path="/shop/:id"
@@ -198,7 +196,6 @@ const App = () => {
             </SellerProtectedRoute>
           }
         />
-
         <Route
           path="/order/:id"
           element={

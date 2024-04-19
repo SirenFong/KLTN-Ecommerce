@@ -13,7 +13,7 @@ import { Button, Select } from "@material-ui/core";
 
 const Checkout = () => {
   const { user } = useSelector((state) => state.user); // Lấy thông tin người dùng
-  const { cart } = useSelector((state) => state.cart); // Lấy giỏ hàng
+  const { cart } = useSelector((state) => state.cart); // Lấy giỏ hàngz
 
   //
   const [open, setOpen] = useState(false);
