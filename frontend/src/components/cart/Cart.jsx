@@ -1,13 +1,23 @@
 import React, { useState } from "react";
 import { RxCross1 } from "react-icons/rx";
-import { IoBagHandleOutline } from "react-icons/io5";
+// import { IoBagHandleOutline } from "react-icons/io5";
 import { HiOutlineMinus, HiPlus } from "react-icons/hi";
 import styles from "../../styles/styles";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { addTocart, removeFromCart } from "../../redux/actions/cart";
 import { toast } from "react-toastify";
-import { Button } from "@material-ui/core";
+import {
+  Box,
+  Button,
+  Divider,
+  IconButton,
+  List,
+  ListItem,
+  Typography,
+} from "@material-ui/core";
+import CloseIcon from "@material-ui/icons/Close";
+import ShoppingCartIcon from "@material-ui/icons/ShoppingCart";
 
 const Cart = ({ setOpenCart }) => {
   const { cart } = useSelector((state) => state.cart); // Lấy giỏ hàng từ store
@@ -31,66 +41,90 @@ const Cart = ({ setOpenCart }) => {
   };
 
   return (
-    <div className="fixed top-0 left-0 w-full bg-[#0000004b] h-screen z-10">
-      <div className="fixed top-0 right-0 h-full w-[80%] 800px:w-[25%] bg-white flex flex-col overflow-y-scroll justify-between shadow-sm">
+    <Box
+      position="fixed"
+      top={0}
+      left={0}
+      width="100%"
+      height="100vh"
+      bgcolor="rgba(0, 0, 0, 0.3)"
+      zIndex={10}
+    >
+      <Box
+        position="fixed"
+        top={0}
+        right={0}
+        height="100%"
+        width={{ xs: "80%", md: "25%" }}
+        bgcolor="white"
+        display="flex"
+        flexDirection="column"
+        overflow="auto"
+        boxShadow={1}
+      >
         {cart && cart.length === 0 ? (
-          <div className="w-full h-screen flex items-center justify-center">
-            <div className="flex w-full justify-end pt-5 pr-5 fixed top-3 right-3">
-              <RxCross1
-                size={25}
-                className="cursor-pointer"
-                onClick={() => setOpenCart(false)}
-              />
-            </div>
-            <h5>Giỏ hàng đang trống!</h5>
-          </div>
+          <Box
+            display="flex"
+            alignItems="center"
+            justifyContent="center"
+            height="100%"
+          >
+            <Box
+              position="fixed"
+              top={3}
+              right={3}
+              display="flex"
+              justifyContent="flex-end"
+            >
+              <IconButton onClick={() => setOpenCart(false)}>
+                <CloseIcon />
+              </IconButton>
+            </Box>
+            <Typography variant="h5">Giỏ hàng đang trống!</Typography>
+          </Box>
         ) : (
           <>
-            <div>
-              <div className="flex w-full justify-end pt-5 pr-5">
-                <RxCross1
-                  size={25}
-                  className="cursor-pointer"
-                  onClick={() => setOpenCart(false)}
-                />
-              </div>
+            <Box p={2}>
+              <Box display="flex" justifyContent="flex-end">
+                <IconButton onClick={() => setOpenCart(false)}>
+                  <CloseIcon />
+                </IconButton>
+              </Box>
 
-              <div className={`${styles.noramlFlex} p-4`}>
-                <IoBagHandleOutline size={25} />
-                <h5 className="pl-2 text-[20px] font-[500]">
+              <Box display="flex" alignItems="center" p={1}>
+                <ShoppingCartIcon />
+                <Typography variant="h5" pl={2}>
                   {cart && cart.length} sản phẩm
-                </h5>
-              </div>
+                </Typography>
+              </Box>
 
-              <br />
-              <div className="w-full border-t">
+              <Divider />
+
+              <List>
                 {cart &&
                   cart.map((i, index) => (
-                    <CartSingle
-                      key={index}
-                      data={i}
-                      quantityChangeHandler={quantityChangeHandler}
-                      removeFromCartHandler={removeFromCartHandler}
-                    />
+                    <ListItem key={index}>
+                      <CartSingle
+                        data={i}
+                        quantityChangeHandler={quantityChangeHandler}
+                        removeFromCartHandler={removeFromCartHandler}
+                      />
+                    </ListItem>
                   ))}
-              </div>
-            </div>
+              </List>
+            </Box>
 
-            <div className="px-5 mb-3">
+            <Box p={2} mb={2}>
               <Link to="/checkout">
-                <div
-                  className={`h-[45px] flex items-center justify-center w-[100%] rounded-[5px]`}
-                >
-                  <Button variant="contained" color="primary">
-                    Thanh toán ngay ({totalPrice.toLocaleString("vi-VN")} VNĐ)
-                  </Button>
-                </div>
+                <Button variant="contained" color="primary" fullWidth>
+                  Thanh toán ngay ({totalPrice.toLocaleString("vi-VN")} VNĐ)
+                </Button>
               </Link>
-            </div>
+            </Box>
           </>
         )}
-      </div>
-    </div>
+      </Box>
+    </Box>
   );
 };
 

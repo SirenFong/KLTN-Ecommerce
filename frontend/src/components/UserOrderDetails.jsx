@@ -6,9 +6,11 @@ import styles from "../styles/styles";
 import { getAllOrdersOfUser } from "../redux/actions/order";
 import { server } from "../server";
 import { RxCross1 } from "react-icons/rx";
-import { AiFillStar, AiOutlineStar } from "react-icons/ai";
+// import { AiFillStar, AiOutlineStar } from "react-icons/ai";
 import axios from "axios";
 import { toast } from "react-toastify";
+import { Box, Button, Grid, TextField, Typography } from "@material-ui/core";
+import { Rating } from "@material-ui/lab";
 
 const UserOrderDetails = () => {
   const { orders } = useSelector((state) => state.order);
@@ -70,151 +72,160 @@ const UserOrderDetails = () => {
   };
 
   return (
-    <div className={`py-4 min-h-screen ${styles.section}`}>
-      <div className="w-full flex items-center justify-between">
-        <div className="flex items-center">
-          <BsFillBagFill size={30} color="crimson" />
-          <h1 className="pl-2 text-[25px]">Chi tiết đơn hàng</h1>
-        </div>
-        <Link to="/profile">
-          <div
-            className={`${styles.button} !bg-[#fce1e6] !rounded-[4px] text-[#e94560] font-[600] !h-[45px] text-[18px]`}
+    <Box py={4} minHeight="100vh" className={styles.section}>
+      <Grid container justifyContent="space-between" alignItems="center">
+        <Grid item>
+          <Box display="flex" alignItems="center">
+            <BsFillBagFill size={30} color="crimson" />
+            <Typography variant="h4" className="pl-2">
+              Chi tiết đơn hàng
+            </Typography>
+          </Box>
+        </Grid>
+        <Grid item>
+          <Button
+            component={Link}
+            to="/profile"
+            variant="contained"
+            color="secondary"
           >
             Trở về
-          </div>
-        </Link>
-      </div>
+          </Button>
+        </Grid>
+      </Grid>
 
-      <div className="w-full flex items-center justify-between pt-6">
-        <h5 className="text-[#00000084]">
-          Mã đơn hàng: <span>#{data?._id?.slice(0, 8)}</span>
-        </h5>
-        <h5 className="text-[#00000084]">
-          Đặt ngày: <span>{data?.createdAt?.slice(0, 10)}</span>
-        </h5>
-      </div>
+      <Grid container justifyContent="space-between" alignItems="center" pt={6}>
+        <Grid item>
+          <Typography variant="body1">
+            Mã đơn hàng: <span>#{data?._id?.slice(0, 8)}</span>
+          </Typography>
+        </Grid>
+        <Grid item>
+          <Typography variant="body1">
+            Đặt ngày: <span>{data?.createdAt?.slice(0, 10)}</span>
+          </Typography>
+        </Grid>
+      </Grid>
 
       {/* order items */}
-      <br />
-      <br />
-      {data &&
-        data?.cart.map((item) => {
-          return (
-            <div className="w-full flex items-start mb-5">
-              <img
-                src={`${item.images[0]?.url}`}
-                alt=""
-                className="w-[80x] h-[80px]"
-              />
-              <div className="w-full">
-                <h5 className="pl-3 text-[20px]">{item.name}</h5>
-                <h5 className="pl-3 text-[20px] text-[#00000091]">
-                  {item.sellPrice?.toLocaleString("vi-VN") ||
-                    item.discountPrice?.toLocaleString("vi-VN")}{" "}
-                  đ x {item.qty}
-                </h5>
-              </div>
-              {!item.isReviewed && data?.status === "Đã giao hàng" ? (
-                <div
-                  className={`${styles.button} text-[#fff]`}
-                  onClick={() => setOpen(true) || setSelectedItem(item)}
-                >
-                  Đánh giá
-                </div>
-              ) : null}
-            </div>
-          );
-        })}
+      <Box pt={4}>
+        {data &&
+          data?.cart.map((item) => {
+            return (
+              <Grid container alignItems="start" mb={5}>
+                <Grid item className="p-5">
+                  <img
+                    src={`${item.images[0]?.url}`}
+                    alt=""
+                    className="w-[80x] h-[80px] "
+                  />
+                </Grid>
+                <Grid item xs>
+                  <Typography variant="h5" className="pl-3">
+                    {item.name}
+                  </Typography>
+                  <Typography variant="h5" className="pl-3 text-[#00000091]">
+                    {item.sellPrice?.toLocaleString("vi-VN") ||
+                      item.discountPrice?.toLocaleString("vi-VN")}{" "}
+                    đ x {item.qty}
+                  </Typography>
+                </Grid>
+                {!item.isReviewed && data?.status === "Đã giao hàng" && (
+                  <Grid item>
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      onClick={() => setOpen(true) || setSelectedItem(item)}
+                    >
+                      Đánh giá
+                    </Button>
+                  </Grid>
+                )}
+              </Grid>
+            );
+          })}
+      </Box>
 
       {/* Bảng Review */}
       {open && (
-        <div className="w-full fixed top-0 left-0 h-screen bg-[#0005] z-50 flex items-center justify-center">
-          <div className="w-[50%] h-min bg-[#fff] shadow rounded-md p-3">
-            <div className="w-full flex justify-end p-3">
+        <Box
+          display="flex"
+          alignItems="center"
+          justifyContent="center"
+          position="fixed"
+          top={0}
+          left={0}
+          height="100vh"
+          // bgcolor="#0005"
+          zIndex="tooltip"
+        >
+          <Box width="50%" bgcolor="#fff" boxShadow={3} borderRadius={2} p={3}>
+            <Grid container justifyContent="flex-end" p={3}>
               <RxCross1
                 size={30}
                 onClick={() => setOpen(false)}
                 className="cursor-pointer"
               />
-            </div>
-            <h2 className="text-[30px] font-[500] font-Poppins text-center">
+            </Grid>
+            <Typography variant="h3" align="center">
               Đánh giá
-            </h2>
-            <br />
-            <div className="w-full flex">
+            </Typography>
+            <Box pt={4} display="flex">
               <img
                 src={`${selectedItem?.images[0]?.url}`}
                 alt=""
                 className="w-[80px] h-[80px]"
               />
-              <div>
-                <div className="pl-3 text-[20px]">{selectedItem?.name}</div>
-                <h4 className="pl-3 text-[20px]">
+              <Box pl={3}>
+                <Typography variant="h5">{selectedItem?.name}</Typography>
+                <Typography variant="h5">
                   {selectedItem?.sellPrice.toLocaleString("vi-VN")}đ x{" "}
                   {selectedItem?.qty}
-                </h4>
-              </div>
-            </div>
+                </Typography>
+              </Box>
+            </Box>
 
-            <br />
-            <br />
-
-            {/* Đánh giá */}
-            <h5 className="pl-3 text-[20px] font-[500]">
-              Chọn đánh giá <span className="text-red-500">*</span>
-            </h5>
-            <div className="flex w-full ml-2 pt-1">
-              {[1, 2, 3, 4, 5].map((i) =>
-                rating >= i ? (
-                  <AiFillStar
-                    key={i}
-                    className="mr-1 cursor-pointer"
-                    color="rgb(246,186,0)"
-                    size={25}
-                    onClick={() => setRating(i)}
-                  />
-                ) : (
-                  <AiOutlineStar
-                    key={i}
-                    className="mr-1 cursor-pointer"
-                    color="rgb(246,186,0)"
-                    size={25}
-                    onClick={() => setRating(i)}
-                  />
-                )
-              )}
-            </div>
-            <br />
-            <div className="w-full ml-3">
-              <label className="block text-[20px] font-[500]">
-                Cảm nhận của bạn
-                <span className="ml-1 font-[400] text-[16px] text-[#00000052]">
-                  (Tùy chọn)
-                </span>
-              </label>
-              <textarea
-                name="comment"
-                id=""
-                cols="20"
-                rows="5"
-                value={comment}
-                onChange={(e) => setComment(e.target.value)}
-                placeholder="Để lại đánh giá sản phẩm!"
-                className="mt-2 w-[95%] border p-2 outline-none"
-              ></textarea>
-            </div>
-            <div
-              className={`${styles.button} text-white text-[20px] ml-3`}
-              onClick={rating > 0 ? reviewHandler : null}
-            >
-              Gửi
-            </div>
-          </div>
-        </div>
+            <Box pt={4}>
+              <Typography variant="h5">
+                Chọn đánh giá <span className="text-red-500">*</span>
+              </Typography>
+              <Box pt={1}>
+                <Rating
+                  name="simple-controlled"
+                  value={rating}
+                  onChange={(event, newValue) => {
+                    setRating(newValue);
+                  }}
+                />
+              </Box>
+              <Box pt={2}>
+                <TextField
+                  name="comment"
+                  multiline
+                  rows={5}
+                  value={comment}
+                  onChange={(e) => setComment(e.target.value)}
+                  placeholder="Để lại đánh giá sản phẩm!"
+                  variant="outlined"
+                  fullWidth
+                />
+              </Box>
+              <Box pt={2}>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={rating > 0 ? reviewHandler : null}
+                >
+                  Gửi
+                </Button>
+              </Box>
+            </Box>
+          </Box>
+        </Box>
       )}
 
-      <div className="border-t w-full text-right">
-        <h5 className="pt-3 text-[18px]">
+      <Box borderTop={1} borderColor="divider" className="w-full text-right">
+        <Typography variant="h6" pt={3}>
           Thành tiền:{" "}
           <strong>
             {data?.totalPrice.toLocaleString("vi-VN", {
@@ -222,48 +233,49 @@ const UserOrderDetails = () => {
               currency: "VND",
             })}
           </strong>
-        </h5>
-      </div>
+        </Typography>
+      </Box>
       <br />
       <br />
-      <div className="w-full 800px:flex items-center">
-        <div className="w-full 800px:w-[60%]">
-          <h4 className="pt-3 text-[20px] font-[600]">Địa chỉ giao hàng:</h4>
-          <h4 className="pt-3 text-[20px]">
+      <Grid container spacing={2}>
+        <Grid item xs={12} md={6}>
+          <Typography variant="h6">Địa chỉ giao hàng:</Typography>
+          <Typography variant="body1">
             {data?.shippingAddress.address1 +
               " " +
               data?.shippingAddress.address2}
-          </h4>
-          <h4 className=" text-[20px]">{data?.shippingAddress.country}</h4>
-          <h4 className=" text-[20px]">{data?.shippingAddress.city}</h4>
-          <h4 className=" text-[20px]">0{data?.user?.phoneNumber}</h4>
-        </div>
-        <div className="w-full 800px:w-[40%]">
-          <h4 className="pt-3 text-[20px]">Trạng thái thanh toán:</h4>
-          <h4>
+          </Typography>
+          <Typography variant="body1">
+            {data?.shippingAddress.country}
+          </Typography>
+          <Typography variant="body1">{data?.shippingAddress.city}</Typography>
+          <Typography variant="body1">0{data?.user?.phoneNumber}</Typography>
+        </Grid>
+        <Grid item xs={12} md={6}>
+          <Typography variant="h6">Trạng thái thanh toán:</Typography>
+          <Typography variant="body1">
             Trạng thái đơn hàng:{" "}
             {data?.paymentInfo?.status
               ? data?.paymentInfo?.status
               : "Chưa thanh toán"}
-          </h4>
+          </Typography>
           <br />
           {data?.status === "Đã giao hàng" && (
-            <div
-              className={`${styles.button} text-white`}
-              onClick={refundHandler}
-            >
+            <Button variant="contained" color="primary" onClick={refundHandler}>
               Yêu cầu hoàn trả
-            </div>
+            </Button>
           )}
-        </div>
-      </div>
+        </Grid>
+      </Grid>
       <br />
       <Link to="/">
-        <div className={`${styles.button} text-white`}>Nhắn tin</div>
+        <Button variant="contained" color="primary">
+          Nhắn tin
+        </Button>
       </Link>
       <br />
       <br />
-    </div>
+    </Box>
   );
 };
 

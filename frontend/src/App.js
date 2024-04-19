@@ -90,6 +90,7 @@ const App = () => {
         <Route path="/" element={<HomePage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/sign-up" element={<SignupPage />} />
+        <Route path="/checkout" element={<CheckoutPage />} />
         <Route
           path="/activation/:activation_token"
           element={<ActivationPage />}
