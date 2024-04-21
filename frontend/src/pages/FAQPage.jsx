@@ -100,7 +100,7 @@ const Faq = () => {
             thuốc Thanh Thương cam kết không chia sẻ hay sử dụng thông tin cá
             nhân của khách hàng cho một bên thứ 3 nào khác với mục đích lợi
             nhuận. Thông tin của khách hàng sẽ chỉ được sử dụng trong nội bộ Nhà
-            thuốc Long Châu. Khi cần thiết, chúng tôi có thể sử dụng những thông
+            thuốc Thanh Thương. Khi cần thiết, chúng tôi có thể sử dụng những thông
             tin này để liên hệ trực tiếp với khách hàng dưới các hình thức như:
             gửi thư, đơn đặt hàng, thư cảm ơn. Khách hàng có thể nhận được thư
             định kỳ cung cấp thông tin sản phẩm, dịch vụ mới, thông tin về các
@@ -129,12 +129,12 @@ const Faq = () => {
             <span className="font-bold">
               1. Thông báo miễn trừ trách nhiệm:{" "}
             </span>
-            Tất cả các sản phẩm bán tại nhà thuốc Long Châu đều có mô tả chi
+            Tất cả các sản phẩm bán tại nhà thuốc Thanh Thương đều có mô tả chi
             tiết. Nhà thuốc sẽ cung cấp thông tin về sản phẩm như ảnh, giấy phép
             kinh doanh, thành phần, tác dụng và chỉ định sử dụng. Mặc dù chúng
             tôi lựa chọn và cung cấp thông tin từ các trang web đáng tin cậy và
             chính thống, có độ chính xác cao, nhưng bạn nên coi đó chỉ là tài
-            liệu tham khảo. Nhà thuốc Long Châu muốn cung cấp thông tin đầy đủ
+            liệu tham khảo. Nhà thuốc Thanh Thương muốn cung cấp thông tin đầy đủ
             về thành phần của các loại thuốc. Vì vậy, chúng tôi tổng hợp các
             thông tin từ Dược thư quốc gia hay hướng dẫn sử dụng được Cục quản
             lý Dược phê duyệt. Chúng tôi sẽ liên tục cập nhật thông tin mới
@@ -148,7 +148,7 @@ const Faq = () => {
             dịch vụ y tế và chăm sóc sức khỏe của bạn để được tư vấn kỹ về các
             tương tác có thể xảy ra với tất cả các loại thuốc hay các sản phẩm
             không phải là thuốc (thực phẩm chức năng, thực phẩm dinh dưỡng,...)
-            mà bạn đang dùng. Nhà thuốc Long Châu có thể sửa đổi hoặc bổ sung
+            mà bạn đang dùng. Nhà thuốc Thanh Thương có thể sửa đổi hoặc bổ sung
             thông tin mà không báo trước. Công dụng và hiệu quả điều trị của một
             sản phẩm có thể thay đổi. Thậm chí, sản phẩm có thể có hiệu quả với
             người này nhưng không hiệu quả với người khác. Chúng tôi không chịu
