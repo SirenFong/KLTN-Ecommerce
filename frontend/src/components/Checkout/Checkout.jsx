@@ -13,6 +13,7 @@ import { Button, Select } from "@material-ui/core";
 
 const Checkout = () => {
   const { user } = useSelector((state) => state.user); // Lấy thông tin người dùng
+  const { seller } = useSelector((state) => state.seller);
   const { cart } = useSelector((state) => state.cart); // Lấy giỏ hàngz
 
   //
@@ -73,6 +74,7 @@ const Checkout = () => {
         sellPrice,
         shippingAddress,
         user,
+        seller,
       };
 
       //Lưu giỏ hàng lên localStorage
@@ -198,6 +200,7 @@ const Checkout = () => {
         <div className="w-full 800px:w-[65%]">
           <ShippingInfo
             user={user}
+            seller={seller}
             country={country}
             setCountry={setCountry}
             city={city}
@@ -244,7 +247,17 @@ const Checkout = () => {
           </>
         </div>
       </div>
-      <div className={"w-[150px] 800px:w-[280px]"} onClick={paymentSubmit}>
+      <div
+        className={"w-[150px] 800px:w-[280px]"}
+        onClick={() => {
+          if (!user && !seller) {
+            navigate("/login");
+          } else {
+            paymentSubmit();
+          }
+          //console.log(seller);
+        }}
+      >
         <Button color="primary" variant="contained">
           Hoàn tất
         </Button>
