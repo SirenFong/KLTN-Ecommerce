@@ -17,6 +17,7 @@ import { useEffect } from "react";
 import { addTocart } from "../../../redux/actions/cart";
 import { toast } from "react-toastify";
 import Ratings from "../../Products/Ratings";
+import { makeStyles } from "@material-ui/core";
 
 const ProductCard = ({ data, isEvent }) => {
   const { wishlist } = useSelector((state) => state.wishlist);
@@ -58,9 +59,33 @@ const ProductCard = ({ data, isEvent }) => {
     }
   };
 
+  const useStyles = makeStyles({
+    productCard: {
+      maxWidth: "100%",
+      height: 330,
+      boxShadow: "0 0 10px 0 rgba(0,0,0,0.12)",
+      transition: "all 0.3s",
+      "&:hover": {
+        boxShadow: "0 4px 20px 0 rgba(0,0,0,0.12)",
+        transform: "scale(1.05)",
+      },
+    },
+    productImage: {
+      height: 170,
+      width: "100%",
+      objectFit: "contain",
+      transition: "all 0.3s",
+      "&:hover": {
+        opacity: 0.75,
+      },
+    },
+  });
+  const classes = useStyles();
   return (
     <>
-      <div className="w-full h-[330px] bg-white rounded-lg shadow-sm p-3 relative cursor-pointer">
+      <div
+        className={`w-full bg-white rounded-lg p-3 relative cursor-pointer ${classes.productCard}`}
+      >
         <div className="flex justify-end"></div>
         <Link
           to={`${
@@ -72,7 +97,7 @@ const ProductCard = ({ data, isEvent }) => {
           <img
             src={`${data.images && data.images[0]?.url}`}
             alt=""
-            className="w-full h-[170px] object-contain"
+            className={classes.productImage}
           />
         </Link>
 
