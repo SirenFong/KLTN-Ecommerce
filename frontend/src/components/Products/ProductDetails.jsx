@@ -18,6 +18,7 @@ import { addTocart } from "../../redux/actions/cart";
 import { toast } from "react-toastify";
 import Ratings from "./Ratings";
 import axios from "axios";
+import { Button, makeStyles } from "@material-ui/core";
 
 const ProductDetails = ({ data }) => {
   const { wishlist } = useSelector((state) => state.wishlist);
@@ -91,6 +92,23 @@ const ProductDetails = ({ data }) => {
       }
     }
   };
+  const useStyles = makeStyles((theme) => ({
+    button: {
+      backgroundColor: theme.palette.primary.main,
+      color: "#fff",
+      display: "flex",
+      alignItems: "center",
+      "&:hover": {
+        backgroundColor: theme.palette.primary.dark,
+      },
+    },
+    icon: {
+      marginLeft: theme.spacing(1),
+    },
+  }));
+
+  // Trong component của bạn
+  const classes = useStyles();
 
   const totalReviewsLength = // Tính tổng số lượng đánh giá
     products &&
@@ -230,7 +248,14 @@ const ProductDetails = ({ data }) => {
                     </button>
                   )}
                 </p>
-
+                <div
+                  className={`${styles.button} !mt-6 !rounded !h-11 flex items-center`}
+                  onClick={() => addToCartHandler(data._id)}
+                >
+                  <Button variant="contained" className={classes.button}>
+                    Thêm sản phẩm
+                  </Button>
+                </div>
                 <div className="flex items-center mt-12 justify-between pr-3">
                   <div>
                     <button
@@ -269,14 +294,7 @@ const ProductDetails = ({ data }) => {
                     )}
                   </div>
                 </div>
-                <div
-                  className={`${styles.button} !mt-6 !rounded !h-11 flex items-center`}
-                  onClick={() => addToCartHandler(data._id)}
-                >
-                  <span className="text-white flex items-center">
-                    Thêm sản phẩm <AiOutlineShoppingCart className="ml-1" />
-                  </span>
-                </div>
+
                 <div className="flex items-center pt-8">
                   <Link to={`/shop/preview/${data?.shop._id}`}>
                     <img

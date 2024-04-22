@@ -1,78 +1,71 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import styles from "../../styles/styles";
 import EventCard from "./EventCard";
-import {
-  IoIosArrowDropleftCircle,
-  IoIosArrowDroprightCircle,
-} from "react-icons/io";
+import { IconButton } from "@material-ui/core";
+import ArrowBackIcon from "@material-ui/icons/ArrowBack";
+import Loader from "../Layout/Loader";
+import ArrowForwardIcon from "@material-ui/icons/ArrowForward";
 
 const Events = () => {
-  const { allEvents, isLoading } = useSelector((state) => state.events); // Lấy tất cả sự kiện từ store
-  const [currentEventIndex, setCurrentEventIndex] = useState(0); // Sự kiện hiện tại
-  const [autoSlide, setAutoSlide] = useState(false); // Tự động chuyển đổi sự kiện
+  const { allEvents, isLoading } = useSelector((state) => state.events);
+  const [startIndex, setStartIndex] = useState(0);
 
-  useEffect(() => {
-    if (allEvents && allEvents.length > 1 && !autoSlide) {
-      // Nếu có nhiều hơn 1 sự kiện và không tự động chuyển đổi
-      const timer = setInterval(() => {
-        // Tự động chuyển đổi sự kiện
-        setCurrentEventIndex((prevIndex) => (prevIndex + 1) % allEvents.length);
-      }, 5000); // thời gian chuyển đổi tự động, ở đây là 5 giây
-      return () => clearInterval(timer);
-    }
-  }, [autoSlide, allEvents]);
+  if (isLoading) {
+    return (
+      <div>
+        <Loader />
+      </div>
+    );
+  }
 
-  const handleNextEvent = () => {
-    setCurrentEventIndex((prevIndex) => (prevIndex + 1) % allEvents.length); // Chuyển đổi sự kiện tiếp theo
-    setAutoSlide(false); // Dừng tự động chuyển đổi khi người dùng chọn sự kiện tiếp theo
+  const handleNext = () => {
+    setStartIndex((prevIndex) => prevIndex + 5);
   };
 
-  const handlePrevEvent = () => {
-    setCurrentEventIndex(
-      (prevIndex) => (prevIndex - 1 + allEvents.length) % allEvents.length // Chuyển đổi sự kiện trước đó
-    );
-    setAutoSlide(false); // Dừng tự động chuyển đổi khi người dùng chọn sự kiện trước đó
+  const handlePrev = () => {
+    setStartIndex((prevIndex) => Math.max(prevIndex - 5, 0));
   };
 
   return (
-    <div>
-      {!isLoading && (
-        <div className={`${styles.section}`}>
-          <div className={`${styles.heading}`}>
-            <h1>Sự kiện đang chạy</h1>
-          </div>
+    <div className={styles.section}>
+      <div className={styles.heading}>
+        <h1>Sự kiện đang chạy</h1>
+      </div>
 
-          <div className="w-full grid">
-            {allEvents && allEvents.length > 0 ? (
-              <div className="flex items-center">
-                <EventCard
-                  key={currentEventIndex} // Hiển thị sự kiện hiện tại
-                  data={allEvents[currentEventIndex]} // Hiển thị thông tin sự kiện
-                />
-                {allEvents.length > 1 && (
-                  <>
-                    <IoIosArrowDropleftCircle
-                      className="cursor-pointer p-1 "
-                      // size={20}
-                      onClick={handlePrevEvent}
-                      style={{ width: "50px", height: "50px" }}
-                    />
-                    <IoIosArrowDroprightCircle
-                      className="cursor-pointer p-1"
-                      // size={20}
-                      onClick={handleNextEvent}
-                      style={{ width: "50px", height: "50px" }}
-                    />
-                  </>
+      <div className="w-full grid gap-4">
+        {allEvents && allEvents.length > 0 ? (
+          <>
+            <div className="flex items-stretch justify-around">
+              {allEvents
+                .slice(startIndex, startIndex + 5)
+                .map((event, index) => (
+                  <EventCard
+                    key={event.id} // Add a unique key
+                    data={event}
+                    active={index === 0}
+                  />
+                ))}
+            </div>
+            {allEvents.length > 5 && (
+              <div className="flex justify-center mt-4">
+                {startIndex > 0 && (
+                  <IconButton onClick={handlePrev}>
+                    <ArrowBackIcon />
+                  </IconButton>
+                )}
+                {startIndex + 5 < allEvents.length && (
+                  <IconButton onClick={handleNext}>
+                    <ArrowForwardIcon />
+                  </IconButton>
                 )}
               </div>
-            ) : (
-              <h4>Hiện tại chưa có sự kiện nào!</h4>
             )}
-          </div>
-        </div>
-      )}
+          </>
+        ) : (
+          <h4>Hiện tại chưa có sự kiện nào!</h4>
+        )}
+      </div>
     </div>
   );
 };
