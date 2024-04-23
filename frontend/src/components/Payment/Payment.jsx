@@ -122,7 +122,7 @@ const Payment = () => {
       });
   };
 
-  //Dữ liệu thanh toán
+  //Dữ liệu thanh toán  
   const paymentData = {
     //Số tiền cần thanh toán
     amount: Math.round(orderData?.totalPrice * 100), //Chuyển đổi tiền VND sang cent

@@ -20,11 +20,11 @@ const Events = () => {
   }
 
   const handleNext = () => {
-    setStartIndex((prevIndex) => prevIndex + 5);
+    setStartIndex((prevIndex) => prevIndex + 3);
   };
 
   const handlePrev = () => {
-    setStartIndex((prevIndex) => Math.max(prevIndex - 5, 0));
+    setStartIndex((prevIndex) => Math.max(prevIndex - 3, 0));
   };
 
   return (
@@ -38,7 +38,7 @@ const Events = () => {
           <>
             <div className="flex items-stretch justify-around">
               {allEvents
-                .slice(startIndex, startIndex + 5)
+                .slice(startIndex, startIndex + 3)
                 .map((event, index) => (
                   <EventCard
                     key={event.id} // Add a unique key
@@ -47,14 +47,14 @@ const Events = () => {
                   />
                 ))}
             </div>
-            {allEvents.length > 5 && (
+            {allEvents.length > 3 && (
               <div className="flex justify-center mt-4">
                 {startIndex > 0 && (
                   <IconButton onClick={handlePrev}>
                     <ArrowBackIcon />
                   </IconButton>
                 )}
-                {startIndex + 5 < allEvents.length && (
+                {startIndex + 3 < allEvents.length && (
                   <IconButton onClick={handleNext}>
                     <ArrowForwardIcon />
                   </IconButton>

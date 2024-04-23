@@ -16,9 +16,17 @@ import {
 } from "../../redux/actions/wishlist";
 import { addTocart } from "../../redux/actions/cart";
 import { toast } from "react-toastify";
-import Ratings from "./Ratings";
+// import Ratings from "./Ratings";
 import axios from "axios";
-import { Button, makeStyles } from "@material-ui/core";
+import {
+  Avatar,
+  Box,
+  Button,
+  Typography,
+  makeStyles,
+  useTheme,
+} from "@material-ui/core";
+import Rating from "@mui/material/Rating";
 
 const ProductDetails = ({ data }) => {
   const { wishlist } = useSelector((state) => state.wishlist);
@@ -257,23 +265,33 @@ const ProductDetails = ({ data }) => {
                   </Button>
                 </div>
                 <div className="flex items-center mt-12 justify-between pr-3">
-                  <div>
-                    <button
-                      className="bg-gradient-to-r from-teal-400 to-teal-500 text-white font-bold rounded-l px-4 py-2 shadow-lg hover:opacity-75 transition duration-300 ease-in-out"
+                  <Box display="flex" alignItems="center">
+                    <Button
+                      variant="contained"
+                      color="primary"
                       onClick={decrementCount}
+                      style={{ marginRight: "10px" }}
                     >
                       -
-                    </button>
-                    <span className="bg-gray-200 text-gray-800 font-medium px-4 py-[11px]">
+                    </Button>
+                    <Typography
+                      variant="body1"
+                      style={{
+                        backgroundColor: "#f5f5f5",
+                        padding: "10px",
+                        margin: "0 10px",
+                      }}
+                    >
                       {count}
-                    </span>
-                    <button
-                      className="bg-gradient-to-r from-teal-400 to-teal-500 text-white font-bold rounded-l px-4 py-2 shadow-lg hover:opacity-75 transition duration-300 ease-in-out"
+                    </Typography>
+                    <Button
+                      variant="contained"
+                      color="primary"
                       onClick={incrementCount}
                     >
                       +
-                    </button>
-                  </div>
+                    </Button>
+                  </Box>
                   <div>
                     {click ? (
                       <AiFillHeart
@@ -346,125 +364,165 @@ const ProductDetailsInfo = ({
   averageRating,
 }) => {
   const [active, setActive] = useState(1);
+  const theme = useTheme();
 
   return (
-    <div className="bg-[#f5f6fb] px-3 800px:px-10 py-2 rounded">
-      <div className="w-full flex justify-between border-b pt-10 pb-2">
-        <div className="relative">
-          <h5
-            className={
-              "text-[#000] text-[18px] px-1 leading-5 font-[600] cursor-pointer 800px:text-[20px]"
-            }
+    <Box sx={{ bgcolor: "#f5f6fb", px: 3, py: 2, borderRadius: 1 }}>
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "space-between",
+          borderBottom: 1,
+          pt: 10,
+          pb: 2,
+        }}
+      >
+        <Box sx={{ position: "relative" }}>
+          <Box
+            sx={{
+              cursor: "pointer",
+              textDecoration: active === 1 ? "underline" : "none", // Giữ gạch chân khi active
+              "&:hover": {
+                color: theme.palette.primary.main, // Thay đổi màu sắc khi hover
+                textDecoration: "underline", // Thêm gạch chân khi hover
+              },
+            }}
             onClick={() => setActive(1)}
           >
-            Thông tin sản phẩm
-          </h5>
-          {active === 1 ? (
-            <div className={`${styles.active_indicator}`} />
-          ) : null}
-        </div>
-        <div className="relative">
-          <h5
-            className={
-              "text-[#000] text-[18px] px-1 leading-5 font-[600] cursor-pointer 800px:text-[20px]"
-            }
+            <Typography variant="h5">Thông tin sản phẩm</Typography>
+          </Box>
+          {active === 1 && <Box sx={{ ...styles.active_indicator }} />}
+        </Box>
+        <Box sx={{ position: "relative" }}>
+          <Box
+            sx={{
+              cursor: "pointer",
+              textDecoration: active === 2 ? "underline" : "none", // Giữ gạch chân khi active
+              "&:hover": {
+                color: theme.palette.primary.main, // Thay đổi màu sắc khi hover
+                textDecoration: "underline", // Thêm gạch chân khi hover
+              },
+            }}
             onClick={() => setActive(2)}
           >
-            Đánh giá sản phẩm
-          </h5>
-          {active === 2 ? (
-            <div className={`${styles.active_indicator}`} />
-          ) : null}
-        </div>
-        <div className="relative">
-          <h5
-            className={
-              "text-[#000] text-[18px] px-1 leading-5 font-[600] cursor-pointer 800px:text-[20px]"
-            }
+            <Typography variant="h5">Đánh giá sản phẩm</Typography>
+          </Box>
+          {active === 2 && <Box sx={{ ...styles.active_indicator }} />}
+        </Box>
+        <Box sx={{ position: "relative" }}>
+          <Box
+            sx={{
+              cursor: "pointer",
+              textDecoration: active === 3 ? "underline" : "none", // Giữ gạch chân khi active
+              "&:hover": {
+                color: theme.palette.primary.main, // Thay đổi màu sắc khi hover
+                textDecoration: "underline", // Thêm gạch chân khi hover
+              },
+            }}
             onClick={() => setActive(3)}
           >
-            Thông tin cửa hàng
-          </h5>
-          {active === 3 ? (
-            <div className={`${styles.active_indicator}`} />
-          ) : null}
-        </div>
-      </div>
-      {active === 1 ? (
-        <p className="py-2 text-[18px] leading-8 pb-10 whitespace-pre-line">
+            <Typography variant="h5">Thông tin cửa hàng</Typography>
+          </Box>
+          {active === 3 && <Box sx={{ ...styles.active_indicator }} />}
+        </Box>
+      </Box>
+      {active === 1 && (
+        <Typography
+          variant="body1"
+          sx={{ py: 2, pb: 10, whiteSpace: "pre-line" }}
+        >
           {data?.description}
-        </p>
-      ) : null}
-
-      {active === 2 ? (
-        <div className="w-full min-h-[40vh] flex flex-col items-center py-3 overflow-y-scroll">
-          {data?.reviews?.map((item) => (
-            <div className="w-full flex my-2">
-              <img
-                src={`${item.user?.avatar?.url}`}
-                alt=""
-                className="w-[50px] h-[50px] rounded-full"
-              />
-              <div className="pl-2 ">
-                <div className="w-full flex items-center">
-                  <h1 className="font-[500] mr-3">{item.user.name}</h1>
-                  <Ratings rating={data?.ratings} />
-                </div>
-                <p>{item.comment}</p>
-              </div>
-            </div>
-          ))}
-
-          <div className="w-full flex justify-center">
-            {data?.reviews?.length === 0 && <h5>Chưa có đánh giá nào!</h5>}
-          </div>
-        </div>
-      ) : null}
-
-      {active === 3 && (
-        <div className="w-full block 800px:flex p-5">
-          <div className="w-full 800px:w-[50%]">
-            <Link to={`/shop/preview/${data.shop._id}`}>
-              <div className="flex items-center">
-                <img
-                  src={`${data?.shop?.avatar?.url}`}
-                  className="w-[50px] h-[50px] rounded-full"
-                  alt=""
-                />
-                <div className="pl-3">
-                  <h3 className={`${styles.shop_name}`}>{data.shop.name}</h3>
-                  <h5 className="pb-2 text-[15px]">
-                    ({averageRating}/5) Đánh giá
-                  </h5>
-                </div>
-              </div>
-            </Link>
-            <p className="pt-2">{data.shop.description}</p>
-          </div>
-          <div className="w-full 800px:w-[50%] mt-5 800px:mt-0 800px:flex flex-col items-end">
-            <div className="text-left">
-              <h5 className="font-[600] pt-3">
-                Sản phẩm cửa hàng:{" "}
-                <span className="font-[500]">
-                  {products && products.length}
-                </span>
-              </h5>
-              <h5 className="font-[600] pt-3">
-                Đánh giá:{" "}
-                <span className="font-[500]">{totalReviewsLength}</span>
-              </h5>
-              <Link to={`/shop/preview/${data?.shop._id}`}>
-                <div
-                  className={`${styles.button} !rounded-[4px] !h-[39.5px] mt-3`}
-                >
-                  <h4 className="text-white">Xem cửa hàng</h4>
-                </div>
-              </Link>
-            </div>
-          </div>
-        </div>
+        </Typography>
       )}
-    </div>
+      {active === 2 && (
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "flex-start", // changed from "center" to "flex-start"
+            py: 3,
+            overflowY: "scroll",
+          }}
+        >
+          {data?.reviews?.map((item) => (
+            <Box sx={{ display: "flex", my: 2 }}>
+              <Avatar src={item.user?.avatar?.url} />
+              <Box sx={{ pl: 2 }}>
+                <Box sx={{ display: "flex", alignItems: "center" }}>
+                  <Typography variant="h6" sx={{ mr: 3 }}>
+                    {item.user.name}
+                  </Typography>
+                  <Rating value={data?.ratings} readOnly />
+                </Box>
+                <Typography>{item.comment}</Typography>
+              </Box>
+            </Box>
+          ))}
+          <Box sx={{ display: "flex", justifyContent: "center" }}>
+            {data?.reviews?.length === 0 && (
+              <Typography>Chưa có đánh giá nào!</Typography>
+            )}
+          </Box>
+        </Box>
+      )}
+      {active === 3 && (
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: { xs: "column", md: "row" },
+            p: 5,
+          }}
+        >
+          <Box sx={{ width: { xs: "100%", md: "50%" } }}>
+            <Link to={`/shop/preview/${data.shop._id}`}>
+              <Box sx={{ display: "flex", alignItems: "center" }}>
+                <Avatar src={data?.shop?.avatar?.url} />
+                <Box sx={{ pl: 3 }}>
+                  <Typography variant="h6" sx={{ ...styles.shop_name }}>
+                    {data.shop.name}
+                  </Typography>
+                  <Typography variant="body2">
+                    ({averageRating}/5) Đánh giá
+                  </Typography>
+                </Box>
+              </Box>
+            </Link>
+            <Typography variant="body1" sx={{ pt: 2 }}>
+              {data.shop.description}
+            </Typography>
+          </Box>
+          <Box
+            sx={{
+              width: { xs: "100%", md: "50%" },
+              mt: { xs: 5, md: 0 },
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "end",
+            }}
+          >
+            <Box sx={{ textAlign: "left" }}>
+              <Typography variant="h6" sx={{ pt: 3 }}>
+                Sản phẩm cửa hàng:{" "}
+                <Typography variant="body1" component="span">
+                  {products && products.length}
+                </Typography>
+              </Typography>
+              <Typography variant="h6" sx={{ pt: 3 }}>
+                Đánh giá:{" "}
+                <Typography variant="body1" component="span">
+                  {totalReviewsLength}
+                </Typography>
+              </Typography>
+              <Link to={`/shop/preview/${data?.shop._id}`}>
+                <Button variant="contained" sx={{ mt: 3 }}>
+                  Xem cửa hàng
+                </Button>
+              </Link>
+            </Box>
+          </Box>
+        </Box>
+      )}
+    </Box>
   );
 };
 
