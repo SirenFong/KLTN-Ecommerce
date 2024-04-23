@@ -5,69 +5,53 @@ import { FiPackage, FiShoppingBag } from "react-icons/fi";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { BiMessageSquareDetail } from "react-icons/bi";
+import { AppBar, Toolbar, IconButton, Avatar } from "@material-ui/core";
 
 const DashboardHeader = () => {
   const { seller } = useSelector((state) => state.seller);
   return (
-    <div className="w-full h-[80px] bg-white shadow sticky top-0 left-0 z-30 flex items-center justify-between px-4">
-      <div>
-        <Link to="/">
-          <img
-            src="https://res.cloudinary.com/dgtostoep/image/upload/v1702905710/imgonline-com-ua-resize-kyOORaMPjDUL_1_at1rmh.jpg"
-            alt=""
-            style={{
-              width: "auto",
-              height: "80px",
-              marginTop: "0px",
-              marginLeft: "auto",
-              marginRight: "auto",
-            }}
-          />
-        </Link>
-      </div>
-      <div className="flex items-center">
-        <div className="flex items-center mr-4">
-          <Link to="/dashboard/cupouns" className="800px:block hidden">
-            <AiOutlineGift
-              color="#555"
-              size={30}
-              className="mx-5 cursor-pointer"
-            />
-          </Link>
-          <Link to="/dashboard-events" className="800px:block hidden">
-            <MdOutlineLocalOffer
-              color="#555"
-              size={30}
-              className="mx-5 cursor-pointer"
-            />
-          </Link>
-          <Link to="/dashboard-products" className="800px:block hidden">
-            <FiShoppingBag
-              color="#555"
-              size={30}
-              className="mx-5 cursor-pointer"
-            />
-          </Link>
-          <Link to="/dashboard-orders" className="800px:block hidden">
-            <FiPackage color="#555" size={30} className="mx-5 cursor-pointer" />
-          </Link>
-          <Link to="/dashboard-messages" className="800px:block hidden">
-            <BiMessageSquareDetail
-              color="#555"
-              size={30}
-              className="mx-5 cursor-pointer"
-            />
-          </Link>
-          <Link to={`/shop/${seller._id}`}>
+    <AppBar position="sticky">
+      <Toolbar>
+        <IconButton edge="start" color="inherit" aria-label="menu">
+          <Link to="/">
             <img
-              src={`${seller.avatar?.url}`}
+              src="https://res.cloudinary.com/dgtostoep/image/upload/v1702905710/imgonline-com-ua-resize-kyOORaMPjDUL_1_at1rmh.jpg"
               alt=""
-              className="w-[50px] h-[50px] rounded-full object-cover"
             />
           </Link>
-        </div>
-      </div>
-    </div>
+        </IconButton>
+        <IconButton color="inherit">
+          <Link to="/dashboard/cupouns">
+            <AiOutlineGift />
+          </Link>
+        </IconButton>
+        <IconButton color="inherit">
+          <Link to="/dashboard-events">
+            <MdOutlineLocalOffer />
+          </Link>
+        </IconButton>
+        <IconButton color="inherit">
+          <Link to="/dashboard-products">
+            <FiShoppingBag />
+          </Link>
+        </IconButton>
+        <IconButton color="inherit">
+          <Link to="/dashboard-orders">
+            <FiPackage />
+          </Link>
+        </IconButton>
+        <IconButton color="inherit">
+          <Link to="/dashboard-messages">
+            <BiMessageSquareDetail />
+          </Link>
+        </IconButton>
+        <IconButton color="inherit">
+          <Link to={`/shop/${seller._id}`}>
+            <Avatar src={`${seller.avatar?.url}`} />
+          </Link>
+        </IconButton>
+      </Toolbar>
+    </AppBar>
   );
 };
 

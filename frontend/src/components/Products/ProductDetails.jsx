@@ -1,10 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {
-  AiFillHeart,
-  AiOutlineHeart,
-  AiOutlineMessage,
-  AiOutlineShoppingCart,
-} from "react-icons/ai";
+import { AiFillHeart, AiOutlineHeart, AiOutlineMessage } from "react-icons/ai";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { getAllProductsShop } from "../../redux/actions/product";
@@ -16,7 +11,6 @@ import {
 } from "../../redux/actions/wishlist";
 import { addTocart } from "../../redux/actions/cart";
 import { toast } from "react-toastify";
-// import Ratings from "./Ratings";
 import axios from "axios";
 import {
   Avatar,
@@ -32,7 +26,6 @@ const ProductDetails = ({ data }) => {
   const { wishlist } = useSelector((state) => state.wishlist);
   const { cart } = useSelector((state) => state.cart);
   const { user, isAuthenticated } = useSelector((state) => state.user);
-  // const { seller } = useSelector((state) => state.seller);
   const { products } = useSelector((state) => state.products);
   const [count, setCount] = useState(1);
   const [click, setClick] = useState(false);
@@ -76,11 +69,13 @@ const ProductDetails = ({ data }) => {
   };
 
   const removeFromWishlistHandler = (data) => {
+    // Xóa sản phẩm khỏi danh sách yêu thích
     setClick(!click);
     dispatch(removeFromWishlist(data));
   };
 
   const addToWishlistHandler = (data) => {
+    // Thêm sản phẩm vào danh sách yêu thích
     setClick(!click);
     dispatch(addToWishlist(data));
   };
@@ -92,15 +87,17 @@ const ProductDetails = ({ data }) => {
       toast.error("Sản phẩm đã tồn tại trong giỏ hàng!");
     } else {
       if (data.stock < 1) {
+        // Kiểm tra số lượng tồn kho
         toast.error("Sản phẩm đã hết!");
       } else {
-        const cartData = { ...data, qty: count };
+        const cartData = { ...data, qty: count }; // Dữ liệu giỏ hàng
         dispatch(addTocart(cartData));
         toast.success("Thêm thành công!");
       }
     }
   };
   const useStyles = makeStyles((theme) => ({
+    // CSS cho button
     button: {
       backgroundColor: theme.palette.primary.main,
       color: "#fff",

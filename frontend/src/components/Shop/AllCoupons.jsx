@@ -1,6 +1,18 @@
 /* eslint-disable jsx-a11y/role-supports-aria-props */
-import { Button } from "@material-ui/core";
-import { DataGrid } from "@material-ui/data-grid";
+import {
+  Button,
+  CircularProgress,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Grid,
+  IconButton,
+  MenuItem,
+  Select,
+  TextField,
+} from "@material-ui/core";
+import { DataGrid, GridCloseIcon } from "@material-ui/data-grid";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { AiOutlineDelete } from "react-icons/ai";
@@ -143,17 +155,23 @@ const AllCoupons = () => {
   return (
     <>
       {isLoading ? (
-        <Loader />
+        <CircularProgress />
       ) : (
-        <div className="w-full mx-8 pt-1 mt-10 bg-white">
-          <div className="w-full flex justify-end">
-            <div
-              className={`${styles.button} !w-max !h-[45px] px-3 !rounded-[5px] mr-3 mb-3`}
-              onClick={() => setOpen(true)}
-            >
-              <span className="text-white">Tạo mã giảm giá</span>
-            </div>
-          </div>
+        <Grid container justify="flex-end" style={{ position: "relative" }}>
+          <Button
+            variant="contained"
+            color="primary"
+            size="medium"
+            onClick={() => setOpen(true)}
+            style={{
+              position: "absolute",
+              top: "10px",
+              right: "10px",
+              zIndex: 2,
+            }}
+          >
+            Tạo mã giảm giá
+          </Button>
           <DataGrid
             rows={row}
             columns={columns}
@@ -161,124 +179,83 @@ const AllCoupons = () => {
             disableSelectionOnClick
             autoHeight
           />
-          {open && (
-            <div className="fixed top-0 left-0 w-full h-screen bg-[#00000062] z-[20000] flex items-center justify-center">
-              <div className="w-[90%] 800px:w-[40%] h-[90vh] bg-white rounded-md shadow p-4">
-                <div className="w-full flex justify-end">
-                  <RxCross1
-                    size={30}
-                    className="cursor-pointer"
-                    onClick={() => setOpen(false)}
-                  />
-                </div>
-                <h5 className="text-[30px] font-Poppins text-center">
-                  Tạo mã giảm giá
-                </h5>
-                <form onSubmit={handleSubmit} aria-required={true}>
-                  <br />
-                  <div>
-                    <label className="pb-2">
-                      Tên mã giảm <span className="text-red-500">*</span>
-                    </label>
-                    <input
-                      type="text"
-                      name="name"
-                      required
-                      value={name}
-                      className="mt-2 appearance-none block w-full px-3 h-[35px] border border-gray-300 rounded-[3px] placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                      onChange={(e) => setName(e.target.value)}
-                      placeholder="Nhập tên mã giảm giá..."
-                    />
-                  </div>
-                  <br />
-                  <div>
-                    <label className="pb-2">
-                      (%) Giảm giá <span className="text-red-500">*</span>
-                    </label>
-                    <input
-                      type="text"
-                      name="value"
-                      value={value}
-                      required
-                      className="mt-2 appearance-none block w-full px-3 h-[35px] border border-gray-300 rounded-[3px] placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                      onChange={(e) => setValue(e.target.value)}
-                      placeholder="Nhập (%) giảm giá..."
-                    />
-                  </div>
-                  <br />
-                  <div>
-                    <label className="pb-2">Số tiền nhỏ nhất</label>
-                    <input
-                      type="text"
-                      name="value"
-                      value={
-                        minAmount
-                          ? minAmount.toLocaleString("vi-VN", {
-                              style: "currency",
-                              currency: "VND",
-                            })
-                          : ""
-                      }
-                      className="mt-2 appearance-none block w-full px-3 h-[35px] border border-gray-300 rounded-[3px] placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                      onChange={(e) =>
-                        setMinAmout(Number(e.target.value.replace(/\D/g, "")))
-                      }
-                      placeholder="Nhập số tiền nhỏ nhất"
-                    />
-                  </div>
-                  <br />
-                  <div>
-                    <label className="pb-2">Giảm tối đa</label>
-                    <input
-                      type="text"
-                      name="value"
-                      value={
-                        maxAmount
-                          ? maxAmount.toLocaleString("vi-VN", {
-                              style: "currency",
-                              currency: "VND",
-                            })
-                          : ""
-                      }
-                      className="mt-2 appearance-none block w-full px-3 h-[35px] border border-gray-300 rounded-[3px] placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                      onChange={(e) =>
-                        setMaxAmount(Number(e.target.value.replace(/\D/g, "")))
-                      }
-                      placeholder="Giảm tối đa"
-                    />
-                  </div>
-                  <br />
-                  <div>
-                    <label className="pb-2">Chọn sản phẩm</label>
-                    <select
-                      className="w-full mt-2 border h-[35px] rounded-[5px]"
-                      value={selectedProducts}
-                      onChange={(e) => setSelectedProducts(e.target.value)}
-                    >
-                      <option value="Choose your selected products">
-                        Chọn sản phẩm
-                      </option>
-                      {products &&
-                        products.map((i) => (
-                          <option value={i.name} key={i.name}>
-                            {i.name}
-                          </option>
-                        ))}
-                    </select>
-                  </div>
-                  <br />
-                  <div>
-                    <input
-                      type="submit"
-                      value="Tạo mã"
-                      className="mt-2 appearance-none block w-full px-3 h-[35px] border border-gray-300 rounded-[3px] placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                    />
-                  </div>
-                </form>
-              </div>
-            </div>
-          )}
-        </div>
+
+          <Dialog open={open} onClose={() => setOpen(false)}>
+            <IconButton
+              style={{ position: "absolute", right: "10px", top: "10px" }}
+              onClick={() => setOpen(false)}
+            >
+              <GridCloseIcon />
+            </IconButton>
+            <DialogTitle>Tạo mã giảm giá</DialogTitle>
+            <DialogContent>
+              <form onSubmit={handleSubmit}>
+                <TextField
+                  label="Tên mã giảm"
+                  required
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  placeholder="Nhập tên mã giảm giá..."
+                  fullWidth
+                  margin="normal"
+                />
+                <TextField
+                  label="(%) Giảm giá"
+                  required
+                  value={value}
+                  onChange={(e) => setValue(e.target.value)}
+                  placeholder="Nhập (%) giảm giá..."
+                  fullWidth
+                  margin="normal"
+                />
+                <TextField
+                  label="Số tiền nhỏ nhất"
+                  value={minAmount || ""}
+                  onChange={(e) =>
+                    setMinAmout(Number(e.target.value.replace(/\D/g, "")))
+                  }
+                  placeholder="Nhập số tiền nhỏ nhất"
+                  fullWidth
+                  margin="normal"
+                />
+                <TextField
+                  label="Giảm tối đa"
+                  value={maxAmount || ""}
+                  onChange={(e) =>
+                    setMaxAmount(Number(e.target.value.replace(/\D/g, "")))
+                  }
+                  placeholder="Giảm tối đa"
+                  fullWidth
+                  margin="normal"
+                />
+                {/* <Select
+                  value={selectedProducts}
+                  onChange={(e) => setSelectedProducts(e.target.value)}
+                  fullWidth
+                  margin="normal"
+                >
+                  <MenuItem value="Choose your selected products">
+                    Chọn sản phẩm
+                  </MenuItem>
+                  {products &&
+                    products.map((i) => (
+                      <MenuItem value={i.name} key={i.name}>
+                        {i.name}
+                      </MenuItem>
+                    ))}
+                </Select> */}
+                <Button
+                  type="submit"
+                  variant="contained"
+                  color="primary"
+                  fullWidth
+                >
+                  Tạo mã
+                </Button>
+              </form>
+            </DialogContent>
+          </Dialog>
+        </Grid>
       )}
     </>
   );
