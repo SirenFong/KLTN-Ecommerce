@@ -7,27 +7,33 @@ import styles from "../../styles/styles";
 import axios from "axios";
 import { loadSeller } from "../../redux/actions/user";
 import { toast } from "react-toastify";
+import {
+  Avatar,
+  Box,
+  Button,
+  Container,
+  Grid,
+  TextField,
+} from "@material-ui/core";
+import { PhotoCamera } from "@material-ui/icons";
 
 const ShopSettings = () => {
   const { seller } = useSelector((state) => state.seller);
   const [avatar, setAvatar] = useState();
   const [name, setName] = useState(seller && seller.name);
   const [description, setDescription] = useState(
-    seller && seller.description ? seller.description : "" // Mô tả cửa hàng
-  ); // Mô tả cửa hàng
+    seller && seller.description ? seller.description : ""
+  );
   const [address, setAddress] = useState(seller && seller.address);
-  const [phoneNumber, setPhoneNumber] = useState(seller && seller.phoneNumber); // Số điện thoại
+  const [phoneNumber, setPhoneNumber] = useState(seller && seller.phoneNumber);
   const [zipCode, setZipcode] = useState(seller && seller.zipCode);
 
   const dispatch = useDispatch();
 
   const handleImage = async (e) => {
-    const reader = new FileReader(); // Đọc file
-
-    // Khi file đã được đọc
+    const reader = new FileReader();
     reader.onload = () => {
       if (reader.readyState === 2) {
-        // Nếu file đã được đọc
         setAvatar(reader.result);
         axios
           .put(
@@ -47,11 +53,10 @@ const ShopSettings = () => {
       }
     };
 
-    reader.readAsDataURL(e.target.files[0]); // Đọc file dưới dạng URL
+    reader.readAsDataURL(e.target.files[0]);
   };
 
   const updateHandler = async (e) => {
-    // Cập nhật thông tin cửa hàng
     e.preventDefault();
 
     await axios
@@ -64,7 +69,7 @@ const ShopSettings = () => {
           phoneNumber,
           description,
         },
-        { withCredentials: true } // Gửi request đến server
+        { withCredentials: true }
       )
       .then((res) => {
         toast.success("Thông tin cập nhật thành công!");
@@ -76,114 +81,110 @@ const ShopSettings = () => {
   };
 
   return (
-    <div className="w-full min-h-screen flex flex-col items-center">
-      <div className="flex w-full 800px:w-[80%] flex-col justify-center my-5">
-        <div className="w-full flex items-center justify-center">
-          <div className="relative">
-            <img
+    <Container maxWidth="md">
+      <Box display="flex" flexDirection="column" alignItems="center" mt={5}>
+        <Box display="flex" alignItems="center" justifyContent="center">
+          <Box position="relative">
+            <Avatar
               src={avatar ? avatar : `${seller.avatar?.url}`}
               alt=""
-              className="w-[200px] h-[200px] rounded-full cursor-pointer"
+              style={{
+                width: 200,
+                height: 200,
+                cursor: "pointer",
+                borderRadius: "50%",
+              }}
             />
-            <div className="w-[30px] h-[30px] bg-[#E3E9EE] rounded-full flex items-center justify-center cursor-pointer absolute bottom-[10px] right-[15px]">
+            <Box
+              display="flex"
+              alignItems="center"
+              justifyContent="center"
+              style={{
+                position: "absolute",
+                bottom: 10,
+                right: 0,
+                transform: "translateX(50%)",
+                backgroundColor: "#fff",
+                borderRadius: "50%",
+                padding: 5,
+                boxShadow: "0px 0px 5px rgba(0, 0, 0, 0.3)",
+                cursor: "pointer",
+                transition: "all 0.3s ease",
+              }}
+              component="label"
+              htmlFor="image"
+            >
+              <PhotoCamera />
               <input
                 type="file"
                 id="image"
-                className="hidden"
+                style={{ display: "none" }}
                 onChange={handleImage}
               />
-              <label htmlFor="image">
-                <AiOutlineCamera />
-              </label>
-            </div>
-          </div>
-        </div>
+            </Box>
+          </Box>
+        </Box>
 
-        {/* Thông tin cửa hàng */}
-        <form
-          aria-aria-required={true}
-          className="flex flex-col items-center"
-          onSubmit={updateHandler}
-        >
-          <div className="w-[100%] flex items-center flex-col 800px:w-[50%] mt-5">
-            <div className="w-full pl-[3%]">
-              <label className="block pb-2">Tên cửa hàng</label>
-            </div>
-            <input
-              type="name"
-              readOnly
-              placeholder={`${seller.name}`}
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              className={`${styles.input} !w-[95%] mb-4 800px:mb-0`}
-            />
-          </div>
-          <div className="w-[100%] flex items-center flex-col 800px:w-[50%] mt-5">
-            <div className="w-full pl-[3%]">
-              <label className="block pb-2">Mô tả cửa hàng</label>
-            </div>
-            <input
-              type="name"
-              placeholder={`${
-                seller?.description ? seller.description : "Mô tả..."
-              }`}
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              className={`${styles.input} !w-[95%] mb-4 800px:mb-0`}
-            />
-          </div>
-          <div className="w-[100%] flex items-center flex-col 800px:w-[50%] mt-5">
-            <div className="w-full pl-[3%]">
-              <label className="block pb-2">Địa chỉ</label>
-            </div>
-            <input
-              type="name"
-              placeholder={seller?.address}
-              value={address}
-              onChange={(e) => setAddress(e.target.value)}
-              className={`${styles.input} !w-[95%] mb-4 800px:mb-0`}
-            />
-          </div>
-
-          <div className="w-[100%] flex items-center flex-col 800px:w-[50%] mt-5">
-            <div className="w-full pl-[3%]">
-              <label className="block pb-2">Hotline</label>
-            </div>
-            <input
-              type="number"
-              placeholder={seller?.phoneNumber}
-              value={phoneNumber}
-              onChange={(e) => setPhoneNumber(e.target.value)}
-              className={`${styles.input} !w-[95%] mb-4 800px:mb-0`}
-              required
-            />
-          </div>
-
-          <div className="w-[100%] flex items-center flex-col 800px:w-[50%] mt-5">
-            <div className="w-full pl-[3%]">
-              <label className="block pb-2">Zipcode</label>
-            </div>
-            <input
-              type="number"
-              placeholder={seller?.zipCode}
-              value={zipCode}
-              onChange={(e) => setZipcode(e.target.value)}
-              className={`${styles.input} !w-[95%] mb-4 800px:mb-0`}
-            />
-          </div>
-
-          <div className="w-[100%] flex items-center flex-col 800px:w-[50%] mt-5">
-            <input
-              type="submit"
-              value="Cập nhật"
-              className={`${styles.input} !w-[95%] mb-4 800px:mb-0`}
-              required
-              readOnly
-            />
-          </div>
+        <form onSubmit={updateHandler} style={{ width: "100%", marginTop: 20 }}>
+          <Grid container spacing={3}>
+            <Grid item xs={12} md={6}>
+              <TextField
+                label="Tên cửa hàng"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                fullWidth
+                InputProps={{
+                  readOnly: true,
+                }}
+              />
+            </Grid>
+            <Grid item xs={12} md={6}>
+              <TextField
+                label="Mô tả cửa hàng"
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+                fullWidth
+              />
+            </Grid>
+            <Grid item xs={12} md={6}>
+              <TextField
+                label="Địa chỉ"
+                value={address}
+                onChange={(e) => setAddress(e.target.value)}
+                fullWidth
+              />
+            </Grid>
+            <Grid item xs={12} md={6}>
+              <TextField
+                label="Hotline"
+                value={phoneNumber}
+                onChange={(e) => setPhoneNumber(e.target.value)}
+                fullWidth
+                required
+              />
+            </Grid>
+            <Grid className="pt-5" item xs={12} md={6}>
+              <TextField
+                label="Zipcode"
+                value={zipCode}
+                onChange={(e) => setZipcode(e.target.value)}
+                fullWidth
+              />
+            </Grid>
+            <Grid item xs={12} md={12}>
+              <Button
+                type="submit"
+                variant="contained"
+                color="primary"
+                fullWidth
+              >
+                Cập nhật
+              </Button>
+            </Grid>
+          </Grid>
         </form>
-      </div>
-    </div>
+      </Box>
+    </Container>
   );
 };
 

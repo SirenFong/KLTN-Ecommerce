@@ -88,11 +88,6 @@ const ShopEditProduct = () => {
       reader.readAsDataURL(file);
     });
   };
-
-  // ... populate state variables with product data
-  // ... other code ...
-
-  // Fetch product data using _id
   useEffect(() => {
     if (id) {
       dispatch();
