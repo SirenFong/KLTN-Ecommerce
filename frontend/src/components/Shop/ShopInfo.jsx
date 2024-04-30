@@ -1,13 +1,64 @@
-import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { server } from "../../server";
-import styles from "../../styles/styles";
-import Loader from "../Layout/Loader";
+import {
+  Avatar,
+  Button,
+  CircularProgress,
+  Divider,
+  Typography,
+  makeStyles,
+} from "@material-ui/core";
 import { useDispatch, useSelector } from "react-redux";
 import { getAllProductsShop } from "../../redux/actions/product";
+import axios from "axios";
+
+const useStyles = makeStyles((theme) => ({
+  loader: {
+    margin: "auto",
+    display: "block",
+    marginTop: theme.spacing(2),
+  },
+  profile: {
+    textAlign: "center",
+    padding: theme.spacing(2),
+  },
+  avatar: {
+    width: theme.spacing(15),
+    height: theme.spacing(15),
+    margin: "auto",
+  },
+  name: {
+    marginTop: theme.spacing(1),
+  },
+  description: {
+    color: theme.palette.text.secondary,
+    marginTop: theme.spacing(1),
+  },
+  info: {
+    padding: theme.spacing(2),
+  },
+  subtitle: {
+    fontWeight: "bold",
+    marginBottom: theme.spacing(1),
+  },
+  buttonsContainer: {
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: theme.spacing(2),
+  },
+  button: {
+    margin: theme.spacing(1),
+    width: "150px",
+  },
+  link: {
+    textDecoration: "none",
+  },
+}));
 
 const ShopInfo = ({ isOwner }) => {
+  const classes = useStyles();
   const [data, setData] = useState({});
   const { products } = useSelector((state) => state.products);
   const [isLoading, setIsLoading] = useState(false);
@@ -15,10 +66,10 @@ const ShopInfo = ({ isOwner }) => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(getAllProductsShop(id)); // Lấy tất cả sản phẩm của shop
+    dispatch(getAllProductsShop(id));
     setIsLoading(true);
     axios
-      .get(`${server}/shop/get-shop-info/${id}`) // Gửi request đến server
+      .get(`${server}/shop/get-shop-info/${id}`)
       .then((res) => {
         setData(res.data.shop);
         setIsLoading(false);
@@ -30,81 +81,92 @@ const ShopInfo = ({ isOwner }) => {
   }, [dispatch, id]);
 
   const logoutHandler = async () => {
-    // Đăng xuất
     axios.get(`${server}/shop/logout`, {
       withCredentials: true,
     });
     window.location.reload();
   };
 
-  const totalReviewsLength = // Tính tổng số lượng đánh giá
-    products &&
-    products.reduce((acc, product) => acc + product.reviews.length, 0); // Tính tổng số lượng đánh giá
-
-  const totalRatings = // Tính tổng số lượng đánh giá
-    products && // Tính tổng số lượng đánh giá
-    products.reduce(
-      // Tính tổng số lượng đánh giá
-      (
-        acc,
-        product // Tính tổng số lượng đánh giá
-      ) =>
-        acc + product.reviews.reduce((sum, review) => sum + review.rating, 0), // Tính tổng số lượng đánh giá
-      0
-    );
-
-  const averageRating = totalRatings / totalReviewsLength || 0; // Tính trung bình đánh giá
+  const totalReviewsLength = products
+    ? products.reduce((acc, product) => acc + product.reviews.length, 0)
+    : 0;
+  const totalRatings = products
+    ? products.reduce(
+        (acc, product) =>
+          acc + product.reviews.reduce((sum, review) => sum + review.rating, 0),
+        0
+      )
+    : 0;
+  const averageRating = totalReviewsLength
+    ? totalRatings / totalReviewsLength
+    : 0;
 
   return (
     <>
       {isLoading ? (
-        <Loader /> // Hiển thị loader
+        <CircularProgress className={classes.loader} />
       ) : (
         <div>
-          <div className="w-full py-5">
-            <div className="w-full flex item-center justify-center">
-              <img
-                src={`${data.avatar?.url}`} // Hiển thị ảnh đại diện
-                alt=""
-                className="w-[150px] h-[150px] object-cover rounded-full"
-              />
-            </div>
-            <h3 className="text-center py-2 text-[20px]">{data.name}</h3>
-            <p className="text-[16px] text-[#000000a6] p-[10px] flex items-center">
+          <div className={classes.profile}>
+            <Avatar src={data.avatar?.url} alt="" className={classes.avatar} />
+            <Typography variant="h5" className={classes.name}>
+              {data.name}
+            </Typography>
+            <Typography variant="body1" className={classes.description}>
               {data.description}
-            </p>
+            </Typography>
           </div>
-          <div className="p-3">
-            <h5 className="font-[600]">Địa chỉ cửa hàng</h5>
-            <h4 className="text-[#000000a6]">{data.address}</h4>
+          <Divider />
+          <div className={classes.info}>
+            <Typography variant="h6" className={classes.subtitle}>
+              Địa chỉ cửa hàng
+            </Typography>
+            <Typography variant="body1">{data.address}</Typography>
           </div>
-          <div className="p-3">
-            <h5 className="font-[600]">Hotline</h5>
-            <h4 className="text-[#000000a6]">0{data.phoneNumber}</h4>
+          <Divider />
+          <div className={classes.info}>
+            <Typography variant="h6" className={classes.subtitle}>
+              Hotline
+            </Typography>
+            <Typography variant="body1">0{data.phoneNumber}</Typography>
           </div>
-          <div className="p-3">
-            <h5 className="font-[600]">Số lượng sản phẩm</h5>
-            <h4 className="text-[#000000a6]">{products && products.length}</h4>
+          <Divider />
+          <div className={classes.info}>
+            <Typography variant="h6" className={classes.subtitle}>
+              Số lượng sản phẩm
+            </Typography>
+            <Typography variant="body1">
+              {products ? products.length : 0}
+            </Typography>
           </div>
-          <div className="p-3">
-            <h5 className="font-[600]">Đánh giá sản phẩm</h5>
-            <h4 className="text-[#000000b0]">{averageRating}/5</h4>
+          <Divider />
+          <div className={classes.info}>
+            <Typography variant="h6" className={classes.subtitle}>
+              Đánh giá trung bình
+            </Typography>
+            <Typography variant="body1">
+              {averageRating.toFixed(1)}/5
+            </Typography>
           </div>
           {isOwner && (
-            <div className="py-3 px-4">
-              <Link to="/settings">
-                <div
-                  className={`${styles.button} !w-full !h-[42px] !rounded-[5px]`}
+            <div className={classes.buttonsContainer}>
+              <Link to="/settings" className={classes.link}>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  className={classes.button}
                 >
-                  <span className="text-white">Chỉnh sửa</span>
-                </div>
+                  Chỉnh sửa
+                </Button>
               </Link>
-              <div
-                className={`${styles.button} !w-full !h-[42px] !rounded-[5px]`}
+              <Button
+                variant="contained"
+                color="secondary"
+                className={classes.button}
                 onClick={logoutHandler}
               >
-                <span className="text-white">Đăng xuất</span>
-              </div>
+                Đăng xuất
+              </Button>
             </div>
           )}
         </div>

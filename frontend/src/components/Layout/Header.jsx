@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import styles from "../../styles/styles";
+import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
 import { categoriesData, productData } from "../../static/data";
 import {
   AiOutlineHeart,
@@ -16,6 +17,7 @@ import { useSelector } from "react-redux";
 import Cart from "../cart/Cart";
 import Wishlist from "../Wishlist/Wishlist";
 import { FaArrowAltCircleDown } from "react-icons/fa";
+import { Button, Typography } from "@material-ui/core";
 
 const Header = ({ activeHeading }) => {
   const { isAuthenticated, user } = useSelector((state) => state.user);
@@ -165,14 +167,17 @@ const Header = ({ activeHeading }) => {
           </div>
 
           {isSeller ? (
-            <div className={`${styles.button}`}>
-              <div className={`${styles.button}`}>
-                <Link to="/dashboard">
-                  <h1 className="text-[#fff] flex items-center">
-                    Trang quản lý <IoIosArrowForward className="ml-1" />
-                  </h1>
-                </Link>
-              </div>
+            <div>
+              <Button
+                variant="contained"
+                color="primary"
+                component={Link}
+                to="/dashboard"
+              >
+                <Typography variant="h9" className="flex items-center">
+                  Trang quản lý <ArrowForwardIosIcon className="ml-1" />
+                </Typography>
+              </Button>
             </div>
           ) : null}
         </div>

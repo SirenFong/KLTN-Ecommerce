@@ -2,10 +2,11 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useParams } from "react-router-dom";
 import { getAllProductsShop } from "../../redux/actions/product";
-import styles from "../../styles/styles";
 import ProductCard from "../Route/ProductCard/ProductCard";
 import Ratings from "../Products/Ratings";
 import { getAllEventsShop } from "../../redux/actions/event";
+import { Button, Typography, Grid, Avatar, Box } from "@material-ui/core";
+import ArrowForwardIosIcon from "@material-ui/icons/ArrowForwardIos";
 
 const ShopProfileData = ({ isOwner }) => {
   const { products } = useSelector((state) => state.products);
@@ -24,110 +25,105 @@ const ShopProfileData = ({ isOwner }) => {
     products && products.map((product) => product.reviews).flat(); // Lấy tất cả đánh giá
 
   return (
-    <div className="w-full">
-      <div className="flex w-full items-center justify-between">
-        <div className="w-full flex">
-          <div className="flex items-center" onClick={() => setActive(1)}>
-            <h5
-              className={`font-[600] text-[20px] ${
-                active === 1 ? "text-red-500" : "text-[#333]"
-              } cursor-pointer pr-[20px]`}
-            >
-              Sản phẩm
-            </h5>
-          </div>
-          <div className="flex items-center" onClick={() => setActive(2)}>
-            <h5
-              className={`font-[600] text-[20px] ${
-                active === 2 ? "text-red-500" : "text-[#333]"
-              } cursor-pointer pr-[20px]`}
-            >
-              Sự kiện
-            </h5>
-          </div>
-
-          <div className="flex items-center" onClick={() => setActive(3)}>
-            <h5
-              className={`font-[600] text-[20px] ${
-                active === 3 ? "text-red-500" : "text-[#333]"
-              } cursor-pointer pr-[20px]`}
-            >
-              Đánh giá
-            </h5>
-          </div>
-        </div>
-        <div>
+    <Box>
+      <Grid container justify="space-between" alignItems="center">
+        <Grid item>
+          <Button
+            color={active === 1 ? "primary" : "default"}
+            onClick={() => setActive(1)}
+          >
+            <Typography variant="h5">Sản phẩm</Typography>
+          </Button>
+          <Button
+            color={active === 2 ? "primary" : "default"}
+            onClick={() => setActive(2)}
+          >
+            <Typography variant="h5">Sự kiện</Typography>
+          </Button>
+          <Button
+            color={active === 3 ? "primary" : "default"}
+            onClick={() => setActive(3)}
+          >
+            <Typography variant="h5">Đánh giá</Typography>
+          </Button>
+        </Grid>
+        <Grid item>
           {isOwner && (
-            <div>
-              <Link to="/dashboard">
-                <div className={`${styles.button} !rounded-[4px] h-[42px]`}>
-                  <span className="text-[#fff]">Trang quản lý</span>
-                </div>
-              </Link>
-            </div>
+            <Button
+              variant="contained"
+              color="primary"
+              component={Link}
+              to="/dashboard"
+            >
+              <Typography variant="h9">Trang quản lý</Typography>
+            </Button>
           )}
-        </div>
-      </div>
+        </Grid>
+      </Grid>
 
       <br />
       {active === 1 && (
-        <div className="grid grid-cols-1 gap-[20px] md:grid-cols-2 md:gap-[25px] lg:grid-cols-3 lg:gap-[25px] xl:grid-cols-4 xl:gap-[20px] mb-12 border-0">
+        <Grid container spacing={2}>
           {products &&
             products.map((i, index) => (
-              <ProductCard data={i} key={index} isShop={true} />
+              <Grid item xs={12} sm={6} md={4} lg={3} key={index}>
+                <ProductCard data={i} isShop={true} />
+              </Grid>
             ))}
-        </div>
+        </Grid>
       )}
 
       {active === 2 && (
-        <div className="w-full">
-          <div className="grid grid-cols-1 gap-[20px] md:grid-cols-2 md:gap-[25px] lg:grid-cols-3 lg:gap-[25px] xl:grid-cols-4 xl:gap-[20px] mb-12 border-0">
+        <Box>
+          <Grid container spacing={2}>
             {events &&
               events.map((i, index) => (
-                <ProductCard
-                  data={i}
-                  key={index}
-                  isShop={true}
-                  isEvent={true}
-                />
+                <Grid item xs={12} sm={6} md={4} lg={3} key={index}>
+                  <ProductCard data={i} isShop={true} isEvent={true} />
+                </Grid>
               ))}
-          </div>
+          </Grid>
           {events && events.length === 0 && (
-            <h5 className="w-full text-center py-5 text-[18px]">
+            <Typography align="center" py={5} variant="h5">
               Hiện tại chưa có sự kiện nào!
-            </h5>
+            </Typography>
           )}
-        </div>
+        </Box>
       )}
 
       {active === 3 && (
-        <div className="w-full">
+        <Box>
           {allReviews &&
             allReviews.map((item, index) => (
-              <div className="w-full flex my-4">
-                <img
-                  src={`${item.user.avatar?.url}`}
-                  className="w-[50px] h-[50px] rounded-full"
-                  alt=""
-                />
-                <div className="pl-2">
-                  <div className="flex w-full items-center">
-                    <h1 className="font-[600] pr-2">{item.user.name}</h1>
+              <Box display="flex" my={2} key={index}>
+                <Avatar src={`${item.user.avatar?.url}`} alt="" />
+                <Box pl={2}>
+                  <Box display="flex" alignItems="center">
+                    <Typography variant="h6" pr={2}>
+                      {item.user.name}
+                    </Typography>
                     <Ratings rating={item.rating} />
-                  </div>
-                  <p className="font-[400] text-[#000000a7]">{item?.comment}</p>
-                  <p className="text-[#000000a7] text-[14px]">{"2days ago"}</p>
-                </div>
-              </div>
+                  </Box>
+                  <Typography variant="body1" color="textSecondary">
+                    {item?.name}
+                  </Typography>
+                  <Typography variant="body1" color="textSecondary">
+                    {item?.comment}
+                  </Typography>
+                  <Typography variant="body2" color="textSecondary">
+                    {item?.createdAt.slice(0, 10)}
+                  </Typography>
+                </Box>
+              </Box>
             ))}
           {allReviews && allReviews.length === 0 && (
-            <h5 className="w-full text-center py-5 text-[18px]">
+            <Typography align="center" py={5} variant="h5">
               Chưa có đánh giá sản phẩm!
-            </h5>
+            </Typography>
           )}
-        </div>
+        </Box>
       )}
-    </div>
+    </Box>
   );
 };
 
