@@ -90,13 +90,13 @@ const productSchema = new mongoose.Schema({
       rating: {
         type: Number,
       },
-      name: {
-        type: String,
-      },
       comment: {
         type: String,
       },
       productId: {
+        type: String,
+      },
+      productName: {
         type: String,
       },
       createdAt: {

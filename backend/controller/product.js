@@ -208,17 +208,19 @@ router.put(
   catchAsyncErrors(async (req, res, next) => {
     // Middleware kiểm tra người dùng đã đăng nhập chưa
     try {
-      const { user, name, rating, comment, productId, orderId } = req.body;
+      const { user, rating, comment, productId, orderId } = req.body;
 
       const product = await Product.findById(productId); // Tìm sản phẩm theo id
+
+      const productName = product.name; // Lấy tên sản phẩm
 
       const review = {
         // Tạo đánh giá
         user,
         rating,
-        name,
         comment,
         productId,
+        productName, // Thêm tên sản phẩm vào đánh giá
       };
 
       const isReviewed = product.reviews.find(

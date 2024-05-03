@@ -6,13 +6,19 @@ import ProductCard from "../Route/ProductCard/ProductCard";
 import Ratings from "../Products/Ratings";
 import { getAllEventsShop } from "../../redux/actions/event";
 import { Button, Typography, Grid, Avatar, Box } from "@material-ui/core";
-import ArrowForwardIosIcon from "@material-ui/icons/ArrowForwardIos";
 
 const ShopProfileData = ({ isOwner }) => {
   const { products } = useSelector((state) => state.products);
   const { events } = useSelector((state) => state.events);
   const { id } = useParams();
+  const [showAllReviews, setShowAllReviews] = useState(false);
+
   const dispatch = useDispatch();
+
+  // Hàm xử lý khi nhấn vào nút "Xem thêm"
+  const handleShowAllReviews = () => {
+    setShowAllReviews(true);
+  };
 
   useEffect(() => {
     dispatch(getAllProductsShop(id));
@@ -93,32 +99,43 @@ const ShopProfileData = ({ isOwner }) => {
 
       {active === 3 && (
         <Box>
-          {allReviews &&
-            allReviews.map((item, index) => (
-              <Box display="flex" my={2} key={index}>
-                <Avatar src={`${item.user.avatar?.url}`} alt="" />
-                <Box pl={2}>
-                  <Box display="flex" alignItems="center">
-                    <Typography variant="h6" pr={2}>
-                      {item.user.name}
-                    </Typography>
-                    <Ratings rating={item.rating} />
-                  </Box>
-                  <Typography variant="body1" color="textSecondary">
-                    {item?.name}
-                  </Typography>
-                  <Typography variant="body1" color="textSecondary">
-                    {item?.comment}
-                  </Typography>
-                  <Typography variant="body2" color="textSecondary">
-                    {item?.createdAt.slice(0, 10)}
-                  </Typography>
-                </Box>
-              </Box>
-            ))}
+          {active === 3 && (
+            <Box>
+              {allReviews &&
+                allReviews
+                  .slice(0, showAllReviews ? allReviews.length : 10)
+                  .map((item, index) => (
+                    <Box display="flex" my={2} key={index}>
+                      <Avatar src={`${item.user.avatar?.url}`} alt="" />
+                      <Box pl={2}>
+                        <Box display="flex" alignItems="center">
+                          <Typography variant="h6" pr={2}>
+                            {item.user.name}
+                          </Typography>
+                          <Ratings rating={item.rating} />
+                        </Box>
+                        <Typography variant="body1" color="textSecondary">
+                          <span className="font-bold">{item?.productName}</span>
+                        </Typography>
+                        <Typography variant="body1" color="textSecondary">
+                          {item?.comment}
+                        </Typography>
+                        <Typography variant="body2" color="textSecondary">
+                          {item?.createdAt.slice(0, 10)}
+                        </Typography>
+                      </Box>
+                    </Box>
+                  ))}
+              {!showAllReviews && allReviews.length > 10 && (
+                <Button onClick={handleShowAllReviews} color="primary">
+                  Xem thêm
+                </Button>
+              )}
+            </Box>
+          )}
           {allReviews && allReviews.length === 0 && (
             <Typography align="center" py={5} variant="h5">
-              Chưa có đánh giá sản phẩm!
+              Sản phẩm chưa có đánh giá!
             </Typography>
           )}
         </Box>
