@@ -12,15 +12,20 @@ router.post(
     try {
       const { groupTitle, userId, sellerId } = req.body;
 
-      const isConversationExist = await Conversation.findOne({ groupTitle });
+      // Kiểm tra xem cuộc trò chuyện đã tồn tại giữa người dùng và người bán hàng
+      const existingConversation = await Conversation.findOne({
+        members: { $all: [userId, sellerId] },
+      });
 
-      if (isConversationExist) {
-        return res.status(201).json({
+      if (existingConversation) {
+        return res.status(200).json({
           success: true,
-          conversation: isConversationExist,
+          conversation: existingConversation,
+          message: "Trò chuyện đã tồn tại.",
         });
       }
 
+      // Nếu cuộc trò chuyện chưa tồn tại, tạo mới
       const conversation = await Conversation.create({
         members: [userId, sellerId],
         groupTitle: groupTitle,
