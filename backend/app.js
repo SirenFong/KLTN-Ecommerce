@@ -7,7 +7,7 @@ const cors = require("cors");
 
 app.use(
   cors({
-    origin: ["https://ql-nhathuoc.vercel.app"],
+   origin: ["http://localhost:3000"],
     credentials: true,
   })
 );
