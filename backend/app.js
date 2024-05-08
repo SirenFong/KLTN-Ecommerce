@@ -7,12 +7,12 @@ const cors = require("cors");
 
 app.use(
   cors({
-    origin: ["http://localhost:3000"],
+   origin: ["http://localhost:3000"],
     credentials: true,
   })
 );
 
-app.use("/test", (req, res) => {
+app.use("/", (req, res) => {
   res.send("Hello world!");
 });
 

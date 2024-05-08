@@ -1,6 +1,6 @@
 {
     "version": 2,
-    "name":"manager-ecommerce",
+    "name":"drug-manager-ecommerce",
     "builds":[
         {"src":"server.js","use":"@vercel/node"}
     ],
