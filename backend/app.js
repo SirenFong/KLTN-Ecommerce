@@ -7,7 +7,7 @@ const cors = require("cors");
 
 app.use(
   cors({
-    origin: ["https://ql-nhathuoc-fe.vercel.app/"],
+    origin: ["https://ql-nhathuoc-fe.vercel.app"],
     credentials: true,
   })
 );
