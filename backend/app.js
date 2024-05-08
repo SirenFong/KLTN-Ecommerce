@@ -12,7 +12,7 @@ app.use(
   })
 );
 
-app.use("/", (req, res) => {
+app.use("/test", (req, res) => {
   res.send("Hello world!");
 });
 
