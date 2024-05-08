@@ -39,7 +39,7 @@ router.post("/create-user", async (req, res, next) => {
 
     const activationToken = createActivationToken(user); // tạo token
 
-    const activationUrl = `http://localhost:3000/activation/${activationToken}`; // tạo url
+    const activationUrl = `https://ql-nhathuoc-fe.vercel.app/activation/${activationToken}`; // tạo url
 
     try {
       await sendMail({
