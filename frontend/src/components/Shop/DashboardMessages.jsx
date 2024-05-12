@@ -12,7 +12,7 @@ import { TfiGallery } from "react-icons/tfi";
 import socketIO from "socket.io-client";
 import { format } from "timeago.js";
 // const ENDPOINT = "https://socket-ecommerce-tu68.onrender.com/";
-const ENDPOINT = "https://kltn-ecommerce-socket.onrender.com";
+const ENDPOINT = "https://kltn-ecommerce-socket.onrender.com/";
 const socketId = socketIO(ENDPOINT, { transports: ["websocket"] });
 
 const DashboardMessages = () => {
