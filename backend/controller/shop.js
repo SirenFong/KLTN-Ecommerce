@@ -45,7 +45,7 @@ router.post(
 
       const activationToken = createActivationToken(seller); // Tạo token kích hoạt
 
-      const activationUrl = `https://ql-nhathuoc-fe.vercel.app/seller/activation/${activationToken}`; // Tạo đường link kích hoạt
+      const activationUrl = `https://nhathuocthanhthuong.vercel.app/seller/activation/${activationToken}`; // Tạo đường link kích hoạt
 
       try {
         await sendMail({
