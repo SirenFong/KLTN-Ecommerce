@@ -262,7 +262,7 @@ const ProductDetails = ({ data }) => {
                   </Button>
                 </div>
                 <div className="flex items-center mt-12 justify-between pr-3">
-                  <Box display="flex" alignItems="center">
+                  {/* <Box display="flex" alignItems="center">
                     <Button
                       variant="contained"
                       color="primary"
@@ -288,7 +288,7 @@ const ProductDetails = ({ data }) => {
                     >
                       +
                     </Button>
-                  </Box>
+                  </Box> */}
                   <div>
                     {click ? (
                       <AiFillHeart

@@ -38,16 +38,14 @@ const ProfileSidebar = ({ setActive, active }) => {
 
   const logoutHandler = () => {
     axios
-      .get(`${server}/user/logout`, {
-        withCredentials: true,
-      })
+      .get(`${server}/user/logout`, { withCredentials: true })
       .then((res) => {
         toast.success(res.data.message);
-        navigate("/login");
         window.location.reload(true);
+        navigate("/login");
       })
       .catch((error) => {
-        toast.error(error.response?.data?.message || "Logout failed");
+        console.log(error.response.data.message);
       });
   };
 
@@ -77,13 +75,7 @@ const ProfileSidebar = ({ setActive, active }) => {
         </ListItemIcon>
         <ListItemText primary="Hoàn trả" />
       </ListItem>
-      <ListItem
-        button
-        onClick={() => {
-          setActive(4);
-          navigate("/inbox");
-        }}
-      >
+      <ListItem button onClick={() => setActive(4) || navigate("/inbox")}>
         <ListItemIcon>
           <AiOutlineMessage
             size={20}
@@ -120,13 +112,7 @@ const ProfileSidebar = ({ setActive, active }) => {
         <ListItemText primary="Địa chỉ giao hàng" />
       </ListItem>
       {user && user?.role === "Admin" && (
-        <Link
-          to="/admin/dashboard"
-          style={{
-            textDecoration: "none",
-            color: "inherit",
-          }}
-        >
+        <Link to="/admin/dashboard">
           <ListItem button onClick={() => setActive(8)}>
             <ListItemIcon>
               <MdOutlineAdminPanelSettings
@@ -142,7 +128,7 @@ const ProfileSidebar = ({ setActive, active }) => {
         <ListItemIcon>
           <AiOutlineLogin
             size={20}
-            className={active === 9 ? classes.active : ""}
+            className={active === 8 ? classes.active : ""}
           />
         </ListItemIcon>
         <ListItemText primary="Đăng xuất" />
