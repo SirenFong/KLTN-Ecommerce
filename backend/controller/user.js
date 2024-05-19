@@ -548,4 +548,69 @@ router.put(
     }
   })
 );
+router.get(
+  "/get-products-by-categories/",
+  catchAsyncErrors(async (req, res, next) => {
+    try {
+      const products = await Product.find({
+        category: req.query.category,
+      }).sort({ createdAt: -1 });
+      // const products = await Product.find().sort({ createdAt: -1 });
+
+      res.status(200).json({
+        success: true,
+        products,
+      });
+    } catch (error) {
+      return next(new ErrorHandler(error, 400));
+    }
+  })
+);
+
+router.post("/create-user-mobi", async (req, res, next) => {
+  try {
+    const { name, email, password, avatar } = req.body;
+    const userEmail = await User.findOne({ email });
+    console.log(req.body);
+    if (userEmail) {
+      return res
+        .status(400)
+        .json({ msg: "User with same email already exists!" });
+    }
+
+    const myCloud = await cloudinary.v2.uploader.upload(avatar, {
+      folder: "avatars",
+    });
+
+    const user = {
+      name: name,
+      email: email,
+      password: password,
+      avatar: {
+        public_id: myCloud.public_id,
+        url: myCloud.secure_url,
+      },
+    };
+
+    const activationToken = createActivationToken(user);
+
+    const activationUrl = `http://localhost:3000/activation/${activationToken}`;
+
+    try {
+      await sendMail({
+        email: user.email,
+        subject: "Kích hoạt tài khoản người dùng",
+        message: `Xin chào: ${user.name}, Vui lòng nhấn vào đường link bên dưới để kích hoạt tài khoản: ${activationUrl}`,
+      });
+      res.status(201).json({
+        success: true,
+        msg: `Kiểm tra:- ${user.email} Để kích hoạt tài khoản!`,
+      });
+    } catch (error) {
+      return next(new ErrorHandler(error.message, 500));
+    }
+  } catch (error) {
+    return next(new ErrorHandler(error.message, 400));
+  }
+});
 module.exports = router;
