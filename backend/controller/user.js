@@ -1,5 +1,6 @@
 const express = require("express");
 const User = require("../model/user");
+const Product = require("../model/product");
 const router = express.Router();
 const cloudinary = require("cloudinary");
 const ErrorHandler = require("../utils/ErrorHandler");
@@ -39,7 +40,7 @@ router.post("/create-user", async (req, res, next) => {
 
     const activationToken = createActivationToken(user); // tạo token
 
-    const activationUrl = `https://nhathuocthanhthuong.vercel.app/activation/${activationToken}`; // tạo url
+    const activationUrl = `http://localhost:3000/activation/${activationToken}`; // tạo url
 
     try {
       await sendMail({
@@ -435,4 +436,116 @@ router.delete(
   })
 );
 
+router.put(
+  "/add-user-cart",
+  isAuthenticated,
+  catchAsyncErrors(async (req, res, next) => {
+    console.log(req);
+    try {
+      const { id } = req.body;
+
+      const user = await User.findById(req.user._id);
+      const product = await Product.findById(id);
+      if (!user.cart) {
+        user.cart = []; // Khởi tạo giỏ hàng nếu nó không tồn tại
+      }
+      if (user.cart.length == 0) {
+        user.cart.push({ ...product._doc, qty: 1 });
+      } else {
+        let isProductFound = false;
+        // Kiểm tra sản phẩm đã tồn tại trong giỏ hàng
+        const existingProduct = user.cart.find((item) =>
+          item._id.equals(product._id)
+        );
+
+        if (existingProduct) {
+          // Sản phẩm đã tồn tại, tăng số lượng
+          existingProduct.qty += 1;
+        } else {
+          // Sản phẩm chưa tồn tại, thêm mới vào giỏ hàng
+          user.cart.push({ ...product._doc, qty: 1 });
+        }
+      }
+      await user.save(); // Lưu giỏ hàng đã cập nhật
+
+      res.status(200).json({
+        success: true,
+        user, // Trả về thông tin người dùng đã cập nhật
+      });
+    } catch (error) {
+      return next(new ErrorHandler(error.message, 500));
+    }
+  })
+);
+router.put(
+  "/add-user-cart",
+  isAuthenticated,
+  catchAsyncErrors(async (req, res, next) => {
+    try {
+      const { id } = req.body;
+
+      const user = await User.findById(req.user._id);
+      const product = await Product.findById(id);
+      if (!user.cart) {
+        user.cart = []; // Khởi tạo giỏ hàng nếu nó không tồn tại
+      }
+      if (user.cart.length == 0) {
+        user.cart.push({ product, qty: 1 });
+      } else {
+        let isProductFound = false;
+        for (let i = 0; i < user.cart.length; i++) {
+          if (user.cart[i].product._id.equals(product._id)) {
+            isProductFound = true;
+          }
+        }
+
+        if (isProductFound) {
+          let producttt = user.cart.find((productt) =>
+            productt.product._id.equals(product._id)
+          );
+          producttt.qty += 1;
+        } else {
+          user.cart.push({ product, qty: 1 });
+        }
+      }
+      await user.save(); // Lưu giỏ hàng đã cập nhật
+
+      res.status(200).json({
+        success: true,
+        user, // Trả về thông tin người dùng đã cập nhật
+      });
+    } catch (error) {
+      return next(new ErrorHandler(error.message, 500));
+    }
+  })
+);
+router.put(
+  "/remove-from-cart/:id",
+  isAuthenticated,
+  catchAsyncErrors(async (req, res, next) => {
+    console.log(req);
+    try {
+      const user = await User.findById(req.user._id);
+      const product = await Product.findById(req.params.id);
+
+      for (let i = 0; i < user.cart.length; i++) {
+        if (user.cart[i].product._id.equals(product._id)) {
+          if (user.cart[i].quantity == 1) {
+            user.cart.splice(i, 1);
+          } else {
+            user.cart[i].quantity -= 1;
+          }
+        }
+      }
+      await user.save(); // Lưu giỏ hàng đã cập nhật
+
+      res.status(200).json({
+        success: true,
+        user, // Trả về thông tin người dùng đã cập nhật
+      });
+    } catch (error) {
+      return next(new ErrorHandler(error.message, 500));
+    }
+  })
+);
 module.exports = router;

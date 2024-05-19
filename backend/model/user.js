@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const product = require("./product");
+const { productSchema } = require("../model/product");
 
 const userSchema = new mongoose.Schema({
   name: {
@@ -47,19 +47,10 @@ const userSchema = new mongoose.Schema({
     type: String,
     default: "user",
   },
-  cart: [
-    {
-      product: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Product",
-        required: true,
-      },
-      quantity: {
-        type: Number,
-        required: true,
-      },
-    },
-  ],
+  cart: {
+    type: Array,
+    required: true,
+  },
   avatar: {
     public_id: {
       type: String,

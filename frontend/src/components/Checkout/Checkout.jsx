@@ -14,7 +14,6 @@ import { Button, Select } from "@material-ui/core";
 const Checkout = () => {
   const { user } = useSelector((state) => state.user); // Lấy thông tin người dùng
   const { seller } = useSelector((state) => state.seller);
-  const { cart } = useSelector((state) => state.cart); // Lấy giỏ hàngz
 
   //
   const [open, setOpen] = useState(false);
@@ -67,7 +66,7 @@ const Checkout = () => {
 
       const orderData = {
         //  Dữ liệu đơn hàng
-        cart,
+        cart: user.cart,
         totalPrice,
         subTotalPrice,
         shipping,
@@ -102,7 +101,7 @@ const Checkout = () => {
       }
 
       // Kiểm tra xem mã giảm giá đã được áp dụng cho mục trong giỏ hàng chưa
-      const isCouponApplicable = cart.some(
+      const isCouponApplicable = user.cart.some(
         (item) => item.shopId === coupon.shopId
       );
       if (!isCouponApplicable) {
@@ -177,7 +176,7 @@ const Checkout = () => {
   }, [coupouns]);
 
   // Tính tổng giá tiền của giỏ hàng
-  const subTotalPrice = cart.reduce((acc, item) => {
+  const subTotalPrice = user.cart.reduce((acc, item) => {
     return acc + (item.qty * item.sellPrice || item.qty * item.discountPrice);
   }, 0);
 

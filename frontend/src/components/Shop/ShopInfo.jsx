@@ -82,12 +82,6 @@ const ShopInfo = ({ isOwner }) => {
       });
   }, [dispatch, id]);
 
-  // const logoutHandler = async () => {
-  //   window.location.reload();
-  //   axios.get(`${server}/shop/logout`, {
-  //     withCredentials: true,
-  //   });
-  // };
 
   const logoutHandler = () => {
     axios

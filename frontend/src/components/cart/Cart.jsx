@@ -5,7 +5,7 @@ import { HiOutlineMinus, HiPlus } from "react-icons/hi";
 import styles from "../../styles/styles";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { addTocart, removeFromCart } from "../../redux/actions/cart";
+import { addTocart, loadUserCart } from "../../redux/actions/cart";
 import { toast } from "react-toastify";
 import {
   Box,
@@ -20,15 +20,15 @@ import CloseIcon from "@material-ui/icons/Close";
 import ShoppingCartIcon from "@material-ui/icons/ShoppingCart";
 
 const Cart = ({ setOpenCart }) => {
-  const { cart } = useSelector((state) => state.cart); // Lấy giỏ hàng từ store
+  const { user } = useSelector((state) => state.user); // Lấy giỏ hàng từ store
   const dispatch = useDispatch();
 
   const removeFromCartHandler = (data) => {
     // Xóa sản phẩm khỏi giỏ hàng
-    dispatch(removeFromCart(data));
+    dispatch();
   };
 
-  const totalPrice = cart.reduce(
+  const totalPrice = user.cart.reduce(
     // Tính tổng giá tiền
     (acc, item) =>
       acc + item.qty * item.sellPrice || acc + item.discountPrice * item.qty, // Tính giá tiền sau khi giảm giá
@@ -62,7 +62,7 @@ const Cart = ({ setOpenCart }) => {
         overflow="auto"
         boxShadow={1}
       >
-        {cart && cart.length === 0 ? (
+        {user.cart && user.cart.length === 0 ? (
           <Box
             display="flex"
             alignItems="center"
@@ -94,15 +94,15 @@ const Cart = ({ setOpenCart }) => {
               <Box display="flex" alignItems="center" p={1}>
                 <ShoppingCartIcon />
                 <Typography variant="h5" pl={2}>
-                  {cart && cart.length} sản phẩm
+                  {user.cart && user.cart.length} sản phẩm
                 </Typography>
               </Box>
 
               <Divider />
 
               <List>
-                {cart &&
-                  cart.map((i, index) => (
+                {user.cart &&
+                  user.cart.map((i, index) => (
                     <ListItem key={index}>
                       <CartSingle
                         data={i}
@@ -130,15 +130,16 @@ const Cart = ({ setOpenCart }) => {
 
 const CartSingle = ({ data, quantityChangeHandler, removeFromCartHandler }) => {
   const [value, setValue] = useState(data.qty);
+
   const totalPrice = data.sellPrice * value;
+  const dispatch = useDispatch();
 
   const increment = (data) => {
     if (data.stock < value) {
       toast.error("Sản phẩm đã hết!");
     } else {
+      dispatch(addTocart(data._id));
       setValue(value + 1);
-      const updateCartData = { ...data, qty: value + 1 };
-      quantityChangeHandler(updateCartData);
     }
   };
 
@@ -163,7 +164,7 @@ const CartSingle = ({ data, quantityChangeHandler, removeFromCartHandler }) => {
           >
             <HiPlus size={18} color="#fff" />
           </div>
-          <span className="pl-[10px]">{data.qty}</span>
+          <span className="pl-[10px]">{value}</span>
           <div
             className="bg-[#a7abb14f] rounded-full w-[25px] h-[25px] flex items-center justify-center cursor-pointer"
             onClick={() => decrement(data)}
