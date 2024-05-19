@@ -179,14 +179,13 @@ router.get(
   "/logout",
   catchAsyncErrors(async (req, res, next) => {
     try {
-      res.cookie("seller_token", null, {
-        // Xóa cookie
-        expires: new Date(Date.now()),
+      res.cookie("seller_token", "", {
+        expires: new Date(0), // Cookie expires immediately
         httpOnly: true,
         sameSite: "none",
-        secure: true,
+        secure: process.env.NODE_ENV === "production", // Secure in production
       });
-      res.status(201).json({
+      res.status(200).json({
         success: true,
         message: "Đã đăng xuất!",
       });
