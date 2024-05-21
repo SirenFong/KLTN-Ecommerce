@@ -6,6 +6,7 @@ import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
 import CircularProgress from "@mui/material/CircularProgress";
 import Alert from "@mui/material/Alert";
+import Button from "@mui/material/Button";
 
 const ActivationPage = () => {
   const { activation_token } = useParams();
@@ -44,9 +45,29 @@ const ActivationPage = () => {
       {loading ? (
         <CircularProgress />
       ) : error ? (
-        <Alert severity="error">Link đã hết hạn!</Alert>
+        <>
+          <Alert severity="error">Link đã hết hạn!</Alert>
+          <Button
+            variant="contained"
+            color="primary"
+            href="https://nhathuocthanhthuong.vercel.app/login"
+            sx={{ mt: 2 }}
+          >
+            Trở về trang đăng nhập
+          </Button>
+        </>
       ) : (
-        <Alert severity="success">Bạn đã đăng ký tài khoản thành công!</Alert>
+        <>
+          <Alert severity="success">Bạn đã đăng ký tài khoản thành công!</Alert>
+          <Button
+            variant="contained"
+            color="primary"
+            href="https://nhathuocthanhthuong.vercel.app/login"
+            sx={{ mt: 2 }}
+          >
+            Trở về trang đăng nhập
+          </Button>
+        </>
       )}
       <Typography variant="h6" sx={{ mt: 2 }}>
         {loading ? "Đang xử lý..." : ""}
