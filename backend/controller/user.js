@@ -440,8 +440,9 @@ router.put(
   "/add-user-cart",
   isAuthenticated,
   catchAsyncErrors(async (req, res, next) => {
-    console.log(req);
+    console.log(req)
     try {
+
       const { id } = req.body;
 
       const user = await User.findById(req.user._id);
@@ -450,47 +451,7 @@ router.put(
         user.cart = []; // Khởi tạo giỏ hàng nếu nó không tồn tại
       }
       if (user.cart.length == 0) {
-        user.cart.push({ ...product._doc, qty: 1 });
-      } else {
-        let isProductFound = false;
-        // Kiểm tra sản phẩm đã tồn tại trong giỏ hàng
-        const existingProduct = user.cart.find((item) =>
-          item._id.equals(product._id)
-        );
-
-        if (existingProduct) {
-          // Sản phẩm đã tồn tại, tăng số lượng
-          existingProduct.qty += 1;
-        } else {
-          // Sản phẩm chưa tồn tại, thêm mới vào giỏ hàng
-          user.cart.push({ ...product._doc, qty: 1 });
-        }
-      }
-      await user.save(); // Lưu giỏ hàng đã cập nhật
-
-      res.status(200).json({
-        success: true,
-        user, // Trả về thông tin người dùng đã cập nhật
-      });
-    } catch (error) {
-      return next(new ErrorHandler(error.message, 500));
-    }
-  })
-);
-router.put(
-  "/add-user-cart",
-  isAuthenticated,
-  catchAsyncErrors(async (req, res, next) => {
-    try {
-      const { id } = req.body;
-
-      const user = await User.findById(req.user._id);
-      const product = await Product.findById(id);
-      if (!user.cart) {
-        user.cart = []; // Khởi tạo giỏ hàng nếu nó không tồn tại
-      }
-      if (user.cart.length == 0) {
-        user.cart.push({ product, qty: 1 });
+        user.cart.push({ product, quantity: 1 });
       } else {
         let isProductFound = false;
         for (let i = 0; i < user.cart.length; i++) {
@@ -503,10 +464,11 @@ router.put(
           let producttt = user.cart.find((productt) =>
             productt.product._id.equals(product._id)
           );
-          producttt.qty += 1;
+          producttt.quantity += 1;
         } else {
-          user.cart.push({ product, qty: 1 });
+          user.cart.push({ product, quantity: 1 });
         }
+
       }
       await user.save(); // Lưu giỏ hàng đã cập nhật
 
@@ -517,17 +479,16 @@ router.put(
     } catch (error) {
       return next(new ErrorHandler(error.message, 500));
     }
-  })
-);
+  }));
 router.put(
   "/remove-from-cart/:id",
   isAuthenticated,
   catchAsyncErrors(async (req, res, next) => {
-    console.log(req);
     try {
+
       const user = await User.findById(req.user._id);
       const product = await Product.findById(req.params.id);
-
+      console.log(user); console.log(product);
       for (let i = 0; i < user.cart.length; i++) {
         if (user.cart[i].product._id.equals(product._id)) {
           if (user.cart[i].quantity == 1) {
@@ -546,71 +507,5 @@ router.put(
     } catch (error) {
       return next(new ErrorHandler(error.message, 500));
     }
-  })
-);
-router.get(
-  "/get-products-by-categories/",
-  catchAsyncErrors(async (req, res, next) => {
-    try {
-      const products = await Product.find({
-        category: req.query.category,
-      }).sort({ createdAt: -1 });
-      // const products = await Product.find().sort({ createdAt: -1 });
-
-      res.status(200).json({
-        success: true,
-        products,
-      });
-    } catch (error) {
-      return next(new ErrorHandler(error, 400));
-    }
-  })
-);
-
-router.post("/create-user-mobi", async (req, res, next) => {
-  try {
-    const { name, email, password, avatar } = req.body;
-    const userEmail = await User.findOne({ email });
-    console.log(req.body);
-    if (userEmail) {
-      return res
-        .status(400)
-        .json({ msg: "User with same email already exists!" });
-    }
-
-    const myCloud = await cloudinary.v2.uploader.upload(avatar, {
-      folder: "avatars",
-    });
-
-    const user = {
-      name: name,
-      email: email,
-      password: password,
-      avatar: {
-        public_id: myCloud.public_id,
-        url: myCloud.secure_url,
-      },
-    };
-
-    const activationToken = createActivationToken(user);
-
-    const activationUrl = `http://localhost:3000/activation/${activationToken}`;
-
-    try {
-      await sendMail({
-        email: user.email,
-        subject: "Kích hoạt tài khoản người dùng",
-        message: `Xin chào: ${user.name}, Vui lòng nhấn vào đường link bên dưới để kích hoạt tài khoản: ${activationUrl}`,
-      });
-      res.status(201).json({
-        success: true,
-        msg: `Kiểm tra:- ${user.email} Để kích hoạt tài khoản!`,
-      });
-    } catch (error) {
-      return next(new ErrorHandler(error.message, 500));
-    }
-  } catch (error) {
-    return next(new ErrorHandler(error.message, 400));
-  }
-});
+  }));
 module.exports = router;

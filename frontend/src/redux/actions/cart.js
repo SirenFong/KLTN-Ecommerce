@@ -39,9 +39,9 @@ export const addTocart = (id) => async (dispatch) => {
     console.log("data");
     console.log(data);
     dispatch({
-      type: " updateUserCartSuccess",
+      type: "updateUserCartSuccess",
       payload: {
-        successMessage: "Success!",
+        successMessage: "Đã cập nhật giỏ hàng thành công !!",
         user: data.user,
       },
     });
@@ -51,4 +51,40 @@ export const addTocart = (id) => async (dispatch) => {
       payload: error.response.data.message,
     });
   }
+};
+
+// update user address
+export const removetocart = (id) => async (dispatch) => {
+  try {
+    dispatch({
+      type: "updateUserCartRequest",
+    });
+    console.log(id);
+    const { data } = await axios.put(
+      `${server}/user/remove-from-cart/${id}`,
+      {},
+      { withCredentials: true }
+    );
+    console.log("data");
+    console.log(data);
+    dispatch({
+      type: "updateUserCartSuccess",
+      payload: {
+        successMessage: "Đã câp nhật giỏ hàng thành công !",
+        user: data.user,
+      },
+    });
+  } catch (error) {
+    dispatch({
+      type: "updateUserCartFailed",
+      payload: error.response.data.message,
+    });
+  }
+};
+
+// clear cart
+export const clearCart = () => (dispatch) => {
+  dispatch({
+    type: "ClearCart",
+  });
 };

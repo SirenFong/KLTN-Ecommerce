@@ -1,7 +1,7 @@
 /* eslint-disable jsx-a11y/role-supports-aria-props */
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import Header from "../components/Layout/Header";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import socketIO from "socket.io-client";
 import { format } from "timeago.js";
 import { server } from "../server";
@@ -10,8 +10,9 @@ import { useNavigate } from "react-router-dom";
 import { AiOutlineArrowRight, AiOutlineSend } from "react-icons/ai";
 import { TfiGallery } from "react-icons/tfi";
 import styles from "../styles/styles";
-// const ENDPOINT = "https://socket-ecommerce-tu68.onrender.com/";
-const ENDPOINT = "https://kltn-ecommerce-socket.onrender.com/";
+import { Avatar, Box, Typography, makeStyles } from "@material-ui/core";
+// const ENDPOINT = "https://socket-ecommerce-tu68.onrender.com/"; // Server socket  (https://socket-ecommerce-tu68.onrender.com/)
+const ENDPOINT = "http://localhost:4000/";
 const socketId = socketIO(ENDPOINT, { transports: ["websocket"] }); // Kết nối socket với server
 
 const UserInbox = () => {
@@ -28,6 +29,7 @@ const UserInbox = () => {
   const [activeStatus, setActiveStatus] = useState(false);
   const [open, setOpen] = useState(false);
   const scrollRef = useRef(null);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     // Lấy tin nhắn mới
@@ -40,7 +42,13 @@ const UserInbox = () => {
         createdAt: Date.now(), // Thời gian gửi
       });
     });
-  }, []);
+    const interval = setInterval(() => {
+      dispatch(setArrivalMessage(user._id));
+    }, 5000); //Lấy danh sách đơn hàng mỗi 5s
+    return () => {
+      clearInterval(interval);
+    };
+  }, [dispatch, user._id]);
 
   useEffect(() => {
     // Kiểm tra tin nhắn mới
@@ -303,52 +311,80 @@ const MessageList = ({
 
   useEffect(() => {
     setActiveStatus(online);
-    const userId = data.members.find((user) => user !== me); // Lấy id người bán trong cuộc trò chuyện
+    const userId = data.members.find((user) => user !== me);
     const getUser = async () => {
       try {
-        const res = await axios.get(`${server}/shop/get-shop-info/${userId}`); // Lấy thông tin người bán thông qua id
+        const res = await axios.get(`${server}/shop/get-shop-info/${userId}`);
         setUser(res.data.shop);
       } catch (error) {
         console.log(error);
       }
     };
     getUser();
-  }, [me, data, setActiveStatus, online]); // Lấy thông tin người bán khi cuộc trò chuyện thay đổi
+  }, [me, data, setActiveStatus, online]);
+  // Lấy thông tin người bán khi cuộc trò chuyện thay đổi
+
+  const userName = useMemo(() => {
+    if (!loading && data?.lastMessageId !== userData?._id) {
+      return "You";
+    } else {
+      return userData?.name.split(" ")[0];
+    }
+  }, [loading, data, userData]);
+
+  const useStyles = makeStyles((theme) => ({
+    conversationItem: {
+      width: "100%",
+      display: "flex",
+      padding: theme.spacing(1.5),
+      cursor: "pointer",
+      transition: "background-color 0.3s ease",
+      "&:hover": {
+        backgroundColor: theme.palette.grey[200], // Màu nền khi hover
+      },
+    },
+    onlineIndicator: {
+      width: theme.spacing(1.5),
+      height: theme.spacing(1.5),
+      backgroundColor: theme.palette.success.main,
+      borderRadius: "50%",
+      top: theme.spacing(1),
+      right: theme.spacing(1),
+    },
+  }));
+
+  const classes = useStyles();
+
+  const handleItemClick = () => {
+    setActive(index);
+    handleClick(data._id);
+    setCurrentChat(data);
+    setUserData(user);
+    setActiveStatus(online);
+  };
 
   return (
     <div
-      className={`w-full flex p-3 px-3 ${
-        active === index ? "bg-[#00000010]" : "bg-transparent"
-      }  cursor-pointer`}
-      onClick={(e) =>
-        setActive(index) ||
-        handleClick(data._id) ||
-        setCurrentChat(data) ||
-        setUserData(user) ||
-        setActiveStatus(online)
-      }
+      className={`${classes.conversationItem} ${
+        active === index ? "bg-[#2427f410]" : "bg-transparent"
+      }`}
+      onClick={handleItemClick}
     >
-      <div className="relative">
-        <img
-          src={`${user?.avatar?.url}`}
-          alt=""
-          className="w-[50px] h-[50px] rounded-full"
+      <Avatar src={user?.avatar?.url} alt={user?.name} />
+      {online ? (
+        <div className={classes.onlineIndicator} />
+      ) : (
+        <div
+          className={classes.onlineIndicator}
+          style={{ backgroundColor: "#c7b9b9" }}
         />
-        {online ? (
-          <div className="w-[12px] h-[12px] bg-green-400 rounded-full absolute top-[2px] right-[2px]" />
-        ) : (
-          <div className="w-[12px] h-[12px] bg-[#c7b9b9] rounded-full absolute top-[2px] right-[2px]" />
-        )}
-      </div>
-      <div className="pl-3">
-        <h1 className="text-[18px]">{user?.name}</h1>
-        <p className="text-[16px] text-[#000c]">
-          {!loading && data?.lastMessageId !== userData?._id
-            ? "You:"
-            : userData?.name.split(" ")[0] + ": "}{" "}
-          {data?.lastMessage}
-        </p>
-      </div>
+      )}
+      <Box ml={2}>
+        <Typography variant="h6">{user?.name}</Typography>
+        <Typography variant="body1" color="textSecondary">
+          {`${userName}: ${data?.lastMessage}`}
+        </Typography>
+      </Box>
     </div>
   );
 };

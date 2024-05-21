@@ -10,11 +10,12 @@ import {
   useElements,
 } from "@stripe/react-stripe-js";
 import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import { server } from "../../server";
 import { toast } from "react-toastify";
 import { RxCross1 } from "react-icons/rx";
+import { clearCart } from "../../redux/actions/cart";
 
 const Payment = () => {
   const [orderData, setOrderData] = useState([]);
@@ -23,6 +24,7 @@ const Payment = () => {
   const navigate = useNavigate();
   const stripe = useStripe();
   const elements = useElements();
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const orderData = JSON.parse(localStorage.getItem("latestOrder")); //Lấy dữ liệu order từ localStorage
@@ -122,7 +124,7 @@ const Payment = () => {
       });
   };
 
-  //Dữ liệu thanh toán  
+  //Dữ liệu thanh toán
   const paymentData = {
     //Số tiền cần thanh toán
     amount: Math.round(orderData?.totalPrice * 100), //Chuyển đổi tiền VND sang cent
@@ -205,9 +207,15 @@ const Payment = () => {
         setOpen(false);
         navigate("/order/success");
         toast.success("Thanh toán thành công!");
-        localStorage.setItem("cartItems", JSON.stringify([]));
-        localStorage.setItem("latestOrder", JSON.stringify([]));
+
+        // Clear the cart in the Redux store
+        // dispatch(clearCart());
+
         window.location.reload();
+      })
+      .catch((err) => {
+        toast.error("Thanh toán thất bại! Vui lòng thử lại.");
+        console.error(err);
       });
   };
 

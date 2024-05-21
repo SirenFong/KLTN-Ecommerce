@@ -7,7 +7,7 @@ const Shop = require("../model/shop");
 exports.isAuthenticated = catchAsyncErrors(async (req, res, next) => {
   // Kiểm tra người dùng đã đăng nhập chưa
   const { token } = req.cookies;
-
+  console.log(token)
   if (!token) {
     // Nếu chưa đăng nhập
     return next(new ErrorHandler("Vui lòng đăng nhập", 401)); // Trả về lỗi 401

@@ -80,21 +80,21 @@ const ProductDetails = ({ data }) => {
     dispatch(addToWishlist(data));
   };
 
-  const addToCartHandler = (id) => {
+  const addToCartHandler = (data) => {
     // Thêm sản phẩm vào giỏ hàng
-    const isItemExists = cart && cart.find((i) => i._id === id);
-    if (isItemExists) {
-      toast.error("Sản phẩm đã tồn tại trong giỏ hàng!");
-    } else {
-      if (data.stock < 1) {
-        // Kiểm tra số lượng tồn kho
-        toast.error("Sản phẩm đã hết!");
-      } else {
-        const cartData = { ...data, qty: count }; // Dữ liệu giỏ hàng
-        dispatch(addTocart(cartData));
-        toast.success("Thêm thành công!");
-      }
-    }
+    // const isItemExists = cart && cart.find((i) => i._id === id);
+    // if (isItemExists) {
+    //   toast.error("Sản phẩm đã tồn tại trong giỏ hàng!");
+    // } else {
+    //   if (data.stock < 1) {
+    //     // Kiểm tra số lượng tồn kho
+    //     toast.error("Sản phẩm đã hết!");
+    //   } else {
+
+    dispatch(addTocart(data));
+    toast.success("Thêm thành công!");
+    // }
+    // }
   };
   const useStyles = makeStyles((theme) => ({
     // CSS cho button
@@ -176,9 +176,8 @@ const ProductDetails = ({ data }) => {
                   {data &&
                     data.images.slice(0, displayCount).map((i, index) => (
                       <div
-                        className={`${
-                          select === 0 ? "border" : "null"
-                        } cursor-pointer`}
+                        className={`${select === 0 ? "border" : "null"
+                          } cursor-pointer`}
                         key={index}
                       >
                         <img
@@ -195,9 +194,8 @@ const ProductDetails = ({ data }) => {
                     </button>
                   )}
                   <div
-                    className={`${
-                      select === 1 ? "border" : "null"
-                    } cursor-pointer`}
+                    className={`${select === 1 ? "border" : "null"
+                      } cursor-pointer`}
                   ></div>
                 </div>
               </div>
@@ -262,7 +260,7 @@ const ProductDetails = ({ data }) => {
                   </Button>
                 </div>
                 <div className="flex items-center mt-12 justify-between pr-3">
-                  {/* <Box display="flex" alignItems="center">
+                  <Box display="flex" alignItems="center">
                     <Button
                       variant="contained"
                       color="primary"
@@ -288,7 +286,7 @@ const ProductDetails = ({ data }) => {
                     >
                       +
                     </Button>
-                  </Box> */}
+                  </Box>
                   <div>
                     {click ? (
                       <AiFillHeart
@@ -311,13 +309,13 @@ const ProductDetails = ({ data }) => {
                 </div>
 
                 <div className="flex items-center pt-8">
-                  <Link to={`/shop/preview/${data?.shop._id}`}>
+                  {/* <Link to={`/shop/preview/${data?.shop._id}`}>
                     <img
                       src={`${data?.shop?.avatar?.url}`}
                       alt=""
                       className="w-[50px] h-[50px] rounded-full mr-2"
                     />
-                  </Link>
+                  </Link> */}
                   <div className="pr-8">
                     <Link to={`/shop/preview/${data?.shop._id}`}>
                       <h3 className={`${styles.shop_name} pb-1 pt-1`}>

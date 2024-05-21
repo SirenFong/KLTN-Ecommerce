@@ -1,3 +1,4 @@
+
 const express = require("express");
 const User = require("../model/user");
 const bcryptjs = require("bcryptjs");
@@ -8,38 +9,7 @@ const auth = require("../middleware/authmobille");
 const Product = require("../model/product");
 const Order = require("../model/order");
 
-// SIGN UP
-authRouter.post("/signup", async (req, res) => {
-    try {
-        const { name, email, phone, password } = req.body;
 
-        const existingUser = await User.findOne({ email });
-        const existingUserphone = await User.findOne({ phone });
-        if (existingUser) {
-            return res
-                .status(400)
-                .json({ msg: "User with same email already exists!" });
-        }
-        if (existingUserphone) {
-            return res
-                .status(400)
-                .json({ msg: "User with same ephone already exists!" });
-        }
-
-        const hashedPassword = await bcryptjs.hash(password, 8);
-
-        let user = new User({
-            email,
-            phone,
-            password: hashedPassword,
-            name,
-        });
-        user = await user.save();
-        res.json(user);
-    } catch (e) {
-        res.status(500).json({ error: e.message });
-    }
-});
 ///signin
 //Excercise
 authRouter.post("/signin", async (req, res) => {
@@ -48,18 +18,18 @@ authRouter.post("/signin", async (req, res) => {
         if (!email || !password) {
             return res
                 .status(400)
-                .json({ msg: "Roongx!" });
+                .json({ message: "Rỗng !" });
         }
         const user = await User.findOne({ email }).select("+password");
         if (!user) {
             return res
                 .status(400)
-                .json({ msg: "User with this email does not exist!" });
+                .json({ message: "Email chưa đăng ký!" });
         }
 
         const isMatch = await bcryptjs.compare(password, user.password);
         if (!isMatch) {
-            return res.status(400).json({ msg: "Incorrect password." });
+            return res.status(400).json({ msg: "không đúng mật khẩu." });
         }
 
         const token = jwt.sign({ id: user._id }, "passwordKey");
@@ -102,7 +72,7 @@ authRouter.delete("/remove-from-cart/:id", auth, async (req, res) => {
         user = await user.save();
         res.json(user);
     } catch (e) {
-        res.status(500).json({ error: e.message }); 111
+        res.status(500).json({ error: e.message });
     }
 });
 authRouter.post("/add-to-cart", auth, async (req, res) => {
@@ -110,32 +80,26 @@ authRouter.post("/add-to-cart", auth, async (req, res) => {
         const { id } = req.body;
         const product = await Product.findById(id);
         let user = await User.findById(req.user);
-
         if (!user.cart) {
             user.cart = []; // Khởi tạo giỏ hàng nếu nó không tồn tại
         }
         if (user.cart.length == 0) {
-            user.cart.push({ ...product._doc, qty: 1 });
-        }
-        else {
+            user.cart.push({ product, quantity: 1 });
+        } else {
             let isProductFound = false;
-
             for (let i = 0; i < user.cart.length; i++) {
-                if (user.cart[i] && product._id && user.cart[i]._id.equals(product._id)) {
+                if (user.cart[i].product._id.equals(product._id)) {
                     isProductFound = true;
                 }
             }
 
             if (isProductFound) {
-                const productIndex = user.cart.findIndex((productt) =>
-                    productt._id.equals(product._id)
+                let producttt = user.cart.find((productt) =>
+                    productt.product._id.equals(product._id)
                 );
-
-
-                user.cart[productIndex].qty += 1;
-
+                producttt.quantity += 1;
             } else {
-                user.cart.push({ ...product._doc, qty: 1 });
+                user.cart.push({ product, quantity: 1 });
             }
         }
         user = await user.save();
@@ -406,8 +370,18 @@ authRouter.post("/create-order", auth, async (req, res) => {
         let user = await User.findById(req.user);
         // console.log(user)
         const { cart, shippingAddress, totalPrice, paymentInfo } = req.body;
-        console.log(req.body);
+        // console.log(req.body);
         //   group cart items by shopId
+        const useradd = {
+            _id: user._id.toString(),
+            name: user.name,
+            email: user.email,
+            role: user.role,
+            createdAt: user.createdAt,
+            addresses: user.addresses, cart: user.cart, phoneNumber: user.phoneNumber,
+            avatar: user.avatar,
+            __v: user.__v,
+        };
 
         const shopItemsMap = new Map();
 

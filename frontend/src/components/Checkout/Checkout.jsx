@@ -63,10 +63,23 @@ const Checkout = () => {
         country,
         city,
       };
+      // Tạo mảng mới từ user.cart
+      const newCart = user.cart.map((item) => {
+        // Lấy thông tin sản phẩm và số lượng
+        const { product, quantity } = item;
 
+        // Thêm thuộc tính qty với giá trị bằng quantity
+        return {
+          ...product,
+          qty: quantity,
+        };
+      });
+
+      // Giờ newCart chứa các phần tử có thuộc tính product, quantity và qty
+      console.log(newCart);
       const orderData = {
         //  Dữ liệu đơn hàng
-        cart: user.cart,
+        cart: newCart,
         totalPrice,
         subTotalPrice,
         shipping,
@@ -177,7 +190,8 @@ const Checkout = () => {
 
   // Tính tổng giá tiền của giỏ hàng
   const subTotalPrice = user.cart.reduce((acc, item) => {
-    return acc + (item.qty * item.sellPrice || item.qty * item.discountPrice);
+    const itemPrice = item.product.sellPrice || item.discountPrice;
+    return acc + item.quantity * itemPrice;
   }, 0);
 
   const shipping = subTotalPrice > 500000 ? 0 : 15000;

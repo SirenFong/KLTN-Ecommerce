@@ -18,20 +18,20 @@ import Cart from "../cart/Cart";
 import Wishlist from "../Wishlist/Wishlist";
 import { FaArrowAltCircleDown } from "react-icons/fa";
 import { Button, Typography } from "@material-ui/core";
+import { toast } from "react-toastify";
 
 const Header = ({ activeHeading }) => {
   const { isAuthenticated, user } = useSelector((state) => state.user);
   const { isSeller } = useSelector((state) => state.seller);
   const { wishlist } = useSelector((state) => state.wishlist);
-
   const { allProducts } = useSelector((state) => state.products);
+
   const [searchTerm, setSearchTerm] = useState("");
   const [searchData, setSearchData] = useState(null);
   const [active, setActive] = useState(false);
   const [dropDown, setDropDown] = useState(false);
   const [openCart, setOpenCart] = useState(false);
   const [openWishlist, setOpenWishlist] = useState(false);
-  const [open, setOpen] = useState(false);
   const [showAllResults, setShowAllResults] = useState(false);
 
   const searchBoxRef = useRef(); // reference to the search box
@@ -74,8 +74,25 @@ const Header = ({ activeHeading }) => {
       setActive(false);
     }
   });
+
   const handleShowAllResults = () => {
     setShowAllResults(true);
+  };
+
+  const handleOpenCart = () => {
+    if (!isAuthenticated) {
+      toast.error("Đăng nhập để xem giỏ hàng!");
+    } else {
+      setOpenCart(true);
+    }
+  };
+
+  const handleOpenWishlist = () => {
+    if (!isAuthenticated) {
+      toast.error("Vui lòng đăng nhập!");
+    } else {
+      setOpenWishlist(true);
+    }
   };
 
   return (
@@ -85,7 +102,7 @@ const Header = ({ activeHeading }) => {
           <div>
             <Link to="/">
               <img
-                src="https://res.cloudinary.com/djxsh5hhw/image/upload/v1716107428/logo192_ct04yp.jpg"
+                src="https://res.cloudinary.com/dgtostoep/image/upload/v1702905710/imgonline-com-ua-resize-kyOORaMPjDUL_1_at1rmh.jpg"
                 alt=""
                 style={{
                   width: "auto",
@@ -221,7 +238,7 @@ const Header = ({ activeHeading }) => {
             <div className={`${styles.noramlFlex}`}>
               <div
                 className="relative cursor-pointer mr-[15px]"
-                onClick={() => setOpenWishlist(true)}
+                onClick={handleOpenWishlist}
               >
                 <AiOutlineHeart size={30} color="rgb(255 255 255 / 83%)" />
                 <span className="absolute right-0 top-0 rounded-full bg-[#ae3131] w-4 h-4 top right p-0 m-0 text-white font-mono text-[12px] leading-tight text-center">
@@ -233,7 +250,7 @@ const Header = ({ activeHeading }) => {
             <div className={`${styles.noramlFlex}`}>
               <div
                 className="relative cursor-pointer mr-[15px]"
-                onClick={() => setOpenCart(true)}
+                onClick={handleOpenCart}
               >
                 <AiOutlineShoppingCart
                   size={30}
@@ -241,7 +258,7 @@ const Header = ({ activeHeading }) => {
                 />
                 {user?.cart?.length > 0 && (
                   <span className="absolute right-0 top-0 rounded-full bg-[#ae3131] w-4 h-4 top right p-0 m-0 text-white font-mono text-[12px] leading-tight text-center">
-                    {user.cart.length}
+                    {user?.cart?.length}
                   </span>
                 )}
               </div>

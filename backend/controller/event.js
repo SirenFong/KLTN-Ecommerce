@@ -106,9 +106,10 @@ router.delete(
         return next(new ErrorHandler("Không tìm thấy sự kiện", 404));
       }
 
-      for (let i = 0; i < event.images.length; i++) { // duyệt qua từng hình ảnh
+      for (let i = 0; i < event.images.length; i++) {
+        // duyệt qua từng hình ảnh
         // xóa hình ảnh
-        await cloudinary.v2.uploader.destroy(event.images[i].public_id); 
+        await cloudinary.v2.uploader.destroy(event.images[i].public_id);
       }
 
       await event.deleteOne(); // xóa sự kiện

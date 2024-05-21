@@ -47,10 +47,15 @@ const userSchema = new mongoose.Schema({
     type: String,
     default: "user",
   },
-  cart: {
-    type: Array,
-    required: true,
-  },
+  cart: [
+    {
+      product: productSchema,
+      quantity: {
+        type: Number,
+        required: true,
+      },
+    },
+  ],
   avatar: {
     public_id: {
       type: String,

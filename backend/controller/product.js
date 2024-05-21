@@ -62,25 +62,6 @@ router.post(
   })
 );
 
-router.get(
-  "/get-products-by-categories/",
-  catchAsyncErrors(async (req, res, next) => {
-    try {
-      const products = await Product.find({
-        category: req.query.category,
-      }).sort({ createdAt: -1 });
-      // const products = await Product.find().sort({ createdAt: -1 });
-
-      res.status(200).json({
-        success: true,
-        products,
-      });
-    } catch (error) {
-      return next(new ErrorHandler(error, 400));
-    }
-  })
-);
-
 // Lấy danh sách sản phẩm
 router.get(
   "/get-all-products-shop/:id",
@@ -306,6 +287,39 @@ router.get(
       });
     } catch (error) {
       return next(new ErrorHandler(error.message, 500));
+    }
+  })
+); router.get(
+  "/get-products-by-categories/",
+  catchAsyncErrors(async (req, res, next) => {
+    try {
+      const products = await Product.find({ category: req.query.category }).sort({ createdAt: -1 });
+      // const products = await Product.find().sort({ createdAt: -1 });
+
+      res.status(200).json({
+        success: true,
+        products,
+      });
+    } catch (error) {
+      return next(new ErrorHandler(error, 400));
+    }
+  })
+);
+router.get(
+  "/search-product/:name",
+  catchAsyncErrors(async (req, res, next) => {
+    try {
+      const products = await Product.find({
+        name: { $regex: req.params.name, $options: "i" },
+      });
+
+
+      res.status(200).json({
+        success: true,
+        products,
+      });
+    } catch (error) {
+      return next(new ErrorHandler(error, 400));
     }
   })
 );

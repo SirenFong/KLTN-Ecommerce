@@ -50,7 +50,7 @@ const ProductCard = ({ data, isEvent }) => {
       toast.error("Sản phẩm đã được thêm vào giỏ hàng!");
     } else {
       if (data.stock < 1) {
-        toast.error("Đã hết hàng!");
+        toast.error("Sản phẩm tạm hết!");
       } else {
         const cartData = { ...data, qty: 1 };
         dispatch(addTocart(cartData));

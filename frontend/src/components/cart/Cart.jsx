@@ -5,7 +5,7 @@ import { HiOutlineMinus, HiPlus } from "react-icons/hi";
 import styles from "../../styles/styles";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { addTocart, loadUserCart } from "../../redux/actions/cart";
+import { addTocart, removetocart } from "../../redux/actions/cart";
 import { toast } from "react-toastify";
 import {
   Box,
@@ -28,15 +28,19 @@ const Cart = ({ setOpenCart }) => {
     dispatch();
   };
 
-  const totalPrice = user.cart.reduce(
-    // Tính tổng giá tiền
-    (acc, item) =>
-      acc + item.qty * item.sellPrice || acc + item.discountPrice * item.qty, // Tính giá tiền sau khi giảm giá
-    0
-  );
+  const totalPrice = user?.cart.reduce((acc, item) => {
+    const itemPrice =
+      item.product.sellPrice || acc + item.discountPrice * item.quantity;
+    return acc + item.quantity * itemPrice;
+  }, 0);
 
   const quantityChangeHandler = (data) => {
-    // Thay đổi số lượng sản phẩm
+    // Check if the user is logged in
+    if (!user) {
+      toast.error("Please log in to add products to your cart.");
+      return;
+    }
+    // Proceed with adding the item to the cart
     dispatch(addTocart(data));
   };
 
@@ -62,7 +66,7 @@ const Cart = ({ setOpenCart }) => {
         overflow="auto"
         boxShadow={1}
       >
-        {user.cart && user.cart.length === 0 ? (
+        {user?.cart && user?.cart?.length === 0 ? (
           <Box
             display="flex"
             alignItems="center"
@@ -94,15 +98,15 @@ const Cart = ({ setOpenCart }) => {
               <Box display="flex" alignItems="center" p={1}>
                 <ShoppingCartIcon />
                 <Typography variant="h5" pl={2}>
-                  {user.cart && user.cart.length} sản phẩm
+                  {user?.cart && user?.cart?.length} sản phẩm
                 </Typography>
               </Box>
 
               <Divider />
 
               <List>
-                {user.cart &&
-                  user.cart.map((i, index) => (
+                {user?.cart &&
+                  user?.cart.map((i, index) => (
                     <ListItem key={index}>
                       <CartSingle
                         data={i}
@@ -117,7 +121,7 @@ const Cart = ({ setOpenCart }) => {
             <Box p={2} mb={2}>
               <Link to="/checkout">
                 <Button variant="contained" color="primary" fullWidth>
-                  Thanh toán ngay ({totalPrice.toLocaleString("vi-VN")} VNĐ)
+                  Thanh toán ngay ({totalPrice?.toLocaleString("vi-VN")} VNĐ)
                 </Button>
               </Link>
             </Box>
@@ -129,24 +133,28 @@ const Cart = ({ setOpenCart }) => {
 };
 
 const CartSingle = ({ data, quantityChangeHandler, removeFromCartHandler }) => {
-  const [value, setValue] = useState(data.qty);
+  const [value, setValue] = useState(data.quantity);
 
-  const totalPrice = data.sellPrice * value;
+  // const totalPrice = data.product.sellPrice * value;
   const dispatch = useDispatch();
-
+  const [totalPrice, settotalPrice] = useState(data.product.sellPrice * value);
   const increment = (data) => {
-    if (data.stock < value) {
+    if (data.product.stock < value) {
       toast.error("Sản phẩm đã hết!");
     } else {
-      dispatch(addTocart(data._id));
+      dispatch(addTocart(data.product._id));
       setValue(value + 1);
+
+      settotalPrice(data.product.sellPrice * value);
     }
   };
 
   const decrement = (data) => {
-    setValue(value === 1 ? 1 : value - 1);
-    const updateCartData = { ...data, qty: value === 1 ? 1 : value - 1 };
+    setValue(value - 1);
+    dispatch(removetocart(data.product._id));
+    const updateCartData = { ...data, qty: value - 1 };
     quantityChangeHandler(updateCartData);
+    settotalPrice(data.product.sellPrice * value);
   };
 
   return (
@@ -173,17 +181,20 @@ const CartSingle = ({ data, quantityChangeHandler, removeFromCartHandler }) => {
           </div>
         </div>
         <img
-          src={`${data?.images[0]?.url}`}
+          src={`${data?.product?.images[0]?.url}`}
           alt=""
           className="w-[90px] h-min ml-2 mr-2 rounded-[5px]"
         />
         <div className="pl-[5px]">
-          <h1>{data.name}</h1>
+          <h1>{data?.product?.name}</h1>
           <h4 className="font-[400] text-[15px] text-[#00000082]">
-            {(data.sellPrice || data.discountPrice).toLocaleString()} * {value}
+            {(
+              data.product.sellPrice || data.product.discountPrice
+            ).toLocaleString()}{" "}
+            * {value}
           </h4>
           <h4 className="font-[600] text-[17px] pt-[3px] text-[#016FD6] font-Roboto">
-            {(totalPrice || data.discountPrice).toLocaleString()} VNĐ
+            {(totalPrice || data.product.discountPrice).toLocaleString()} VNĐ
           </h4>
         </div>
       </div>

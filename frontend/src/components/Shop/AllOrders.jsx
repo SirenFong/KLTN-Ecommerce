@@ -6,8 +6,7 @@ import { Link } from "react-router-dom";
 import Loader from "../Layout/Loader";
 import { getAllOrdersOfShop } from "../../redux/actions/order";
 import { AiOutlineArrowRight } from "react-icons/ai";
-import { RxCross1 } from "react-icons/rx";
-import styles from "../../styles/styles";
+
 
 const AllOrders = () => {
   const { orders: ordersFromRedux } = useSelector((state) => state.order); // get orders from redux
