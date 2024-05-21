@@ -56,6 +56,11 @@ const userSchema = new mongoose.Schema({
       },
     },
   ],
+  wishList: [
+    {
+      product: productSchema,
+    },
+  ],
   avatar: {
     public_id: {
       type: String,
