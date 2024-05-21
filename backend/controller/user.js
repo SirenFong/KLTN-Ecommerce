@@ -40,7 +40,7 @@ router.post("/create-user", async (req, res, next) => {
 
     const activationToken = createActivationToken(user); // tạo token
 
-    const activationUrl = `http://localhost:3000/activation/${activationToken}`; // tạo url
+    const activationUrl = `https://nhathuocthanhthuong.vercel.app/activation/${activationToken}`; // tạo url
 
     try {
       await sendMail({
@@ -440,9 +440,8 @@ router.put(
   "/add-user-cart",
   isAuthenticated,
   catchAsyncErrors(async (req, res, next) => {
-    console.log(req)
+    console.log(req);
     try {
-
       const { id } = req.body;
 
       const user = await User.findById(req.user._id);
@@ -468,7 +467,6 @@ router.put(
         } else {
           user.cart.push({ product, quantity: 1 });
         }
-
       }
       await user.save(); // Lưu giỏ hàng đã cập nhật
 
@@ -479,16 +477,17 @@ router.put(
     } catch (error) {
       return next(new ErrorHandler(error.message, 500));
     }
-  }));
+  })
+);
 router.put(
   "/remove-from-cart/:id",
   isAuthenticated,
   catchAsyncErrors(async (req, res, next) => {
     try {
-
       const user = await User.findById(req.user._id);
       const product = await Product.findById(req.params.id);
-      console.log(user); console.log(product);
+      console.log(user);
+      console.log(product);
       for (let i = 0; i < user.cart.length; i++) {
         if (user.cart[i].product._id.equals(product._id)) {
           if (user.cart[i].quantity == 1) {
@@ -507,5 +506,6 @@ router.put(
     } catch (error) {
       return next(new ErrorHandler(error.message, 500));
     }
-  }));
+  })
+);
 module.exports = router;
