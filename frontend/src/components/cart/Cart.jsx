@@ -23,9 +23,9 @@ const Cart = ({ setOpenCart }) => {
   const { user } = useSelector((state) => state.user); // Lấy giỏ hàng từ store
   const dispatch = useDispatch();
 
-  const removeFromCartHandler = (data) => {
+  const removeFromCartHandler = (productId) => {
     // Xóa sản phẩm khỏi giỏ hàng
-    dispatch();
+    dispatch(removetocart(productId));
   };
 
   const totalPrice = user?.cart.reduce((acc, item) => {

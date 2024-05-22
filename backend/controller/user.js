@@ -508,4 +508,6 @@ router.put(
     }
   })
 );
+
+router.delete()
 module.exports = router;
