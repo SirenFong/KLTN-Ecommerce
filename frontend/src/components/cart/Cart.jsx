@@ -159,11 +159,11 @@ const CartSingle = ({ data, quantityChangeHandler, removeFromCartHandler }) => {
 
   return (
     <div className="border-b p-4">
-      <RxCross1
+      {/* <RxCross1
         size={25}
         className="cursor-pointer"
         onClick={() => removeFromCartHandler(data)}
-      />
+      /> */}
       <div className="w-full flex items-center">
         <div>
           <div
