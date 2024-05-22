@@ -84,7 +84,7 @@ const ShopInfo = ({ isOwner }) => {
 
   const logoutHandler = () => {
     axios
-      .get(`${server}/user/logout`, { withCredentials: true })
+      .get(`${server}/shop/logout`, { withCredentials: true })
       .then((res) => {
         toast.success(res.data.message);
         window.location.reload(true);
