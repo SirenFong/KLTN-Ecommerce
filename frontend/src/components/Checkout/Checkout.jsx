@@ -189,8 +189,8 @@ const Checkout = () => {
   }, [coupouns]);
 
   // Tính tổng giá tiền của giỏ hàng
-  const subTotalPrice = user.cart.reduce((acc, item) => {
-    const itemPrice = item.product.sellPrice || item.discountPrice;
+  const subTotalPrice = user?.cart.reduce((acc, item) => {
+    const itemPrice = item.product?.sellPrice || item?.discountPrice;
     return acc + item.quantity * itemPrice;
   }, 0);
 
