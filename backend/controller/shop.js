@@ -179,16 +179,16 @@ router.get(
   "/logout",
   catchAsyncErrors(async (req, res, next) => {
     try {
+      // xóa token
       res.cookie("seller_token", null, {
-        // Xóa cookie
-        expires: new Date(Date.now()),
+        expires: new Date(Date.now()), // hết hạn
         httpOnly: true,
-        sameSite: "none",
+        sameSite: "none", // sameSite: "none" for cross-site cookies
         secure: true,
       });
       res.status(201).json({
         success: true,
-        message: "Đã đăng xuất!",
+        message: "Đăng xuất thành công",
       });
     } catch (error) {
       return next(new ErrorHandler(error.message, 500));
