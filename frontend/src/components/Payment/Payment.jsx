@@ -209,11 +209,9 @@ const Payment = () => {
         toast.success("Thanh toán thành công!");
 
         // Clear the cart in the Redux store
-        dispatch(clearCart());
+        // dispatch(clearCart());
 
-        setTimeout(() => {
-          window.location.reload();
-        }, 500);
+        window.location.reload();
       })
       .catch((err) => {
         toast.error("Thanh toán thất bại! Vui lòng thử lại.");

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   AiFillHeart,
   AiOutlineEye,
@@ -6,48 +6,25 @@ import {
   AiOutlineShoppingCart,
 } from "react-icons/ai";
 import { Link } from "react-router-dom";
-import styles from "../../../styles/styles";
+import styles from "../../../stylezs/styles";
 import { useDispatch, useSelector } from "react-redux";
 import ProductDetailsCard from "../ProductDetailsCard/ProductDetailsCard";
 import {
   addToWishlist,
   removeFromWishlist,
 } from "../../../redux/actions/wishlist";
+import { useEffect } from "react";
 import { addTocart } from "../../../redux/actions/cart";
 import { toast } from "react-toastify";
 import Ratings from "../../Products/Ratings";
 import { makeStyles } from "@material-ui/core";
 
-const useStyles = makeStyles({
-  productCard: {
-    maxWidth: "100%",
-    height: 330,
-    boxShadow: "0 0 10px 0 rgba(0,0,0,0.12)",
-    transition: "all 0.3s",
-    "&:hover": {
-      boxShadow: "0 4px 20px 0 rgba(0,0,0,0.12)",
-      transform: "scale(1.05)",
-    },
-  },
-  productImage: {
-    height: 170,
-    width: "100%",
-    objectFit: "contain",
-    transition: "all 0.3s",
-    "&:hover": {
-      opacity: 0.75,
-    },
-  },
-});
-
 const ProductCard = ({ data, isEvent }) => {
   const { wishlist } = useSelector((state) => state.wishlist);
   const { cart } = useSelector((state) => state.cart);
-  const { user } = useSelector((state) => state.user); // Lấy thông tin người dùng từ Redux state
   const [click, setClick] = useState(false);
   const [open, setOpen] = useState(false);
   const dispatch = useDispatch();
-  const classes = useStyles();
 
   useEffect(() => {
     if (wishlist && wishlist.find((i) => i._id === data._id)) {
@@ -68,12 +45,6 @@ const ProductCard = ({ data, isEvent }) => {
   };
 
   const addToCartHandler = (id) => {
-    if (!user) {
-      // Kiểm tra nếu người dùng chưa đăng nhập
-      toast.error("Bạn cần đăng nhập để thêm sản phẩm vào giỏ hàng!");
-      return;
-    }
-
     const isItemExists = cart && cart.find((i) => i._id === id);
     if (isItemExists) {
       toast.error("Sản phẩm đã được thêm vào giỏ hàng!");
@@ -88,6 +59,28 @@ const ProductCard = ({ data, isEvent }) => {
     }
   };
 
+  const useStyles = makeStyles({
+    productCard: {
+      maxWidth: "100%",
+      height: 330,
+      boxShadow: "0 0 10px 0 rgba(0,0,0,0.12)",
+      transition: "all 0.3s",
+      "&:hover": {
+        boxShadow: "0 4px 20px 0 rgba(0,0,0,0.12)",
+        transform: "scale(1.05)",
+      },
+    },
+    productImage: {
+      height: 170,
+      width: "100%",
+      objectFit: "contain",
+      transition: "all 0.3s",
+      "&:hover": {
+        opacity: 0.75,
+      },
+    },
+  });
+  const classes = useStyles();
   return (
     <>
       <div
