@@ -114,13 +114,13 @@ const Checkout = () => {
       }
 
       // Kiểm tra xem mã giảm giá đã được áp dụng cho mục trong giỏ hàng chưa
-      // const isCouponApplicable = user.cart.some(
-      //   (item) => item.shopId === coupon.shopId
-      // );
-      // if (!isCouponApplicable) {
-      //   toast.error("Mã giảm giá không áp dụng cho sản phẩm trong giỏ hàng!");
-      //   return;
-      // }
+      const isCouponApplicable = user.cart.some(
+        (item) => item.shopId === coupon.shopId
+      );
+      if (!isCouponApplicable) {
+        toast.error("Mã giảm giá không áp dụng cho sản phẩm trong giỏ hàng!");
+        return;
+      }
 
       // Kiểm tra xem mã giảm giá đã được chọn trước đó chưa
       const isCouponSelected = selectedCoupons.some(
