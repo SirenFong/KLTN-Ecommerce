@@ -194,7 +194,7 @@ const Checkout = () => {
     return acc + item.quantity * itemPrice;
   }, 0);
 
-  const shipping = subTotalPrice > 500000 ? 0 : 15000;
+  const shipping = 15000;
 
   const discountPercentenge =
     couponCodeData && subTotalPrice !== null
