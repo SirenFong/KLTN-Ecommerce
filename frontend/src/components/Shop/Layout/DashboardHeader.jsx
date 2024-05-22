@@ -17,6 +17,13 @@ const DashboardHeader = () => {
             <img
               src="https://res.cloudinary.com/djxsh5hhw/image/upload/v1716107428/logo192_ct04yp.jpg"
               alt=""
+              style={{
+                width: "auto",
+                height: "80px",
+                marginTop: "0px",
+                marginLeft: "auto",
+                marginRight: "auto",
+              }}
             />
           </Link>
         </IconButton>
