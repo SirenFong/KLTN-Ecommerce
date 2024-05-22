@@ -15,7 +15,7 @@ const DashboardHeader = () => {
         <IconButton edge="start" color="inherit" aria-label="menu">
           <Link to="/">
             <img
-              src="https://res.cloudinary.com/dgtostoep/image/upload/v1702905710/imgonline-com-ua-resize-kyOORaMPjDUL_1_at1rmh.jpg"
+              src="https://res.cloudinary.com/djxsh5hhw/image/upload/v1716107428/logo192_ct04yp.jpg"
               alt=""
             />
           </Link>
