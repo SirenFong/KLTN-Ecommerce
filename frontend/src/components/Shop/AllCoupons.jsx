@@ -3,23 +3,19 @@ import {
   Button,
   CircularProgress,
   Dialog,
-  DialogActions,
   DialogContent,
   DialogTitle,
   Grid,
   IconButton,
-  MenuItem,
-  Select,
   TextField,
 } from "@material-ui/core";
 import { DataGrid, GridCloseIcon } from "@material-ui/data-grid";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { AiOutlineDelete } from "react-icons/ai";
-import { RxCross1 } from "react-icons/rx";
+
 import { useDispatch, useSelector } from "react-redux";
-import styles from "../../styles/styles";
-import Loader from "../Layout/Loader";
+
 import { server } from "../../server";
 import { toast } from "react-toastify";
 
@@ -28,12 +24,13 @@ const AllCoupons = () => {
   const [name, setName] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [coupouns, setCoupouns] = useState([]);
-  const [minAmount, setMinAmout] = useState(null);
+  const [minAmount, setMinAmount] = useState(null);
   const [maxAmount, setMaxAmount] = useState(null);
   const [selectedProducts, setSelectedProducts] = useState(null);
   const [value, setValue] = useState(null);
+  const [errors, setErrors] = useState({});
   const { seller } = useSelector((state) => state.seller);
-  const { products } = useSelector((state) => state.products);
+  // const { products } = useSelector((state) => state.products);
 
   const dispatch = useDispatch();
 
@@ -62,8 +59,45 @@ const AllCoupons = () => {
     window.location.reload();
   };
 
+  const validate = () => {
+    const newErrors = {};
+
+    if (!name) {
+      newErrors.name = "Tên mã giảm giá không được để trống.";
+    }
+    if (!value || isNaN(value) || value <= 4 || value > 31) {
+      newErrors.value = "(%) Giảm giá phải là số từ 5% đến 30%.";
+    }
+    if (
+      !minAmount ||
+      isNaN(minAmount) ||
+      minAmount <= 10000 ||
+      minAmount > 1000000
+    ) {
+      newErrors.minAmount =
+        "Số tiền giảm phải lớn hơn 10.000VNĐ và nhỏ hơn 1.000.000VNĐ.";
+    }
+    if (
+      !maxAmount ||
+      isNaN(maxAmount) ||
+      maxAmount <= 100000 ||
+      maxAmount > 10000000
+    ) {
+      newErrors.maxAmount =
+        "Số tiền giảm tối đa phải lớn hơn 10.000VNĐ và nhỏ hơn 1.000.000VNĐ";
+    }
+
+    return newErrors;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault(); // Prevent the default form submission
+
+    const validationErrors = validate();
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
+      return;
+    }
 
     await axios
       .post(
@@ -198,6 +232,8 @@ const AllCoupons = () => {
                   placeholder="Nhập tên mã giảm giá..."
                   fullWidth
                   margin="normal"
+                  error={!!errors.name}
+                  helperText={errors.name}
                 />
                 <TextField
                   label="(%) Giảm giá"
@@ -207,16 +243,20 @@ const AllCoupons = () => {
                   placeholder="Nhập (%) giảm giá..."
                   fullWidth
                   margin="normal"
+                  error={!!errors.value}
+                  helperText={errors.value}
                 />
                 <TextField
                   label="Số tiền nhỏ nhất"
                   value={minAmount || ""}
                   onChange={(e) =>
-                    setMinAmout(Number(e.target.value.replace(/\D/g, "")))
+                    setMinAmount(Number(e.target.value.replace(/\D/g, "")))
                   }
                   placeholder="Nhập số tiền nhỏ nhất"
                   fullWidth
                   margin="normal"
+                  error={!!errors.minAmount}
+                  helperText={errors.minAmount}
                 />
                 <TextField
                   label="Giảm tối đa"
@@ -227,6 +267,8 @@ const AllCoupons = () => {
                   placeholder="Giảm tối đa"
                   fullWidth
                   margin="normal"
+                  error={!!errors.maxAmount}
+                  helperText={errors.maxAmount}
                 />
                 {/* <Select
                   value={selectedProducts}
